@@ -1,0 +1,27 @@
+name: wifi_info_plugin_plus
+description: Wifi info wrapper android plugin,serves as a
+  bridge from flutter currently to android native code to retrieve Network info.
+version: 2.0.2
+homepage: https://github.com/brasizza/flutter_wifi_info_plugin
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.12.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  
+
+flutter:
+
+  plugin:
+   platforms:
+      android:
+        package: br.com.brasizza.marcus.wifi_info_plugin_plus
+        pluginClass: WifiInfoPlugin
+     

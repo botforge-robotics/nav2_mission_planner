@@ -1,0 +1,10 @@
+name: unique_identifier_msgs
+version: 0.1.0
+description: ROS2 message definitions for unique_identifier_msgs
+publish_to: none
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  ros2_msg_utils:
+    path: ../ros2_msg_utils

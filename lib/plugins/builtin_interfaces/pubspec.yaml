@@ -1,0 +1,10 @@
+name: builtin_interfaces
+version: 0.1.0
+description: ROS2 message definitions for builtin_interfaces
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+publish_to: none
+
+dependencies:
+  ros2_msg_utils:
+    path: ../ros2_msg_utils

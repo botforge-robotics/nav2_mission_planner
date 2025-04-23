@@ -1,0 +1,15 @@
+name: nav_msgs
+version: 0.1.0
+description: ROS2 message definitions for nav_msgs
+publish_to: none
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  ros2_msg_utils:
+    path: ../ros2_msg_utils
+  builtin_interfaces:
+    path: ../builtin_interfaces
+  geometry_msgs:
+    path: ../geometry_msgs
+  std_msgs:
+    path: ../std_msgs

@@ -1,0 +1,13 @@
+name: action_tutorials_interfaces
+version: 0.1.0
+description: ROS2 message definitions for action_tutorials_interfaces
+publish_to: none
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+dependencies:
+  ros2_msg_utils:
+    path: ../ros2_msg_utils
+  actionlib_msgs:
+    path: ../actionlib_msgs
+  std_msgs:
+    path: ../std_msgs

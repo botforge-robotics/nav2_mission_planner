@@ -1,0 +1,12 @@
+name: geometry_msgs
+version: 0.1.0
+description: ROS2 message definitions for geometry_msgs
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+
+publish_to: none
+dependencies:
+  ros2_msg_utils:
+    path: ../ros2_msg_utils
+  std_msgs:
+    path: ../std_msgs
