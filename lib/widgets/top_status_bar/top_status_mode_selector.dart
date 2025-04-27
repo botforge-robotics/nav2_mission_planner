@@ -112,11 +112,6 @@ class TopStatusModeSelector extends StatelessWidget {
     ).then((selectedMode) async {
       if (selectedMode != null) {
         onModeChanged(selectedMode);
-        if (selectedMode == AppModes.mapping) {
-          final launchManager =
-              Provider.of<LaunchManager>(context, listen: false);
-          await launchManager.startMapping(context);
-        }
       }
     });
   }

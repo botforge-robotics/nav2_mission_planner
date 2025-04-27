@@ -48,7 +48,10 @@ class TopStatusBar extends StatelessWidget {
                 displayStatusText: displayStatusText,
                 currentMode: currentMode,
                 onModeChanged: (newMode) async {
-                  if (currentMode == AppModes.mapping) {
+                  // ONLY handle stopping mapping, NEVER start mapping
+                  if (currentMode == AppModes.mapping &&
+                      newMode != AppModes.mapping) {
+                    // Confirm stopping active mapping when LEAVING mapping mode
                     final launchManager =
                         Provider.of<LaunchManager>(context, listen: false);
                     if (launchManager.activeLaunches.isNotEmpty) {
@@ -100,7 +103,8 @@ class TopStatusBar extends StatelessWidget {
                       }
                     }
                   }
-                  // Proceed with original mode change
+
+                  // Simply change the mode, nothing else
                   onModeChanged(newMode);
                 },
               ),

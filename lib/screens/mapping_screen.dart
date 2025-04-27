@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:nav2_mission_planner/providers/settings_provider.dart';
+import 'package:nav2_mission_planner/widgets/save_map_dialog.dart';
 import 'package:provider/provider.dart';
 import '../providers/connection_provider.dart';
 import '../services/launch_service.dart';
@@ -18,12 +20,14 @@ class _MappingScreenState extends State<MappingScreen> {
   double _previousScale = 1.0;
   Offset _offset = Offset.zero;
   Offset _previousOffset = Offset.zero;
+  bool _isMappingStarted = false;
+  bool _isMappingActive = false;
+
+  // Add this - don't even create the OccupancyGridViewer until we're ready
+  Widget? _mapWidget;
 
   @override
   Widget build(BuildContext context) {
-    final launchManager = Provider.of<LaunchManager>(context);
-    final isMappingActive = launchManager.activeLaunches.isNotEmpty;
-
     return Consumer<ConnectionProvider>(
       builder: (context, connection, _) {
         return Stack(
@@ -33,45 +37,9 @@ class _MappingScreenState extends State<MappingScreen> {
               child: Container(color: Colors.black),
             ),
 
-            // Occupancy Grid Map Display
-            if (isMappingActive)
-              Positioned.fill(
-                child: GestureDetector(
-                  onScaleStart: (details) {
-                    _previousScale = _scale;
-                    _previousOffset = _offset;
-                  },
-                  onScaleUpdate: (details) {
-                    setState(() {
-                      _scale = (_previousScale * details.scale).clamp(0.5, 5.0);
-
-                      // Calculate translation for single finger pan
-                      if (details.pointerCount == 1) {
-                        final delta =
-                            details.focalPoint - details.localFocalPoint;
-                        _offset = delta;
-                      }
-                    });
-                  },
-                  onScaleEnd: (_) {
-                    _previousScale = _scale;
-                  },
-                  child: Transform.translate(
-                    offset: _offset,
-                    child: OccupancyGridViewer(
-                      topic: '/map',
-                      enabled: true,
-                      scale: _scale,
-                      appModeColor: widget.modeColor,
-                      onScaleChanged: (newScale) {
-                        setState(() {
-                          _scale = newScale;
-                        });
-                      },
-                    ),
-                  ),
-                ),
-              )
+            // Occupancy Grid Map Display - only create it when started
+            if (_mapWidget != null)
+              Positioned.fill(child: _mapWidget!)
             else
               Container(
                 decoration: BoxDecoration(
@@ -111,12 +79,81 @@ class _MappingScreenState extends State<MappingScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      Text(
-                        'Start mapping to visualize the environment',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: widget.modeColor.withOpacity(0.8),
-                          fontStyle: FontStyle.italic,
+                      ElevatedButton(
+                        onPressed: () async {
+                          final launchManager = Provider.of<LaunchManager>(
+                              context,
+                              listen: false);
+                          final success =
+                              await launchManager.startMapping(context);
+                          if (success) {
+                            // Create map widget only when we're ready to start
+                            setState(() {
+                              _isMappingStarted = true;
+                              _isMappingActive = true;
+
+                              // Create the widget now that mapping is started
+                              _mapWidget = GestureDetector(
+                                onScaleStart: (details) {
+                                  _previousScale = _scale;
+                                  _previousOffset = _offset;
+                                },
+                                onScaleUpdate: (details) {
+                                  setState(() {
+                                    _scale = (_previousScale * details.scale)
+                                        .clamp(0.5, 5.0);
+                                    if (details.pointerCount == 1) {
+                                      final delta = details.focalPoint -
+                                          details.localFocalPoint;
+                                      _offset = delta;
+                                    }
+                                  });
+                                },
+                                onScaleEnd: (_) {
+                                  _previousScale = _scale;
+                                },
+                                child: Transform.translate(
+                                  offset: _offset,
+                                  child: OccupancyGridViewer(
+                                    topic: '/map',
+                                    enabled: true,
+                                    scale: _scale,
+                                    appModeColor: widget.modeColor,
+                                    onScaleChanged: (newScale) {
+                                      setState(() {
+                                        _scale = newScale;
+                                      });
+                                    },
+                                  ),
+                                ),
+                              );
+                            });
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: widget.modeColor.withOpacity(0.2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 40, vertical: 20),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(20),
+                            side: BorderSide(color: widget.modeColor, width: 2),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.play_arrow,
+                                color: widget.modeColor, size: 28),
+                            const SizedBox(width: 10),
+                            Text(
+                              'Start Mapping',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: widget.modeColor,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
@@ -124,8 +161,8 @@ class _MappingScreenState extends State<MappingScreen> {
                 ),
               ),
 
-            // Joystick Control (Same position as TeleopScreen)
-            if (isMappingActive)
+            // Joystick Control
+            if (_isMappingStarted && _isMappingActive)
               Positioned(
                 bottom: 60,
                 right: 40,
@@ -140,8 +177,8 @@ class _MappingScreenState extends State<MappingScreen> {
                 ),
               ),
 
-            // Status overlay for map information (when active)
-            if (isMappingActive)
+            // Status overlay
+            if (_isMappingStarted && _isMappingActive)
               Positioned(
                 top: 16,
                 left: 16,
@@ -181,9 +218,78 @@ class _MappingScreenState extends State<MappingScreen> {
                   ),
                 ),
               ),
+            if (_isMappingStarted && _isMappingActive)
+              // mapping_screen.dart
+              Positioned(
+                bottom: 20,
+                left: 20,
+                child: FloatingActionButton(
+                  backgroundColor: widget.modeColor,
+                  onPressed: () async {
+                    final result = await showDialog<Map<String, dynamic>>(
+                      context: context,
+                      builder: (context) => MapSaveDialog(
+                        screenSize: MediaQuery.of(context).size,
+                        modeColor: widget.modeColor,
+                      ),
+                    );
+
+                    if (result != null) {
+                      final String mapName = result['mapName'];
+                      final bool stopMapping = result['stopMapping'];
+
+                      final launchManager =
+                          Provider.of<LaunchManager>(context, listen: false);
+                      final success =
+                          await launchManager.saveMap(context, mapName);
+
+                      if (success) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Map saved as $mapName'),
+                            backgroundColor: Colors.green,
+                          ),
+                        );
+
+                        // Stop mapping if requested
+                        if (stopMapping) {
+                          for (final entry
+                              in launchManager.activeLaunches.entries) {
+                            try {
+                              await launchManager.stopLaunch(
+                                  context, entry.key);
+                            } catch (e) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text('Error stopping mapping: $e'),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+
+                          // Reset the UI state
+                          setState(() {
+                            _isMappingStarted = false;
+                            _isMappingActive = false;
+                            _mapWidget = null;
+                          });
+                        }
+                      }
+                    }
+                  },
+                  child: const Icon(Icons.save, color: Colors.white),
+                ),
+              ),
           ],
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    _mapWidget = null;
+    super.dispose();
   }
 }

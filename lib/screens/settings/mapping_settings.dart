@@ -108,6 +108,13 @@ class MappingSettings extends StatelessWidget {
                     fontStyle: FontStyle.italic,
                   ),
                 ),
+                Text(
+                  'Note: The "map_name" argument will be automatically added when saving',
+                  style: TextStyle(
+                    fontSize: screenSize.height * 0.016,
+                    color: Colors.orange.shade300,
+                  ),
+                ),
               ],
             ),
           ),

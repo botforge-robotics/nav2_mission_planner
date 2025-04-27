@@ -7,15 +7,15 @@ class DefaultSettings {
 
   // Min-Max values
   static const double minVelocity = 0.0;
-  static const double maxVelocity = 2.0;
+  static const double maxVelocity = 100.0;
 
   // Mapping Settings
 
-  static const String defaultMapsFolder = 'slam_toolbox/maps';
-  static const String defaultMappingLaunchFile = 'slam_toolbox/online_async';
+  static const String defaultMapsFolder = 'rio_mapping/maps';
+  static const String defaultMappingLaunchFile = 'rio_mapping/mapping';
 
   // Navigation Settings
-  static const String defaultNavigationLaunchFile = 'nav2_bringup/navigation';
+  static const String defaultNavigationLaunchFile = 'rio_navigation/navigation';
 
   // Camera Topics
   static const String defaultCameraTopic = '';
@@ -24,5 +24,5 @@ class DefaultSettings {
   static const String defaultOdomTopic = '/odom';
   static const String defaultScanTopic = '/scan';
 
-  static const defaultSaveMapLaunchFile = 'nav2_map_server/map_saver';
+  static const defaultSaveMapLaunchFile = 'rio_mapping/save_map';
 }

@@ -19,71 +19,57 @@ class NavigationSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(
-      builder: (context, settings, child) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              SettingHeader(
-                title: 'Navigation Settings',
-                icon: FontAwesomeIcons.locationArrow,
-                screenSize: screenSize,
-                modeColor: modeColor,
-              ),
-
-              SizedBox(height: screenSize.height * 0.02),
-
-              // Settings content in two columns
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Left column
-                  Expanded(
-                    flex: 1,
-                    child: SettingCard(
-                      title: 'Navigation Launch File',
-                      description: 'Set the launch file for navigation',
-                      modeColor: modeColor,
-                      screenSize: screenSize,
-                      content: LaunchFileInput(
-                        initialValue: settings.navigationLaunchFile,
-                        onChanged: settings.setNavigationLaunchFile,
-                        screenSize: screenSize,
-                        modeColor: modeColor,
-                        hintText: 'nav2_bringup/navigation',
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(width: screenSize.width * 0.02),
-
-                  // Right column
-                  Expanded(
-                    flex: 1,
-                    child: SettingCard(
-                      title: 'Launch Arguments',
-                      description:
-                          'Add command-line arguments for the navigation launch file',
-                      modeColor: modeColor,
-                      screenSize: screenSize,
-                      content: ArgumentsList(
-                        arguments: settings.navigationArgs,
-                        onRemove: settings.removeNavigationArg,
-                        onAdd: settings.addNavigationArg,
-                        onUpdate: settings.updateNavigationArg,
-                        screenSize: screenSize,
-                        modeColor: modeColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+    return Consumer<SettingsProvider>(builder: (context, settings, child) {
+      return SingleChildScrollView(
+        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+          // Header
+          SettingHeader(
+            title: 'Navigation Settings',
+            icon: FontAwesomeIcons.locationArrow,
+            screenSize: screenSize,
+            modeColor: modeColor,
           ),
-        );
-      },
-    );
+
+          SizedBox(height: screenSize.height * 0.02),
+
+          SettingCard(
+            title: 'Navigation Launch File',
+            description: 'Set the launch file for navigation',
+            modeColor: modeColor,
+            screenSize: screenSize,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LaunchFileInput(
+                  initialValue: settings.navigationLaunchFile,
+                  onChanged: settings.setNavigationLaunchFile,
+                  screenSize: screenSize,
+                  modeColor: modeColor,
+                  hintText: 'nav2_bringup/navigation',
+                ),
+                SizedBox(height: screenSize.height * 0.02),
+                ArgumentsList(
+                  arguments: settings.navigationArgs,
+                  onRemove: settings.removeNavigationArg,
+                  onAdd: settings.addNavigationArg,
+                  onUpdate: settings.updateNavigationArg,
+                  screenSize: screenSize,
+                  modeColor: modeColor,
+                ),
+                SizedBox(height: screenSize.height * 0.015),
+                Text(
+                  'Command will be: ros2 launch [input].launch.py [arguments]',
+                  style: TextStyle(
+                    fontSize: screenSize.height * 0.018,
+                    color: Colors.grey.shade400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ]),
+      );
+    });
   }
 }
