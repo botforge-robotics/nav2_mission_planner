@@ -36,7 +36,7 @@ geometry_msgs/PoseStamped[] poses''';
     return 4 +
         4 +
         4 +
-        poses.fold<int>(0, (sum, item) => sum + (item.getMessageSize() as int));
+        poses.fold<int>(0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override
@@ -79,7 +79,7 @@ class FollowWaypointsResult extends RosMessage<FollowWaypointsResult> {
   int getMessageSize() {
     return 4 +
         missed_waypoints.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int));
+            0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override

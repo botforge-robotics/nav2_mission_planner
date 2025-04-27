@@ -21,95 +21,107 @@ class ArgumentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        // Arguments list
-        Container(
-          constraints: BoxConstraints(
-            maxHeight: screenSize.height * 0.3,
-          ),
-          child: arguments.isEmpty
-              ? Center(
-                  child: Text(
-                    'No arguments added yet',
+    return Container(
+      width: double.infinity,
+      child: Wrap(
+        spacing: screenSize.width * 0.01, // horizontal spacing
+        runSpacing: screenSize.height * 0.01, // vertical spacing
+        alignment: WrapAlignment.start,
+        children: [
+          // Argument Pills
+          ...arguments.asMap().entries.map((entry) {
+            final index = entry.key;
+            final arg = entry.value;
+            return GestureDetector(
+              onTap: () => showEditArgumentDialog(
+                context: context,
+                screenSize: screenSize,
+                modeColor: modeColor,
+                name: arg['name'] ?? '',
+                value: arg['value'] ?? '',
+                onUpdate: (name, value) => onUpdate(index, name, value),
+              ),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenSize.width * 0.015,
+                  vertical: screenSize.height * 0.008,
+                ),
+                decoration: BoxDecoration(
+                  color: modeColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(20),
+                  border: Border.all(
+                    color: modeColor.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      '${arg['name']} = ${arg['value']}',
+                      style: TextStyle(
+                        fontSize: screenSize.height * 0.02,
+                        color: Colors.white,
+                      ),
+                    ),
+                    SizedBox(width: screenSize.width * 0.01),
+                    InkWell(
+                      onTap: () => onRemove(index),
+                      child: Icon(
+                        Icons.close,
+                        size: screenSize.height * 0.022,
+                        color: modeColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }).toList(),
+
+          // Add Argument Pill
+          GestureDetector(
+            onTap: () => showAddArgumentDialog(
+              context: context,
+              screenSize: screenSize,
+              modeColor: modeColor,
+              onAdd: onAdd,
+            ),
+            child: Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: screenSize.width * 0.015,
+                vertical: screenSize.height * 0.008,
+              ),
+              decoration: BoxDecoration(
+                color: modeColor.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(20),
+                border: Border.all(
+                  color: modeColor.withOpacity(0.3),
+                  width: 1,
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.add,
+                    size: screenSize.height * 0.022,
+                    color: modeColor,
+                  ),
+                  SizedBox(width: screenSize.width * 0.005),
+                  Text(
+                    'Add Argument',
                     style: TextStyle(
                       fontSize: screenSize.height * 0.02,
-                      color: Colors.grey,
-                      fontStyle: FontStyle.italic,
+                      color: modeColor,
                     ),
                   ),
-                )
-              : ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: arguments.length,
-                  itemBuilder: (context, index) {
-                    final arg = arguments[index];
-                    return Card(
-                      color: modeColor.withOpacity(0.1),
-                      margin: EdgeInsets.only(bottom: 8),
-                      child: ListTile(
-                        title: Text(
-                          '${arg['name']} = ${arg['value']}',
-                          style: TextStyle(
-                            fontSize: screenSize.height * 0.022,
-                          ),
-                        ),
-                        trailing: IconButton(
-                          iconSize: screenSize.height * 0.05,
-                          icon: Icon(Icons.delete, color: modeColor),
-                          onPressed: () => onRemove(index),
-                          style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                modeColor.withOpacity(0.2)),
-                            foregroundColor:
-                                MaterialStateProperty.all(modeColor),
-                          ),
-                        ),
-                        onTap: () => showEditArgumentDialog(
-                          context: context,
-                          screenSize: screenSize,
-                          modeColor: modeColor,
-                          name: arg['name'] ?? '',
-                          value: arg['value'] ?? '',
-                          onUpdate: (name, value) =>
-                              onUpdate(index, name, value),
-                        ),
-                      ),
-                    );
-                  },
-                ),
-        ),
-
-        SizedBox(height: screenSize.height * 0.02),
-
-        // Add argument button
-        ElevatedButton.icon(
-          onPressed: () => showAddArgumentDialog(
-            context: context,
-            screenSize: screenSize,
-            modeColor: modeColor,
-            onAdd: onAdd,
-          ),
-          icon: Icon(Icons.add, color: modeColor),
-          label: Text(
-            'Add Argument',
-            style: TextStyle(
-              color: modeColor,
-              fontSize: screenSize.height * 0.023,
+                ],
+              ),
             ),
           ),
-          style: ElevatedButton.styleFrom(
-            backgroundColor: modeColor.withOpacity(0.2),
-            shadowColor: modeColor.withOpacity(0.2),
-            foregroundColor: modeColor,
-            elevation: 0,
-            padding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.02,
-              vertical: screenSize.height * 0.015,
-            ),
-          ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

@@ -42,10 +42,33 @@ uint8[] data''';
 
   @override
   CompressedImage fromJson(Map<String, dynamic> jsonMap) {
+    var data = jsonMap['data'];
+    List<int> byteData;
+
+    // Handle case where data is a String (base64 encoded)
+    if (data is String) {
+      try {
+        byteData = base64Decode(data);
+      } catch (e) {
+        print('Error decoding base64 data: $e');
+        byteData = [];
+      }
+    }
+    // Handle case where data is already a List
+    else if (data is List) {
+      byteData = (data).cast<int>();
+    }
+    // Handle any other unexpected type
+    else {
+      print('Unexpected data type: ${data.runtimeType}');
+      byteData = [];
+    }
+
     return CompressedImage(
-        header: std_msgs.Header()
-            .fromJson(jsonMap['header'] as Map<String, dynamic>),
-        format: jsonMap['format'] as String,
-        data: (jsonMap['data'] as List).cast<int>());
+      header:
+          std_msgs.Header().fromJson(jsonMap['header'] as Map<String, dynamic>),
+      format: jsonMap['format'] as String,
+      data: byteData,
+    );
   }
 }

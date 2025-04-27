@@ -26,7 +26,7 @@ geographic_msgs/GeoPoint goal''';
 
   @override
   int getMessageSize() {
-    return (start.getMessageSize() as int) + (goal.getMessageSize() as int);
+    return (start.getMessageSize()) + (goal.getMessageSize());
   }
 
   @override

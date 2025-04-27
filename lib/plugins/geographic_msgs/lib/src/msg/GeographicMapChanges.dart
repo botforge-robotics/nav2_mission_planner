@@ -33,11 +33,10 @@ unique_identifier_msgs/UUID[] deletes''';
 
   @override
   int getMessageSize() {
-    return (header.getMessageSize() as int) +
-        (diffs.getMessageSize() as int) +
+    return (header.getMessageSize()) +
+        (diffs.getMessageSize()) +
         4 +
-        deletes.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int));
+        deletes.fold<int>(0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override

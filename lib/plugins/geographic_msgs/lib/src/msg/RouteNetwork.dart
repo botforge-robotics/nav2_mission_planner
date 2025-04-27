@@ -48,17 +48,15 @@ KeyValue[] props''';
 
   @override
   int getMessageSize() {
-    return (header.getMessageSize() as int) +
-        (id.getMessageSize() as int) +
-        (bounds.getMessageSize() as int) +
+    return (header.getMessageSize()) +
+        (id.getMessageSize()) +
+        (bounds.getMessageSize()) +
         4 +
-        points.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int)) +
+        points.fold<int>(0, (sum, item) => sum + (item.getMessageSize())) +
         4 +
-        segments.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int)) +
+        segments.fold<int>(0, (sum, item) => sum + (item.getMessageSize())) +
         4 +
-        props.fold<int>(0, (sum, item) => sum + (item.getMessageSize() as int));
+        props.fold<int>(0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override

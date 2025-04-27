@@ -27,8 +27,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
     return Scaffold(
       body: Row(
         children: [
-          // Add padding for side toolbar
-          SizedBox(width: AppTheme.toolbarWidth + 20),
           // Left sidebar with categories
           SizedBox(
             width: sidebarWidth,
@@ -70,7 +68,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: screenSize.width * 0.02,
-                vertical: screenSize.height * 0.025,
+                vertical: 0,
               ),
               child: SettingsContent(
                 category: _selectedCategory,

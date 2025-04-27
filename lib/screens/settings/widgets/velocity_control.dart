@@ -21,6 +21,7 @@ class VelocityControl extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
       children: [
         ElevatedButton(
           onPressed: onDecrement,
@@ -36,26 +37,36 @@ class VelocityControl extends StatelessWidget {
           child: Icon(
             Icons.remove,
             color: modeColor,
-            size: screenSize.height * 0.05,
+            size: screenSize.height * 0.04,
           ),
         ),
         SizedBox(width: screenSize.width * 0.01),
-        Expanded(
+        SizedBox(
+          width: screenSize.width * 0.1,
           child: TextFormField(
             textAlign: TextAlign.center,
             controller: TextEditingController(
               text: value.toStringAsFixed(2),
             ),
-            style: TextStyle(fontSize: screenSize.height * 0.025),
+            style: TextStyle(
+              fontSize: screenSize.height * 0.025,
+              fontWeight: FontWeight.bold,
+            ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
             decoration: InputDecoration(
+              filled: true,
+              fillColor: Colors.grey.shade800,
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(color: Colors.transparent),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: modeColor),
+                borderSide: BorderSide(color: Colors.transparent),
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(color: modeColor, width: 2),
+                borderSide: BorderSide(color: modeColor),
               ),
               contentPadding: EdgeInsets.symmetric(
                 vertical: screenSize.height * 0.015,
@@ -79,8 +90,11 @@ class VelocityControl extends StatelessWidget {
             tapTargetSize: MaterialTapTargetSize.shrinkWrap,
             elevation: 0,
           ),
-          child:
-              Icon(Icons.add, color: modeColor, size: screenSize.height * 0.05),
+          child: Icon(
+            Icons.add,
+            color: modeColor,
+            size: screenSize.height * 0.04,
+          ),
         ),
       ],
     );

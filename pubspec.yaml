@@ -1,6 +1,6 @@
 name: nav2_mission_planner
 description: "A new Flutter project."
-publish_to: 'none'
+publish_to: "none"
 version: 0.1.0
 
 environment:
@@ -14,8 +14,19 @@ dependencies:
   ros2_api:
     path: ./lib/plugins/ros2_api
   shared_preferences: ^2.5.3
+  geometry_msgs:
+    path: ./lib/plugins/geometry_msgs
+  sensor_msgs:
+    path: ./lib/plugins/sensor_msgs
+  nav2_mission_planner_interfaces:
+    path: ./lib/plugins/nav2_mission_planner_interfaces
   wifi_info_plugin_plus:
     path: ./lib/plugins/wifi_info_plugin_plus-2.0.2
+  flutter_mjpeg: ^2.0.4
+  ros2_msg_utils:
+    path: ./lib/plugins/ros2_msg_utils
+  nav_msgs:
+    path: ./lib/plugins/nav_msgs
 
 dev_dependencies:
   flutter_test:

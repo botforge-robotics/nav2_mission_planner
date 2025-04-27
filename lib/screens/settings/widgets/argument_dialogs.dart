@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../../../theme/app_theme.dart';
-import '../../../providers/settings_provider.dart';
 
 /// Shows a dialog to add a new launch argument
 void showAddArgumentDialog({

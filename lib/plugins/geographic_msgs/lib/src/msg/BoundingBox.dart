@@ -25,7 +25,7 @@ GeoPoint max_pt''';
 
   @override
   int getMessageSize() {
-    return (min_pt.getMessageSize() as int) + (max_pt.getMessageSize() as int);
+    return (min_pt.getMessageSize()) + (max_pt.getMessageSize());
   }
 
   @override

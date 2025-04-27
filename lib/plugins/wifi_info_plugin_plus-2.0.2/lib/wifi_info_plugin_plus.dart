@@ -42,21 +42,19 @@ class WifiInfoWrapper {
   WifiInfoWrapper();
 
   WifiInfoWrapper.withMap(Map<dynamic, dynamic> nativeInfo) {
-    if (nativeInfo != null) {
-      this._bssid = nativeInfo["BSSID"];
-      this._ssid = nativeInfo["SSID"];
-      this._ip = nativeInfo["IP"];
-      this._macAddress = nativeInfo["MACADDRESS"];
-      this._linkSpeed = nativeInfo["LINKSPEED"];
-      this._singalStrength = nativeInfo["SIGNALSTRENGTH"];
-      this._frequency = nativeInfo["FREQUENCY"];
-      this._networkid = nativeInfo["NETWORKID"];
-      this._connectionType = nativeInfo["CONNECTIONTYPE"];
-      this._isHiddenSSID = nativeInfo["ISHIDDEDSSID"];
-      this._routerIp = nativeInfo["ROUTERIP"];
-      this._dns1Ip = nativeInfo["DNS1"];
-      this._dns2Ip = nativeInfo["DNS2"];
-    }
+    this._bssid = nativeInfo["BSSID"];
+    this._ssid = nativeInfo["SSID"];
+    this._ip = nativeInfo["IP"];
+    this._macAddress = nativeInfo["MACADDRESS"];
+    this._linkSpeed = nativeInfo["LINKSPEED"];
+    this._singalStrength = nativeInfo["SIGNALSTRENGTH"];
+    this._frequency = nativeInfo["FREQUENCY"];
+    this._networkid = nativeInfo["NETWORKID"];
+    this._connectionType = nativeInfo["CONNECTIONTYPE"];
+    this._isHiddenSSID = nativeInfo["ISHIDDEDSSID"];
+    this._routerIp = nativeInfo["ROUTERIP"];
+    this._dns1Ip = nativeInfo["DNS1"];
+    this._dns2Ip = nativeInfo["DNS2"];
   }
 
   /// IPV4 address for connected device

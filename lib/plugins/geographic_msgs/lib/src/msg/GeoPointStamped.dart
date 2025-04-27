@@ -26,8 +26,7 @@ geographic_msgs/GeoPoint position''';
 
   @override
   int getMessageSize() {
-    return (header.getMessageSize() as int) +
-        (position.getMessageSize() as int);
+    return (header.getMessageSize()) + (position.getMessageSize());
   }
 
   @override

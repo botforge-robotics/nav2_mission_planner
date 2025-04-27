@@ -23,7 +23,7 @@ class DummyBehaviorGoal extends RosMessage<DummyBehaviorGoal> {
 
   @override
   int getMessageSize() {
-    return (command.getMessageSize() as int);
+    return command.getMessageSize();
   }
 
   @override
@@ -62,7 +62,7 @@ uint16 error_code''';
 
   @override
   int getMessageSize() {
-    return (total_elapsed_time.getMessageSize() as int) + 2;
+    return (total_elapsed_time.getMessageSize()) + 2;
   }
 
   @override

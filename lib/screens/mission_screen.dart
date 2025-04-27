@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
 class MissionScreen extends StatelessWidget {
-  const MissionScreen({super.key});
+  final Color modeColor;
+  const MissionScreen({super.key, required this.modeColor});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Mission Mode'),
+    return Center(
+      child: Text(
+        'Mission Mode',
+        style: TextStyle(color: modeColor),
+      ),
     );
   }
 }

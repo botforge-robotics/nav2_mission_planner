@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../../providers/settings_provider.dart';
 import 'widgets/setting_card.dart';
 import 'widgets/setting_header.dart';
-import '../../theme/app_theme.dart';
 import 'widgets/maps_path_input.dart';
 import 'widgets/launch_file_input.dart';
 import 'widgets/arguments_list.dart';
@@ -21,90 +20,113 @@ class MappingSettings extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(
-      builder: (context, settings, child) {
-        return SingleChildScrollView(
+    return Consumer<SettingsProvider>(builder: (context, settings, child) {
+      return SingleChildScrollView(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Header
-              SettingHeader(
-                title: 'Mapping Settings',
-                icon: FontAwesomeIcons.map,
-                screenSize: screenSize,
-                modeColor: modeColor,
-              ),
-
-              SizedBox(height: screenSize.height * 0.02),
-
-              // Settings content in two columns
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Left column
-                  Expanded(
-                    flex: 1,
-                    child: Column(
-                      children: [
-                        // Maps Path Setting
-                        SettingCard(
-                          title: 'Maps Storage Path',
-                          description: 'Set the path where maps will be saved',
-                          modeColor: modeColor,
-                          screenSize: screenSize,
-                          content: MapsPathInput(
-                            initialValue: settings.mapsPath,
-                            onChanged: settings.setMapsPath,
-                            screenSize: screenSize,
-                            modeColor: modeColor,
-                          ),
-                        ),
-                        SizedBox(height: screenSize.height * 0.02),
-                        // Launch File Setting
-                        SettingCard(
-                          title: 'Mapping Launch File',
-                          description: 'Set the launch file for mapping',
-                          modeColor: modeColor,
-                          screenSize: screenSize,
-                          content: LaunchFileInput(
-                            initialValue: settings.mappingLaunchFile,
-                            onChanged: settings.setMappingLaunchFile,
-                            screenSize: screenSize,
-                            modeColor: modeColor,
-                            hintText: 'cartographer_ros/cartographer',
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  SizedBox(width: screenSize.width * 0.02),
-
-                  // Right column
-                  Expanded(
-                    flex: 1,
-                    child: SettingCard(
-                      title: 'Launch Arguments',
-                      description:
-                          'Add command-line arguments for the mapping launch file',
-                      modeColor: modeColor,
-                      screenSize: screenSize,
-                      content: ArgumentsList(
-                        arguments: settings.mappingArgs,
-                        onRemove: settings.removeMappingArg,
-                        onAdd: settings.addMappingArg,
-                        onUpdate: settings.updateMappingArg,
-                        screenSize: screenSize,
-                        modeColor: modeColor,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Header
+          SettingHeader(
+            title: 'Mapping Settings',
+            icon: FontAwesomeIcons.map,
+            screenSize: screenSize,
+            modeColor: modeColor,
           ),
-        );
-      },
-    );
+
+          SizedBox(height: screenSize.height * 0.02),
+          // Launch File Setting
+          SettingCard(
+            title: 'Start Mapping Launch File',
+            description: 'Set Launch File and Arguments for starting mapping.',
+            modeColor: modeColor,
+            screenSize: screenSize,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LaunchFileInput(
+                  initialValue: settings.mappingLaunchFile,
+                  onChanged: settings.setMappingLaunchFile,
+                  screenSize: screenSize,
+                  modeColor: modeColor,
+                  hintText: 'cartographer_ros/cartographer',
+                ),
+                SizedBox(height: screenSize.height * 0.015),
+                // Arguments List (right side)
+                ArgumentsList(
+                  arguments: settings.mappingArgs,
+                  onRemove: settings.removeMappingArg,
+                  onAdd: settings.addMappingArg,
+                  onUpdate: settings.updateMappingArg,
+                  screenSize: screenSize,
+                  modeColor: modeColor,
+                ),
+
+                SizedBox(height: screenSize.height * 0.015),
+                Text(
+                  'Command will be: ros2 launch [input].launch.py [arguments]',
+                  style: TextStyle(
+                    fontSize: screenSize.height * 0.018,
+                    color: Colors.grey.shade400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SettingCard(
+            title: 'Save Map Launch File',
+            description: 'Set Launch File and Arguments for saving map',
+            modeColor: modeColor,
+            screenSize: screenSize,
+            content: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                LaunchFileInput(
+                  initialValue: settings.saveMapLaunchFile,
+                  onChanged: settings.setSaveMapLaunchFile,
+                  screenSize: screenSize,
+                  modeColor: modeColor,
+                  hintText: 'nav2_map_server/map_saver',
+                ),
+                SizedBox(height: screenSize.height * 0.015),
+                // Arguments List (right side)
+                ArgumentsList(
+                  arguments: settings.saveMapArgs,
+                  onRemove: settings.removeSaveMapArg,
+                  onAdd: settings.addSaveMapArg,
+                  onUpdate: settings.updateSaveMapArg,
+                  screenSize: screenSize,
+                  modeColor: modeColor,
+                ),
+
+                SizedBox(height: screenSize.height * 0.015),
+                Text(
+                  'Command will be: ros2 launch [input].launch.py [arguments]',
+                  style: TextStyle(
+                    fontSize: screenSize.height * 0.018,
+                    color: Colors.grey.shade400,
+                    fontStyle: FontStyle.italic,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          // Maps Path Setting
+          SettingCard(
+            title: 'Maps Storage Path',
+            description: 'Set the path where maps will be saved',
+            modeColor: modeColor,
+            screenSize: screenSize,
+            content: MapsPathInput(
+              initialValue: settings.mapsPath,
+              onChanged: settings.setMapsPath,
+              screenSize: screenSize,
+              modeColor: modeColor,
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.1),
+        ],
+      ));
+    });
   }
 }

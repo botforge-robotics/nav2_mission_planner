@@ -27,7 +27,7 @@ string behavior_tree''';
 
   @override
   int getMessageSize() {
-    return (pose.getMessageSize() as int) + 4 + behavior_tree.length;
+    return (pose.getMessageSize()) + 4 + behavior_tree.length;
   }
 
   @override
@@ -110,9 +110,9 @@ float32 distance_remaining''';
 
   @override
   int getMessageSize() {
-    return (current_pose.getMessageSize() as int) +
-        (navigation_time.getMessageSize() as int) +
-        (estimated_time_remaining.getMessageSize() as int) +
+    return (current_pose.getMessageSize()) +
+        (navigation_time.getMessageSize()) +
+        (estimated_time_remaining.getMessageSize()) +
         2 +
         4;
   }

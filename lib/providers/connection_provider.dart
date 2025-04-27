@@ -23,6 +23,7 @@ class ConnectionProvider extends ChangeNotifier {
   String get signalStrength => _wifiInfo?.signalStrength != null
       ? '${_wifiInfo!.signalStrength}dBm'
       : '--dBm';
+  Ros2? get ros2Client => _ros2Client;
 
   ConnectionProvider() {
     _loadRecentConnections();

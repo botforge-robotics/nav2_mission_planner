@@ -33,10 +33,10 @@ KeyValue[] props''';
 
   @override
   int getMessageSize() {
-    return (id.getMessageSize() as int) +
-        (position.getMessageSize() as int) +
+    return (id.getMessageSize()) +
+        (position.getMessageSize()) +
         4 +
-        props.fold<int>(0, (sum, item) => sum + (item.getMessageSize() as int));
+        props.fold<int>(0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override

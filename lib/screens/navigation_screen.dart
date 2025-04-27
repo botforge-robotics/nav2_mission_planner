@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 
 class NavigationScreen extends StatelessWidget {
-  const NavigationScreen({super.key});
+  final Color modeColor;
+  const NavigationScreen({super.key, required this.modeColor});
 
   @override
   Widget build(BuildContext context) {
-    return const Center(
-      child: Text('Navigation Mode'),
+    return Center(
+      child: Text(
+        'Navigation Mode',
+        style: TextStyle(color: modeColor),
+      ),
     );
   }
 }

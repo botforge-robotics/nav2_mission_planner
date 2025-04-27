@@ -5,6 +5,7 @@ import 'screens/screens.dart';
 import 'providers/settings_provider.dart';
 import 'theme/app_theme.dart';
 import 'providers/connection_provider.dart';
+import 'services/launch_service.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ class Nav2MissionPlanner extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (_) => SettingsProvider()),
         ChangeNotifierProvider(create: (_) => ConnectionProvider()),
+        ChangeNotifierProvider(create: (_) => LaunchManager()),
       ],
       child: MaterialApp(
         title: 'Nav2 Mission Planner',

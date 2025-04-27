@@ -33,12 +33,10 @@ class MapsPathInput extends StatelessWidget {
           decoration: InputDecoration(
             hintText: 'slam_toolbox/maps',
             hintStyle: TextStyle(color: Colors.grey.shade700),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+            border: UnderlineInputBorder(
               borderSide: BorderSide(color: modeColor),
             ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
+            focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: modeColor, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(

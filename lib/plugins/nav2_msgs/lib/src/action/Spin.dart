@@ -26,7 +26,7 @@ builtin_interfaces/Duration time_allowance''';
 
   @override
   int getMessageSize() {
-    return 4 + (time_allowance.getMessageSize() as int);
+    return 4 + (time_allowance.getMessageSize());
   }
 
   @override
@@ -66,7 +66,7 @@ uint16 error_code''';
 
   @override
   int getMessageSize() {
-    return (total_elapsed_time.getMessageSize() as int) + 2;
+    return (total_elapsed_time.getMessageSize()) + 2;
   }
 
   @override

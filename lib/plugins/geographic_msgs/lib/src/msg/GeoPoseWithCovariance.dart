@@ -25,7 +25,7 @@ float64[36] covariance''';
 
   @override
   int getMessageSize() {
-    return (pose.getMessageSize() as int) + 36 * 8;
+    return (pose.getMessageSize()) + 36 * 8;
   }
 
   @override

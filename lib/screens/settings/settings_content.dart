@@ -9,6 +9,7 @@ import 'teleop_settings.dart';
 import 'mapping_settings.dart';
 import 'navigation_settings.dart';
 import 'widgets/camera_topic_input.dart';
+import 'general_settings.dart';
 
 class SettingsContent extends StatelessWidget {
   final String category;
@@ -40,6 +41,17 @@ class SettingsContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 12),
+        Expanded(
+          child: _getSettingsContent(),
+        ),
+      ],
+    );
+  }
+
+  Widget _getSettingsContent() {
     if (category == 'Teleop') {
       return TeleopSettings(
         screenSize: screenSize,
@@ -66,54 +78,6 @@ class SettingsContent extends StatelessWidget {
         '$category Settings Coming Soon',
         style: TextStyle(fontSize: screenSize.height * 0.04),
       ),
-    );
-  }
-}
-
-class GeneralSettings extends StatelessWidget {
-  final Size screenSize;
-  final Color modeColor;
-
-  const GeneralSettings({
-    super.key,
-    required this.screenSize,
-    required this.modeColor,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<SettingsProvider>(
-      builder: (context, settings, child) {
-        return SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              SettingHeader(
-                title: 'General Settings',
-                icon: FontAwesomeIcons.gear,
-                screenSize: screenSize,
-                modeColor: modeColor,
-              ),
-              SizedBox(height: screenSize.height * 0.02),
-              SettingCard(
-                title: 'Camera Image Topic',
-                description: 'Set topic for compressed image stream\n'
-                    'Message type: sensor_msgs/CompressedImage',
-                modeColor: modeColor,
-                screenSize: screenSize,
-                content: CameraTopicInput(
-                  initialValue: settings.cameraImageTopic,
-                  onChanged: settings.setCameraImageTopic,
-                  screenSize: screenSize,
-                  modeColor: modeColor,
-                  enabled: settings.cameraEnabled,
-                  onEnabledChanged: settings.setCameraEnabled,
-                ),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

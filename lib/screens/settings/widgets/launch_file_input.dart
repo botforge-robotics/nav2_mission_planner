@@ -19,51 +19,34 @@ class LaunchFileInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Format: \${package_name}/\${launchfile_name}',
           style: TextStyle(
             fontSize: screenSize.height * 0.024,
-            color: Colors.grey.shade400,
+            color: Colors.grey.shade600,
           ),
         ),
-        SizedBox(height: screenSize.height * 0.02),
-        Row(
-          children: [
-            Expanded(
-              child: TextFormField(
-                initialValue: initialValue,
-                style: TextStyle(fontSize: screenSize.height * 0.025),
-                decoration: InputDecoration(
-                  hintText: hintText,
-                  hintStyle: TextStyle(color: Colors.grey.shade700),
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: modeColor),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: modeColor, width: 2),
-                  ),
-                  contentPadding: EdgeInsets.symmetric(
-                    horizontal: screenSize.width * 0.015,
-                    vertical: screenSize.height * 0.015,
-                  ),
-                ),
-                onChanged: onChanged,
-              ),
+        TextFormField(
+          initialValue: initialValue,
+          style: TextStyle(fontSize: screenSize.height * 0.025),
+          decoration: InputDecoration(
+            hintText: hintText,
+            hintStyle: TextStyle(color: Colors.grey.shade700),
+            border: UnderlineInputBorder(
+              borderSide: BorderSide(color: modeColor),
             ),
-          ],
-        ),
-        SizedBox(height: screenSize.height * 0.01),
-        Text(
-          'Command will be: ros2 launch [input].launch.py',
-          style: TextStyle(
-            fontSize: screenSize.height * 0.018,
-            color: Colors.grey.shade400,
-            fontStyle: FontStyle.italic,
+            focusedBorder: UnderlineInputBorder(
+              borderSide: BorderSide(color: modeColor, width: 2),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: screenSize.height * 0.015,
+            ),
+            isDense: true,
           ),
+          onChanged: onChanged,
         ),
       ],
     );

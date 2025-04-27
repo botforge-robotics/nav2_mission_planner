@@ -40,9 +40,8 @@ bool use_start''';
   @override
   int getMessageSize() {
     return 4 +
-        goals.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int)) +
-        (start.getMessageSize() as int) +
+        goals.fold<int>(0, (sum, item) => sum + (item.getMessageSize())) +
+        (start.getMessageSize()) +
         4 +
         planner_id.length +
         1;
@@ -100,9 +99,7 @@ uint16 error_code''';
 
   @override
   int getMessageSize() {
-    return (path.getMessageSize() as int) +
-        (planning_time.getMessageSize() as int) +
-        2;
+    return (path.getMessageSize()) + (planning_time.getMessageSize()) + 2;
   }
 
   @override

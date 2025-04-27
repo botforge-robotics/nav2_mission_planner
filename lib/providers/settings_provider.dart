@@ -14,6 +14,10 @@ class SettingsProvider extends ChangeNotifier {
   String _mappingLaunchFile = DefaultSettings.defaultMappingLaunchFile;
   List<Map<String, String>> _mappingArgs = [];
 
+  // Add new save map settings
+  String _saveMapLaunchFile = DefaultSettings.defaultSaveMapLaunchFile;
+  List<Map<String, String>> _saveMapArgs = [];
+
   // Navigation Settings
   String _navigationLaunchFile = DefaultSettings.defaultNavigationLaunchFile;
   List<Map<String, String>> _navigationArgs = [];
@@ -23,6 +27,10 @@ class SettingsProvider extends ChangeNotifier {
 
   // Add new property
   bool _cameraEnabled = false;
+
+  // Add new properties
+  String _odomTopic = DefaultSettings.defaultOdomTopic;
+  String _scanTopic = DefaultSettings.defaultScanTopic;
 
   // Getters
   String get cmdVelTopic => _cmdVelTopic;
@@ -35,6 +43,10 @@ class SettingsProvider extends ChangeNotifier {
   List<Map<String, String>> get navigationArgs => _navigationArgs;
   String get cameraImageTopic => _cameraImageTopic;
   bool get cameraEnabled => _cameraEnabled;
+  String get odomTopic => _odomTopic;
+  String get scanTopic => _scanTopic;
+  String get saveMapLaunchFile => _saveMapLaunchFile;
+  List<Map<String, String>> get saveMapArgs => _saveMapArgs;
 
   SettingsProvider() {
     _loadSettings();
@@ -72,11 +84,28 @@ class SettingsProvider extends ChangeNotifier {
     }
 
     // Add camera topic loading
-    _cameraImageTopic =
-        prefs.getString('cameraImageTopic') ?? '/camera/image/compressed';
+    _cameraImageTopic = prefs.getString('cameraImageTopic') ??
+        DefaultSettings.defaultCameraTopic;
 
     // Update _cameraEnabled
     _cameraEnabled = prefs.getBool('cameraEnabled') ?? false;
+
+    // Load new topics
+    _odomTopic =
+        prefs.getString('odomTopic') ?? DefaultSettings.defaultOdomTopic;
+    _scanTopic =
+        prefs.getString('scanTopic') ?? DefaultSettings.defaultScanTopic;
+
+    // Load save map settings
+    _saveMapLaunchFile = prefs.getString('saveMapLaunchFile') ??
+        DefaultSettings.defaultSaveMapLaunchFile;
+
+    final String? saveMapArgsJson = prefs.getString('saveMapArgs');
+    if (saveMapArgsJson != null) {
+      List<dynamic> argsList = json.decode(saveMapArgsJson);
+      _saveMapArgs = List<Map<String, String>>.from(
+          argsList.map((item) => Map<String, String>.from(item)));
+    }
 
     notifyListeners();
   }
@@ -94,6 +123,10 @@ class SettingsProvider extends ChangeNotifier {
     await prefs.setString('navigationArgs', json.encode(_navigationArgs));
     await prefs.setString('cameraImageTopic', _cameraImageTopic);
     await prefs.setBool('cameraEnabled', _cameraEnabled);
+    await prefs.setString('odomTopic', _odomTopic);
+    await prefs.setString('scanTopic', _scanTopic);
+    await prefs.setString('saveMapLaunchFile', _saveMapLaunchFile);
+    await prefs.setString('saveMapArgs', json.encode(_saveMapArgs));
   }
 
   // Setters with validation
@@ -205,7 +238,7 @@ class SettingsProvider extends ChangeNotifier {
   // General Setters
   void setCameraImageTopic(String topic) {
     _cameraImageTopic = topic;
-    _saveSettings(); // Add this line to persist
+    _saveSettings();
     notifyListeners();
   }
 
@@ -214,5 +247,47 @@ class SettingsProvider extends ChangeNotifier {
     _cameraEnabled = enabled;
     _saveSettings();
     notifyListeners();
+  }
+
+  // Add new setters
+  void setOdomTopic(String topic) {
+    _odomTopic = topic;
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void setScanTopic(String topic) {
+    _scanTopic = topic;
+    _saveSettings();
+    notifyListeners();
+  }
+
+  // Save Map Configuration Setters
+  void setSaveMapLaunchFile(String file) {
+    _saveMapLaunchFile = file;
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void addSaveMapArg(String name, String value) {
+    _saveMapArgs.add({'name': name, 'value': value});
+    _saveSettings();
+    notifyListeners();
+  }
+
+  void removeSaveMapArg(int index) {
+    if (index >= 0 && index < _saveMapArgs.length) {
+      _saveMapArgs.removeAt(index);
+      _saveSettings();
+      notifyListeners();
+    }
+  }
+
+  void updateSaveMapArg(int index, String name, String value) {
+    if (index >= 0 && index < _saveMapArgs.length) {
+      _saveMapArgs[index] = {'name': name, 'value': value};
+      _saveSettings();
+      notifyListeners();
+    }
   }
 }

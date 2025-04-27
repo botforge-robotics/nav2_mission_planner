@@ -36,8 +36,7 @@ geographic_msgs/GeoPose[] gps_poses''';
     return 4 +
         4 +
         4 +
-        gps_poses.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int));
+        gps_poses.fold<int>(0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override
@@ -80,7 +79,7 @@ class FollowGPSWaypointsResult extends RosMessage<FollowGPSWaypointsResult> {
   int getMessageSize() {
     return 4 +
         missed_waypoints.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int));
+            0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override

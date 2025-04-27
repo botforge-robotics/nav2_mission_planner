@@ -26,8 +26,7 @@ geometry_msgs/Quaternion orientation''';
 
   @override
   int getMessageSize() {
-    return (position.getMessageSize() as int) +
-        (orientation.getMessageSize() as int);
+    return (position.getMessageSize()) + (orientation.getMessageSize());
   }
 
   @override

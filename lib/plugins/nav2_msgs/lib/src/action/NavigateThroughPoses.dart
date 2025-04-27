@@ -29,8 +29,7 @@ string behavior_tree''';
   @override
   int getMessageSize() {
     return 4 +
-        poses.fold<int>(
-            0, (sum, item) => sum + (item.getMessageSize() as int)) +
+        poses.fold<int>(0, (sum, item) => sum + (item.getMessageSize())) +
         4 +
         behavior_tree.length;
   }
@@ -127,9 +126,9 @@ int16 number_of_poses_remaining''';
 
   @override
   int getMessageSize() {
-    return (current_pose.getMessageSize() as int) +
-        (navigation_time.getMessageSize() as int) +
-        (estimated_time_remaining.getMessageSize() as int) +
+    return (current_pose.getMessageSize()) +
+        (navigation_time.getMessageSize()) +
+        (estimated_time_remaining.getMessageSize()) +
         2 +
         4 +
         2;

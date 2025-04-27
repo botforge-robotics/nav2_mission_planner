@@ -20,12 +20,14 @@ class SettingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: EdgeInsets.all(screenSize.width * 0.02),
+      margin: EdgeInsets.only(bottom: screenSize.height * 0.01),
       decoration: BoxDecoration(
         color: Colors.grey.shade900,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: modeColor.withOpacity(0.3), width: 2),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
@@ -36,7 +38,6 @@ class SettingCard extends StatelessWidget {
               color: modeColor,
             ),
           ),
-          SizedBox(height: screenSize.height * 0.01),
           Text(
             description,
             style: TextStyle(

@@ -27,9 +27,9 @@ geographic_msgs/GeoPoseStamped[] poses''';
 
   @override
   int getMessageSize() {
-    return (header.getMessageSize() as int) +
+    return (header.getMessageSize()) +
         4 +
-        poses.fold<int>(0, (sum, item) => sum + (item.getMessageSize() as int));
+        poses.fold<int>(0, (sum, item) => sum + (item.getMessageSize()));
   }
 
   @override

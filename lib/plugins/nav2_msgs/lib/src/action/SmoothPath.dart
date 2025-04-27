@@ -38,10 +38,10 @@ bool check_for_collisions''';
 
   @override
   int getMessageSize() {
-    return (path.getMessageSize() as int) +
+    return (path.getMessageSize()) +
         4 +
         smoother_id.length +
-        (max_smoothing_duration.getMessageSize() as int) +
+        (max_smoothing_duration.getMessageSize()) +
         1;
   }
 
@@ -97,8 +97,8 @@ uint16 error_code''';
 
   @override
   int getMessageSize() {
-    return (path.getMessageSize() as int) +
-        (smoothing_duration.getMessageSize() as int) +
+    return (path.getMessageSize()) +
+        (smoothing_duration.getMessageSize()) +
         1 +
         2;
   }

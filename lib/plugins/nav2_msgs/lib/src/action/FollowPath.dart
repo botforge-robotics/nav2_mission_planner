@@ -36,7 +36,7 @@ string progress_checker_id''';
 
   @override
   int getMessageSize() {
-    return (path.getMessageSize() as int) +
+    return (path.getMessageSize()) +
         4 +
         controller_id.length +
         4 +
@@ -85,7 +85,7 @@ uint16 error_code''';
 
   @override
   int getMessageSize() {
-    return (result.getMessageSize() as int) + 2;
+    return (result.getMessageSize()) + 2;
   }
 
   @override

@@ -23,7 +23,7 @@ class WaitGoal extends RosMessage<WaitGoal> {
 
   @override
   int getMessageSize() {
-    return (time.getMessageSize() as int);
+    return time.getMessageSize();
   }
 
   @override
@@ -61,7 +61,7 @@ uint16 error_code''';
 
   @override
   int getMessageSize() {
-    return (total_elapsed_time.getMessageSize() as int) + 2;
+    return (total_elapsed_time.getMessageSize()) + 2;
   }
 
   @override
@@ -98,7 +98,7 @@ class WaitFeedback extends RosMessage<WaitFeedback> {
 
   @override
   int getMessageSize() {
-    return (time_left.getMessageSize() as int);
+    return time_left.getMessageSize();
   }
 
   @override

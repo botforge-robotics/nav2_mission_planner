@@ -25,7 +25,7 @@ BoundingBox bounds''';
 
   @override
   int getMessageSize() {
-    return 4 + url.length + (bounds.getMessageSize() as int);
+    return 4 + url.length + (bounds.getMessageSize());
   }
 
   @override
@@ -65,7 +65,7 @@ GeographicMap map''';
 
   @override
   int getMessageSize() {
-    return 1 + 4 + status.length + (map.getMessageSize() as int);
+    return 1 + 4 + status.length + (map.getMessageSize());
   }
 
   @override

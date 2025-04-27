@@ -29,7 +29,7 @@ geographic_msgs/GeoPoseWithCovariance pose''';
 
   @override
   int getMessageSize() {
-    return (header.getMessageSize() as int) + (pose.getMessageSize() as int);
+    return (header.getMessageSize()) + (pose.getMessageSize());
   }
 
   @override
