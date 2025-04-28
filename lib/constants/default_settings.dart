@@ -22,7 +22,6 @@ class DefaultSettings {
 
   // Add new defaults
   static const String defaultOdomTopic = '/odom';
-  static const String defaultScanTopic = '/scan';
 
   static const defaultSaveMapLaunchFile = 'rio_mapping/save_map';
 }

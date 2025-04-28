@@ -1,12 +1,16 @@
 import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
+import 'package:geometry_msgs/msg.dart' as geometry_msgs;
+import 'package:nav2_mission_planner/providers/settings_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:ros2_api/ros2_api.dart';
 import '../providers/connection_provider.dart';
 import 'package:nav_msgs/msg.dart';
+import 'robot_position_marker.dart';
 
 class OccupancyGridViewer extends StatefulWidget {
   final bool enabled;
@@ -49,17 +53,30 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
   double _currentScale = 1.0;
   bool _isFirstLoad = true;
 
+  // Add to the class state
+  Subscriber<Odometry>? _odomSubscriber;
+  double _robotX = 0.0;
+  double _robotY = 0.0;
+  double _robotTheta = 0.0;
+
+  // Add these variables to store map origin information
+  double _originX = 0.0;
+  double _originY = 0.0;
+  double _originTheta = 0.0;
+
   @override
   void initState() {
     super.initState();
     // Start with identity matrix (no transformations)
     _transformationController.value = Matrix4.identity();
     _subscribeToTopic();
+    _subscribeToOdometry();
   }
 
   @override
   void dispose() {
     _unsubscribe();
+    _odomSubscriber?.shutdown();
     _transformationController.dispose();
     super.dispose();
   }
@@ -95,7 +112,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
         callback: _processMapMessage,
         prototype: OccupancyGrid(),
       );
-      print('Subscribed to ${widget.topic}');
+      //print('Subscribed to ${widget.topic}');
       setState(() {
         _statusMessage = 'Subscribed to ${widget.topic}, waiting for data...';
       });
@@ -104,7 +121,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
         _statusMessage = 'Failed to subscribe: $e';
         _hasError = true;
       });
-      print('Error subscribing to ${widget.topic}: $e');
+      //print('Error subscribing to ${widget.topic}: $e');
     }
   }
 
@@ -112,9 +129,29 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     try {
       _subscriber?.shutdown();
       _subscriber = null;
-      print('Unsubscribed from ${widget.topic}');
+      //print('Unsubscribed from ${widget.topic}');
     } catch (e) {
-      print('Error unsubscribing: $e');
+      //print('Error unsubscribing: $e');
+    }
+  }
+
+  void _subscribeToOdometry() {
+    final connection = Provider.of<ConnectionProvider>(context, listen: false);
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
+
+    if (connection.ros2Client == null) return;
+
+    try {
+      _odomSubscriber = Subscriber<Odometry>(
+        name: settings.odomTopic,
+        type: Odometry().fullType,
+        ros2: connection.ros2Client!,
+        callback: _processOdometryMessage,
+        prototype: Odometry(),
+      );
+      //print('Subscribed to ${settings.odomTopic}');
+    } catch (e) {
+      //print('Error subscribing to odometry: $e');
     }
   }
 
@@ -152,10 +189,12 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     final int appG = widget.appModeColor.green;
     final int appB = widget.appModeColor.blue;
 
-    for (int y = 0; y < height; y++) {
+    // Flip Y-axis by iterating from bottom to top
+    for (int y = height - 1; y >= 0; y--) {
       for (int x = 0; x < width; x++) {
-        final int index = y * width + x;
-        final int pixelIndex = index * 4;
+        final int index =
+            (height - 1 - y) * width + x; // Adjusted index calculation
+        final int pixelIndex = (y * width + x) * 4;
 
         if (index < message.data.length) {
           final int value = message.data[index].toInt();
@@ -210,6 +249,9 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
   }
 
   void _processMapMessage(OccupancyGrid message) async {
+    // Add coordinate system validation
+    _validateCoordinateSystem(message.info);
+
     // Store current transformation before updating the image
     final Matrix4? currentTransform = _mapImage != null
         ? Matrix4.copy(_transformationController.value)
@@ -219,8 +261,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     final now = DateTime.now();
     _lastUpdateTime = now;
 
-    print(
-        'Processing map update! Width: ${message.info.width}, Height: ${message.info.height}');
+    // print('Processing map update! Width: ${message.info.width}, Height: ${message.info.height}');
 
     // Only show loading indicator for the first load
     if (_mapImage == null && mounted) {
@@ -232,10 +273,24 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     }
 
     try {
-      // Extract map metadata
+      // Extract map metadata including origin
       _width = message.info.width;
       _height = message.info.height;
       _resolution = message.info.resolution;
+
+      // Store origin information
+      _originX = message.info.origin.position.x;
+      _originY = message.info.origin.position.y;
+
+      // Extract yaw from origin quaternion
+      final qx = message.info.origin.orientation.x;
+      final qy = message.info.origin.orientation.y;
+      final qz = message.info.origin.orientation.z;
+      final qw = message.info.origin.orientation.w;
+      _originTheta = math.atan2(
+          2.0 * (qw * qz + qx * qy), 1.0 - 2.0 * (qy * qy + qz * qz));
+
+      //print('Map origin: ($_originX, $_originY), theta: $_originTheta');
 
       if (_width <= 0 || _height <= 0) {
         setState(() {
@@ -275,7 +330,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
         });
       }
     } catch (e) {
-      print('Error processing map data: $e');
+      //print('Error processing map data: $e');
       if (mounted) {
         setState(() {
           _isLoading = false;
@@ -320,7 +375,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
       widget.onScaleChanged!(_initialMapFitScale);
     }
 
-    print('Initial map scale calculated: $_initialMapFitScale');
+    //print('Initial map scale calculated: $_initialMapFitScale');
   }
 
   void _resetView() {
@@ -362,7 +417,31 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
       widget.onScaleChanged!(scale);
     }
 
-    print('View reset with scale: $scale');
+    //print('View reset with scale: $scale');
+  }
+
+  void _processOdometryMessage(Odometry message) {
+    if (!mounted) return;
+
+    try {
+      setState(() {
+        final mapPose = _transformToMapFrame(
+          message.pose.pose.position.x,
+          message.pose.pose.position.y,
+          message.pose.pose.orientation,
+        );
+
+        // Directly use map coordinates (already in pixels)
+        _robotX = mapPose.x;
+        _robotY = mapPose.y;
+        _robotTheta = mapPose.theta;
+
+        // Debug print
+        // print('Robot Position: ($_robotX, $_robotY) Theta: $_robotTheta');
+      });
+    } catch (e) {
+      // print('Odometry error: $e');
+    }
   }
 
   @override
@@ -386,7 +465,6 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
             boundaryMargin: const EdgeInsets.all(double.infinity),
             onInteractionStart: (details) {
               final scale = _transformationController.value.getMaxScaleOnAxis();
-              print('Interaction start - scale: $scale');
             },
             onInteractionUpdate: (details) {
               final scale = _transformationController.value.getMaxScaleOnAxis();
@@ -397,13 +475,33 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
             },
             onInteractionEnd: (details) {
               final scale = _transformationController.value.getMaxScaleOnAxis();
-              print('Interaction end - scale: $scale');
             },
-            child: RawImage(
-              key: ValueKey(_mapImage.hashCode),
-              image: _mapImage,
-              fit: BoxFit.none,
-              filterQuality: FilterQuality.medium,
+            child: Stack(
+              children: [
+                RawImage(
+                  key: ValueKey(_mapImage.hashCode),
+                  image: _mapImage,
+                  fit: BoxFit.none,
+                  filterQuality: FilterQuality.medium,
+                ),
+
+                // Add scale-invariant RobotPositionMarker
+                if (_mapImage != null && !_isLoading)
+                  Positioned(
+                    left: _robotX - 30 / 2,
+                    top: _robotY - 30 / 2,
+                    child: Transform.scale(
+                      scale: 1 / _currentScale, // Counteract map scaling
+                      child: RobotPositionMarker(
+                        x: 0, // Use 0 here since we position with Positioned
+                        y: 0, // Use 0 here since we position with Positioned
+                        theta: _robotTheta,
+                        color: widget.appModeColor,
+                        size: 30.0,
+                      ),
+                    ),
+                  ),
+              ],
             ),
           )
         else
@@ -468,6 +566,77 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
       ],
     );
   }
+
+  // Add new validation method
+  void _validateCoordinateSystem(MapMetaData info) {
+    assert(info.resolution > 0, 'Invalid map resolution (must be > 0)');
+    assert(info.origin.position.z == 0, 'Z position must be zero for 2D maps');
+
+    final q = info.origin.orientation;
+    final rollPitchYaw = _quaternionToEuler(q);
+    assert(rollPitchYaw[0].abs() < 1e-4 && rollPitchYaw[1].abs() < 1e-4,
+        'Map orientation must be 2D (only yaw rotation supported)');
+  }
+
+  // Add comprehensive quaternion conversion
+  List<double> _quaternionToEuler(geometry_msgs.Quaternion q) {
+    final roll = math.atan2(
+        2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
+    final pitch = math.asin(2 * (q.w * q.y - q.z * q.x));
+    final yaw = math.atan2(
+        2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
+    return [roll, pitch, yaw];
+  }
+
+  // Add new transformation methods
+  Offset _worldToGridCoordinates(
+    double worldX,
+    double worldY,
+    int gridWidth,
+    int gridHeight,
+    double resolution,
+    geometry_msgs.Pose origin,
+  ) {
+    // Convert to map frame
+    final mapX = worldX - origin.position.x;
+    final mapY = worldY - origin.position.y;
+
+    // Apply rotation
+    final theta = _quaternionToEuler(origin.orientation)[2];
+    final rotatedX = mapX * math.cos(-theta) - mapY * math.sin(-theta);
+    final rotatedY = mapX * math.sin(-theta) + mapY * math.cos(-theta);
+
+    // Convert to grid coordinates with Y inversion
+    return Offset(
+      rotatedX / resolution,
+      gridHeight - (rotatedY / resolution),
+    );
+  }
+
+  ({double x, double y, double theta}) _transformToMapFrame(
+    double worldX,
+    double worldY,
+    geometry_msgs.Quaternion orientation,
+  ) {
+    final originX = _originX;
+    final originY = _originY;
+    final res = _resolution;
+    final gridHeight = _height;
+
+    // Convert position with proper Y inversion
+    final mapX = (worldX - originX) / res;
+    final mapY = (worldY - originY) / res;
+
+    // Convert orientation
+    final worldYaw = _quaternionToEuler(orientation)[2];
+    final mapYaw = worldYaw - _originTheta;
+
+    return (
+      x: mapX,
+      y: gridHeight - mapY, // Proper Y-axis inversion for image space
+      theta: -mapYaw
+    );
+  }
 }
 
 class MapPainter extends CustomPainter {
@@ -513,5 +682,64 @@ class MapPainter extends CustomPainter {
   bool shouldRepaint(covariant MapPainter oldDelegate) {
     return mapImage != oldDelegate.mapImage ||
         resolution != oldDelegate.resolution;
+  }
+}
+
+// Update WorldAxisPainter with precise rendering
+class WorldAxisPainter extends CustomPainter {
+  final double originX;
+  final double originY;
+  final double originTheta;
+  final double resolution;
+  final Color color;
+
+  WorldAxisPainter({
+    required this.originX,
+    required this.originY,
+    required this.originTheta,
+    required this.resolution,
+    this.color = Colors.white,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    const axisLength = 1.0; // 1 meter
+    final pixelLength = axisLength / resolution;
+
+    final origin = Offset(originX, originY);
+    final rotation = Matrix4.rotationZ(-originTheta);
+
+    canvas.save();
+    canvas.translate(origin.dx, origin.dy);
+    canvas.transform(rotation.storage);
+
+    // X axis (Red)
+    canvas.drawLine(
+      Offset.zero,
+      Offset(pixelLength, 0),
+      Paint()
+        ..color = Colors.red
+        ..strokeWidth = 2,
+    );
+
+    // Y axis (Green) - inverted for image space
+    canvas.drawLine(
+      Offset.zero,
+      Offset(0, -pixelLength),
+      Paint()
+        ..color = Colors.green
+        ..strokeWidth = 2,
+    );
+
+    canvas.restore();
+  }
+
+  @override
+  bool shouldRepaint(covariant WorldAxisPainter oldDelegate) {
+    return originX != oldDelegate.originX ||
+        originY != oldDelegate.originY ||
+        originTheta != oldDelegate.originTheta ||
+        resolution != oldDelegate.resolution ||
+        color != oldDelegate.color;
   }
 }

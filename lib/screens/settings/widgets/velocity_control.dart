@@ -37,7 +37,7 @@ class VelocityControl extends StatelessWidget {
           child: Icon(
             Icons.remove,
             color: modeColor,
-            size: screenSize.height * 0.04,
+            size: 22,
           ),
         ),
         SizedBox(width: screenSize.width * 0.01),
@@ -49,7 +49,7 @@ class VelocityControl extends StatelessWidget {
               text: value.toStringAsFixed(2),
             ),
             style: TextStyle(
-              fontSize: screenSize.height * 0.025,
+              fontSize: 12,
               fontWeight: FontWeight.bold,
             ),
             keyboardType: const TextInputType.numberWithOptions(decimal: true),
@@ -93,7 +93,7 @@ class VelocityControl extends StatelessWidget {
           child: Icon(
             Icons.add,
             color: modeColor,
-            size: screenSize.height * 0.04,
+            size: 22,
           ),
         ),
       ],

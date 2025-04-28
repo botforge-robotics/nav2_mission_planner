@@ -60,7 +60,7 @@ class NavigationSettings extends StatelessWidget {
                 Text(
                   'Command will be: ros2 launch [input].launch.py [arguments]',
                   style: TextStyle(
-                    fontSize: screenSize.height * 0.018,
+                    fontSize: 10,
                     color: Colors.grey.shade400,
                     fontStyle: FontStyle.italic,
                   ),

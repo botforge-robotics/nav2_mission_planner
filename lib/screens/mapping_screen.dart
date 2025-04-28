@@ -6,6 +6,7 @@ import '../providers/connection_provider.dart';
 import '../services/launch_service.dart';
 import '../widgets/joystick_thumb_widget.dart';
 import '../widgets/occupancy_grid_viewer.dart';
+import '../widgets/image_viwer.dart';
 
 class MappingScreen extends StatefulWidget {
   final Color modeColor;
@@ -28,6 +29,7 @@ class _MappingScreenState extends State<MappingScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final settings = Provider.of<SettingsProvider>(context);
     return Consumer<ConnectionProvider>(
       builder: (context, connection, _) {
         return Stack(
@@ -72,7 +74,7 @@ class _MappingScreenState extends State<MappingScreen> {
                       Text(
                         'Mapping Mode',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
                           color: widget.modeColor,
                           letterSpacing: 1.2,
@@ -133,7 +135,7 @@ class _MappingScreenState extends State<MappingScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: widget.modeColor.withOpacity(0.2),
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 40, vertical: 20),
+                              horizontal: 25, vertical: 15),
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20),
                             side: BorderSide(color: widget.modeColor, width: 2),
@@ -221,9 +223,10 @@ class _MappingScreenState extends State<MappingScreen> {
             if (_isMappingStarted && _isMappingActive)
               // mapping_screen.dart
               Positioned(
-                bottom: 20,
-                left: 20,
+                top: 65,
+                right: 16,
                 child: FloatingActionButton(
+                  mini: true,
                   backgroundColor: widget.modeColor,
                   onPressed: () async {
                     final result = await showDialog<Map<String, dynamic>>(
@@ -279,6 +282,33 @@ class _MappingScreenState extends State<MappingScreen> {
                     }
                   },
                   child: const Icon(Icons.save, color: Colors.white),
+                ),
+              ),
+            if (settings.cameraEnabled &&
+                settings.cameraImageTopic.isNotEmpty &&
+                _isMappingStarted &&
+                _isMappingActive)
+              Positioned(
+                bottom: 20,
+                left: 20,
+                child: SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.25,
+                  height: MediaQuery.of(context).size.width * 0.25 * (9 / 16),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: widget.modeColor, width: 2),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(6),
+                      child: ImageViewer(
+                        topic: settings.cameraImageTopic,
+                        enabled: settings.cameraEnabled,
+                        hideTopic: true,
+                      ),
+                    ),
+                  ),
                 ),
               ),
           ],

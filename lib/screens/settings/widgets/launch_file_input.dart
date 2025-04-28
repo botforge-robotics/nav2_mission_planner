@@ -25,13 +25,13 @@ class LaunchFileInput extends StatelessWidget {
         Text(
           'Format: \${package_name}/\${launchfile_name}',
           style: TextStyle(
-            fontSize: screenSize.height * 0.024,
+            fontSize: 12,
             color: Colors.grey.shade600,
           ),
         ),
         TextFormField(
           initialValue: initialValue,
-          style: TextStyle(fontSize: screenSize.height * 0.025),
+          style: TextStyle(fontSize: 12),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: TextStyle(color: Colors.grey.shade700),

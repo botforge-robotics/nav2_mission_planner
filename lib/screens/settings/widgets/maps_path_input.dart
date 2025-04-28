@@ -22,14 +22,14 @@ class MapsPathInput extends StatelessWidget {
         Text(
           'Format: \${package_name}/\${folder_name}',
           style: TextStyle(
-            fontSize: screenSize.height * 0.023,
-            color: Colors.grey.shade400,
+            fontSize: 12,
+            color: Colors.grey.shade600,
           ),
         ),
         SizedBox(height: screenSize.height * 0.02),
         TextFormField(
           initialValue: initialValue,
-          style: TextStyle(fontSize: screenSize.height * 0.025),
+          style: TextStyle(fontSize: 12),
           decoration: InputDecoration(
             hintText: 'slam_toolbox/maps',
             hintStyle: TextStyle(color: Colors.grey.shade700),
@@ -40,7 +40,6 @@ class MapsPathInput extends StatelessWidget {
               borderSide: BorderSide(color: modeColor, width: 2),
             ),
             contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.015,
               vertical: screenSize.height * 0.015,
             ),
           ),

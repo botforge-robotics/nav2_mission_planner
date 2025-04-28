@@ -82,16 +82,16 @@ class CategoriesList extends StatelessWidget {
           horizontal: screenSize.width * 0.015,
           vertical: screenSize.height * 0.005,
         ),
-        minLeadingWidth: 20,
+        minLeadingWidth: 5,
         leading: Icon(
           icon,
-          size: screenSize.height * 0.035,
+          size: 14,
           color: isSelected ? modeColor : Colors.grey,
         ),
         title: Text(
           title,
           style: TextStyle(
-            fontSize: screenSize.height * 0.026,
+            fontSize: 14,
             color: isSelected ? modeColor : Colors.grey,
             fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
           ),

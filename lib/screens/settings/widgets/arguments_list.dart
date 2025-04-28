@@ -60,7 +60,7 @@ class ArgumentsList extends StatelessWidget {
                     Text(
                       '${arg['name']} = ${arg['value']}',
                       style: TextStyle(
-                        fontSize: screenSize.height * 0.02,
+                        fontSize: 12,
                         color: Colors.white,
                       ),
                     ),
@@ -105,14 +105,14 @@ class ArgumentsList extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.add,
-                    size: screenSize.height * 0.022,
+                    size: 12,
                     color: modeColor,
                   ),
                   SizedBox(width: screenSize.width * 0.005),
                   Text(
                     'Add Argument',
                     style: TextStyle(
-                      fontSize: screenSize.height * 0.02,
+                      fontSize: 12,
                       color: modeColor,
                     ),
                   ),

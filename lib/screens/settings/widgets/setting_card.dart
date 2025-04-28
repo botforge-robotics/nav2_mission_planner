@@ -33,7 +33,7 @@ class SettingCard extends StatelessWidget {
           Text(
             title,
             style: TextStyle(
-              fontSize: screenSize.height * 0.03,
+              fontSize: 15,
               fontWeight: FontWeight.bold,
               color: modeColor,
             ),
@@ -41,11 +41,11 @@ class SettingCard extends StatelessWidget {
           Text(
             description,
             style: TextStyle(
-              fontSize: screenSize.height * 0.024,
+              fontSize: 12,
               color: Colors.grey,
             ),
           ),
-          SizedBox(height: screenSize.height * 0.02),
+          SizedBox(height: 5),
           content,
         ],
       ),

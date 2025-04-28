@@ -65,7 +65,7 @@ class MappingSettings extends StatelessWidget {
                 Text(
                   'Command will be: ros2 launch [input].launch.py [arguments]',
                   style: TextStyle(
-                    fontSize: screenSize.height * 0.018,
+                    fontSize: 10,
                     color: Colors.grey.shade400,
                     fontStyle: FontStyle.italic,
                   ),
@@ -103,7 +103,7 @@ class MappingSettings extends StatelessWidget {
                 Text(
                   'Command will be: ros2 launch [input].launch.py [arguments]',
                   style: TextStyle(
-                    fontSize: screenSize.height * 0.018,
+                    fontSize: 10,
                     color: Colors.grey.shade400,
                     fontStyle: FontStyle.italic,
                   ),
@@ -111,7 +111,7 @@ class MappingSettings extends StatelessWidget {
                 Text(
                   'Note: The "map_name" argument will be automatically added when saving',
                   style: TextStyle(
-                    fontSize: screenSize.height * 0.016,
+                    fontSize: 10,
                     color: Colors.orange.shade300,
                   ),
                 ),

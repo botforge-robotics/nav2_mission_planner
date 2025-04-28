@@ -126,7 +126,7 @@ class _CameraTopicInputState extends State<CameraTopicInput> {
         Text(
           'Type: sensor_msgs/msg/CompressedImage',
           style: TextStyle(
-            fontSize: widget.screenSize.height * 0.02,
+            fontSize: 10,
             color: Colors.grey.shade400,
             fontStyle: FontStyle.italic,
           ),
@@ -138,7 +138,7 @@ class _CameraTopicInputState extends State<CameraTopicInput> {
               _errorMessage!,
               style: TextStyle(
                 color: Colors.red,
-                fontSize: widget.screenSize.height * 0.02,
+                fontSize: 10,
               ),
             ),
           ),
@@ -182,7 +182,7 @@ class _CameraTopicInputState extends State<CameraTopicInput> {
                             'No topics found',
                             style: TextStyle(
                               color: Colors.grey[600],
-                              fontSize: 13,
+                              fontSize: 12,
                             ),
                           ),
                         )
@@ -193,7 +193,7 @@ class _CameraTopicInputState extends State<CameraTopicInput> {
                                 topic,
                                 style: TextStyle(
                                   color: Colors.white,
-                                  fontSize: 13,
+                                  fontSize: 12,
                                 ),
                               ),
                             )),
@@ -212,12 +212,11 @@ class _CameraTopicInputState extends State<CameraTopicInput> {
                       _isLoading ? 'Loading topics...' : 'Select topic',
                       style: TextStyle(
                         color: Colors.grey[400],
-                        fontSize: 13,
+                        fontSize: 12,
                       ),
                     ),
                     dropdownColor: Colors.grey[850],
                     menuMaxHeight: 150,
-                    padding: EdgeInsets.symmetric(horizontal: 12),
                   ),
                 ),
               ),

@@ -30,7 +30,6 @@ class SettingsProvider extends ChangeNotifier {
 
   // Add new properties
   String _odomTopic = DefaultSettings.defaultOdomTopic;
-  String _scanTopic = DefaultSettings.defaultScanTopic;
 
   // Getters
   String get cmdVelTopic => _cmdVelTopic;
@@ -44,10 +43,8 @@ class SettingsProvider extends ChangeNotifier {
   String get cameraImageTopic => _cameraImageTopic;
   bool get cameraEnabled => _cameraEnabled;
   String get odomTopic => _odomTopic;
-  String get scanTopic => _scanTopic;
   String get saveMapLaunchFile => _saveMapLaunchFile;
   List<Map<String, String>> get saveMapArgs => _saveMapArgs;
-
   SettingsProvider() {
     _loadSettings();
   }
@@ -93,8 +90,6 @@ class SettingsProvider extends ChangeNotifier {
     // Load new topics
     _odomTopic =
         prefs.getString('odomTopic') ?? DefaultSettings.defaultOdomTopic;
-    _scanTopic =
-        prefs.getString('scanTopic') ?? DefaultSettings.defaultScanTopic;
 
     // Load save map settings
     _saveMapLaunchFile = prefs.getString('saveMapLaunchFile') ??
@@ -124,7 +119,6 @@ class SettingsProvider extends ChangeNotifier {
     await prefs.setString('cameraImageTopic', _cameraImageTopic);
     await prefs.setBool('cameraEnabled', _cameraEnabled);
     await prefs.setString('odomTopic', _odomTopic);
-    await prefs.setString('scanTopic', _scanTopic);
     await prefs.setString('saveMapLaunchFile', _saveMapLaunchFile);
     await prefs.setString('saveMapArgs', json.encode(_saveMapArgs));
   }
@@ -252,12 +246,6 @@ class SettingsProvider extends ChangeNotifier {
   // Add new setters
   void setOdomTopic(String topic) {
     _odomTopic = topic;
-    _saveSettings();
-    notifyListeners();
-  }
-
-  void setScanTopic(String topic) {
-    _scanTopic = topic;
     _saveSettings();
     notifyListeners();
   }

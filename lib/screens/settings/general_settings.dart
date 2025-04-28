@@ -7,7 +7,6 @@ import 'widgets/setting_card.dart';
 import 'widgets/setting_header.dart';
 import '../../constants/default_settings.dart';
 import 'widgets/odom_topic_input.dart';
-import 'widgets/lidar_topic_input.dart';
 
 class GeneralSettings extends StatelessWidget {
   final Size screenSize;
@@ -60,18 +59,6 @@ class GeneralSettings extends StatelessWidget {
                   content: OdomTopicInput(
                     initialValue: settings.odomTopic,
                     onChanged: settings.setOdomTopic,
-                    screenSize: screenSize,
-                    modeColor: modeColor,
-                  ),
-                ),
-                SettingCard(
-                  title: 'Lidar Scan Topic',
-                  description: 'Set topic for LIDAR scan data',
-                  modeColor: modeColor,
-                  screenSize: screenSize,
-                  content: LidarTopicInput(
-                    initialValue: settings.scanTopic,
-                    onChanged: settings.setScanTopic,
                     screenSize: screenSize,
                     modeColor: modeColor,
                   ),

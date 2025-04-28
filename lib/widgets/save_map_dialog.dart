@@ -44,12 +44,6 @@ class _MapSaveDialogState extends State<MapSaveDialog> {
                 // Header
                 Row(
                   children: [
-                    Icon(
-                      Icons.save,
-                      color: widget.modeColor,
-                      size: 28,
-                    ),
-                    const SizedBox(width: 10),
                     Text(
                       'Save Current Map',
                       style: TextStyle(
@@ -115,7 +109,7 @@ class _MapSaveDialogState extends State<MapSaveDialog> {
                     style: TextStyle(color: Colors.white, fontSize: 16),
                   ),
                   activeColor: widget.modeColor,
-                  checkColor: Colors.black,
+                  checkColor: Colors.white,
                   controlAffinity: ListTileControlAffinity.leading,
                   contentPadding: EdgeInsets.zero,
                 ),
@@ -140,7 +134,7 @@ class _MapSaveDialogState extends State<MapSaveDialog> {
                     ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: widget.modeColor,
-                        foregroundColor: Colors.black,
+                        foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                           horizontal: 20,
                           vertical: 12,

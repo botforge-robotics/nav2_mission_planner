@@ -97,7 +97,7 @@ class TeleopSettings extends StatelessWidget {
                 Text(
                   title,
                   style: TextStyle(
-                    fontSize: screenSize.height * 0.03,
+                    fontSize: 15,
                     fontWeight: FontWeight.bold,
                     color: modeColor,
                   ),
@@ -106,14 +106,13 @@ class TeleopSettings extends StatelessWidget {
                 Text(
                   description,
                   style: TextStyle(
-                    fontSize: screenSize.height * 0.024,
+                    fontSize: 12,
                     color: Colors.grey,
                   ),
                 ),
               ],
             ),
           ),
-          SizedBox(width: screenSize.width * 0.02),
           // Right side - Content
           Expanded(
             flex: 3,
@@ -131,7 +130,7 @@ class TeleopSettings extends StatelessWidget {
       children: [
         TextFormField(
           initialValue: settings.cmdVelTopic,
-          style: TextStyle(fontSize: screenSize.height * 0.025),
+          style: TextStyle(fontSize: 12),
           decoration: InputDecoration(
             hintText: 'Enter topic name (e.g. cmd_vel)',
             hintStyle: TextStyle(color: Colors.grey.shade700),
@@ -141,10 +140,6 @@ class TeleopSettings extends StatelessWidget {
             focusedBorder: UnderlineInputBorder(
               borderSide: BorderSide(color: modeColor, width: 2),
             ),
-            contentPadding: EdgeInsets.symmetric(
-              horizontal: screenSize.width * 0.015,
-              vertical: screenSize.height * 0.015,
-            ),
           ),
           onChanged: settings.setCmdVelTopic,
         ),
@@ -152,7 +147,7 @@ class TeleopSettings extends StatelessWidget {
         Text(
           'Type: geometry_msgs/msg/Twist',
           style: TextStyle(
-            fontSize: screenSize.height * 0.02,
+            fontSize: 10,
             color: Colors.grey.shade400,
             fontStyle: FontStyle.italic,
           ),

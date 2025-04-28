@@ -109,10 +109,22 @@ class TopStatusBar extends StatelessWidget {
                 },
               ),
               const TopStatusCenterTitle(),
-              TopStatusNetworkInfo(
-                  height: height, connectionStatusColor: connectionStatusColor),
-              TopStatusConnectionButton(
-                  height: height, connectionStatusColor: connectionStatusColor),
+              Positioned(
+                right: 0,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    TopStatusNetworkInfo(
+                      height: height,
+                      connectionStatusColor: connectionStatusColor,
+                    ),
+                    TopStatusConnectionButton(
+                      height: height,
+                      connectionStatusColor: connectionStatusColor,
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         );

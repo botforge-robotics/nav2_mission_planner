@@ -9,11 +9,12 @@ import 'dart:async';
 class ImageViewer extends StatefulWidget {
   final String topic;
   final bool enabled;
-
+  final bool hideTopic;
   const ImageViewer({
     super.key,
     required this.topic,
     required this.enabled,
+    this.hideTopic = false,
   });
 
   @override
@@ -107,26 +108,27 @@ class _ImageViewerState extends State<ImageViewer> {
                         );
                       },
                     ),
-                    Positioned(
-                      top: 10,
-                      right: 8,
-                      child: Container(
-                        padding:
-                            EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                        child: Text(
-                          widget.topic,
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
+                    if (!widget.hideTopic)
+                      Positioned(
+                        top: 10,
+                        right: 8,
+                        child: Container(
+                          padding:
+                              EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(8),
+                          ),
+                          child: Text(
+                            widget.topic,
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                         ),
                       ),
-                    ),
                   ],
                 ),
         );

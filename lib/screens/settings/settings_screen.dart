@@ -42,16 +42,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
               ),
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.all(screenSize.height * 0.03),
-                    child: Text(
-                      'Settings',
-                      style: TextStyle(
-                        fontSize: screenSize.height * 0.035,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
                   Expanded(
                     child: CategoriesList(
                       selectedCategory: _selectedCategory,

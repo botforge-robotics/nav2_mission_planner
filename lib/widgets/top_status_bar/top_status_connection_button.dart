@@ -204,7 +204,7 @@ class TopStatusConnectionButton extends StatelessWidget {
                                 const Text(
                                   'Connect to Robot',
                                   style: TextStyle(
-                                    fontSize: 22,
+                                    fontSize: 21,
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                   ),
@@ -609,7 +609,7 @@ class TopStatusConnectionButton extends StatelessWidget {
                 key: ValueKey<bool>(connection.isConnected),
                 icon: Icon(
                   connection.isConnected ? Icons.link : Icons.link_off,
-                  color: connectionStatusColor,
+                  color: connection.isConnected ? Colors.red : Colors.green,
                   size: 28,
                 ),
                 onPressed: () {
@@ -625,8 +625,8 @@ class TopStatusConnectionButton extends StatelessWidget {
                 style: IconButton.styleFrom(
                   padding: const EdgeInsets.all(8),
                   backgroundColor: connection.isConnected
-                      ? Colors.green.withOpacity(0.15)
-                      : Colors.grey.withOpacity(0.15),
+                      ? Colors.red.withOpacity(0.15)
+                      : Colors.green.withOpacity(0.15),
                 ),
               ),
             ),

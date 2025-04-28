@@ -22,14 +22,14 @@ class SettingHeader extends StatelessWidget {
           children: [
             Icon(
               icon,
-              size: screenSize.height * 0.04,
+              size: 18,
               color: modeColor,
             ),
             SizedBox(width: screenSize.width * 0.01),
             Text(
               title,
               style: TextStyle(
-                fontSize: screenSize.height * 0.04,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
                 color: modeColor,
               ),
