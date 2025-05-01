@@ -25,8 +25,7 @@ class CategoriesList extends StatelessWidget {
         return ModeColors.modeColorMap[AppModes.mapping]!;
       case 'Navigation':
         return ModeColors.modeColorMap[AppModes.navigation]!;
-      case 'Mission':
-        return ModeColors.modeColorMap[AppModes.mission]!;
+
       default:
         return ModeColors.modeColorMap[AppModes.settings]!;
     }
@@ -52,10 +51,6 @@ class CategoriesList extends StatelessWidget {
         _buildCategoryTile(
           icon: FontAwesomeIcons.mapLocationDot,
           title: 'Navigation',
-        ),
-        _buildCategoryTile(
-          icon: FontAwesomeIcons.route,
-          title: 'Mission',
         ),
       ],
     );

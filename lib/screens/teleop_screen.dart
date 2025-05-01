@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:nav2_mission_planner/providers/connection_provider.dart';
 import 'package:provider/provider.dart';
 import '../providers/settings_provider.dart';
 import '../widgets/image_viwer.dart';
 import '../widgets/joystick_thumb_widget.dart';
-import 'package:geometry_msgs/msg.dart';
+import '../widgets/camera_snap_button.dart';
 
 class TeleopScreen extends StatelessWidget {
   final Color modeColor;
@@ -12,6 +11,8 @@ class TeleopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<ImageViewerState> _imageViewerKey = GlobalKey();
+
     return Consumer<SettingsProvider>(
       builder: (context, settings, child) {
         return Stack(
@@ -22,6 +23,7 @@ class TeleopScreen extends StatelessWidget {
                 child: Container(
                   color: Colors.black,
                   child: ImageViewer(
+                    key: _imageViewerKey,
                     topic: settings.cameraImageTopic,
                     enabled: settings.cameraEnabled,
                   ),
@@ -94,6 +96,14 @@ class TeleopScreen extends StatelessWidget {
                 ),
                 child: JoystickThumbWidget(modeColor: modeColor),
               ),
+            ),
+
+            CameraSnapButton(
+              modeColor: modeColor,
+              isCameraActive: settings.cameraEnabled &&
+                  settings.cameraImageTopic.isNotEmpty,
+              getCurrentFrame: () async =>
+                  _imageViewerKey.currentState?.captureFrame(),
             ),
           ],
         );

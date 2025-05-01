@@ -105,8 +105,7 @@ class TopStatusModeSelector extends StatelessWidget {
         _buildDropdownItem(context, AppModes.teleop, FontAwesomeIcons.gamepad),
         _buildDropdownItem(context, AppModes.mapping, FontAwesomeIcons.map),
         _buildDropdownItem(
-            context, AppModes.navigation, FontAwesomeIcons.mapLocationDot),
-        _buildDropdownItem(context, AppModes.mission, FontAwesomeIcons.route),
+            context, AppModes.navigation, FontAwesomeIcons.route),
         _buildDropdownItem(context, AppModes.settings, FontAwesomeIcons.gear),
       ],
     ).then((selectedMode) async {
@@ -163,13 +162,9 @@ class TopStatusModeSelector extends StatelessWidget {
       case AppModes.mapping:
         return FontAwesomeIcons.map;
       case AppModes.navigation:
-        return FontAwesomeIcons.mapLocationDot;
-      case AppModes.mission:
         return FontAwesomeIcons.route;
       case AppModes.settings:
         return FontAwesomeIcons.gear;
-      default:
-        return FontAwesomeIcons.question;
     }
   }
 

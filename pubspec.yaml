@@ -20,13 +20,16 @@ dependencies:
     path: ./lib/plugins/sensor_msgs
   nav2_mission_planner_interfaces:
     path: ./lib/plugins/nav2_mission_planner_interfaces
-  wifi_info_plugin_plus:
-    path: ./lib/plugins/wifi_info_plugin_plus-2.0.2
   flutter_mjpeg: ^2.0.4
   ros2_msg_utils:
     path: ./lib/plugins/ros2_msg_utils
   nav_msgs:
     path: ./lib/plugins/nav_msgs
+  image_gallery_saver:
+    path: ./lib/plugins/image_gallery_saver-2.0.3
+  permission_handler: ^12.0.0+1
+  rosapi_msgs:
+    path: ./lib/plugins/rosapi_msgs
 
 dev_dependencies:
   flutter_test:

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:ros2_api/ros2_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
-import 'package:wifi_info_plugin_plus/wifi_info_plugin_plus.dart';
 import 'dart:io';
 
 class ConnectionProvider extends ChangeNotifier {
@@ -12,17 +11,12 @@ class ConnectionProvider extends ChangeNotifier {
   bool _isConnected = false;
   List<Map<String, String>> _recentConnections = [];
   Ros2? _ros2Client;
-  WifiInfoWrapper? _wifiInfo;
 
   // Getters
   String get ip => _ip;
   String get port => _port;
   bool get isConnected => _isConnected;
   List<Map<String, String>> get recentConnections => _recentConnections;
-  String get wifiSSID => _wifiInfo?.ssid ?? 'Unknown';
-  String get signalStrength => _wifiInfo?.signalStrength != null
-      ? '${_wifiInfo!.signalStrength}dBm'
-      : '--dBm';
   Ros2? get ros2Client => _ros2Client;
 
   ConnectionProvider() {
@@ -111,15 +105,6 @@ class ConnectionProvider extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       rethrow;
-    }
-  }
-
-  Future<void> updateWifiInfo() async {
-    try {
-      _wifiInfo = await WifiInfoPlugin.wifiDetails;
-      notifyListeners();
-    } on PlatformException catch (e) {
-      print("Error getting WiFi info: ${e.message}");
     }
   }
 }

@@ -1,14 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:nav2_mission_planner/providers/settings_provider.dart';
-import 'package:nav2_mission_planner/screens/settings/widgets/setting_card.dart';
-import 'package:nav2_mission_planner/screens/settings/widgets/setting_header.dart';
-import 'package:provider/provider.dart';
 import '../../constants/modes.dart';
 import 'teleop_settings.dart';
 import 'mapping_settings.dart';
 import 'navigation_settings.dart';
-import 'widgets/camera_topic_input.dart';
 import 'general_settings.dart';
 
 class SettingsContent extends StatelessWidget {
@@ -30,8 +24,6 @@ class SettingsContent extends StatelessWidget {
         return ModeColors.modeColorMap[AppModes.mapping]!;
       case 'Navigation':
         return ModeColors.modeColorMap[AppModes.navigation]!;
-      case 'Mission':
-        return ModeColors.modeColorMap[AppModes.mission]!;
       case 'General':
         return ModeColors.modeColorMap[AppModes.settings]!;
       default:

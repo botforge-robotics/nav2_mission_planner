@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nav2_mission_planner/widgets/top_status_bar/top_status_bar.dart';
-import '../widgets/left_side_toolbar.dart';
 import '../constants/modes.dart';
 import '../theme/app_theme.dart';
 import 'teleop_screen.dart';
@@ -31,8 +30,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return MappingScreen(modeColor: modeColor);
       case AppModes.navigation:
         return NavigationScreen(modeColor: modeColor);
-      case AppModes.mission:
-        return MissionScreen(modeColor: modeColor);
       case AppModes.settings:
         return const SettingsScreen();
     }
@@ -49,8 +46,6 @@ class _HomeScreenState extends State<HomeScreen> {
         return 'Mapping Mode';
       case AppModes.navigation:
         return 'Navigation Mode';
-      case AppModes.mission:
-        return 'Mission Planning Mode';
       case AppModes.settings:
         return 'Settings';
     }
@@ -157,7 +152,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ],
               ),
-              const LeftSideToolbar(),
             ],
           ),
         );

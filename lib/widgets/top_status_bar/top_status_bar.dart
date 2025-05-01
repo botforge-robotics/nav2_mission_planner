@@ -8,7 +8,6 @@ import 'top_status_mode_selector.dart';
 import 'top_status_center_title.dart';
 import 'top_status_network_info.dart';
 import 'top_status_connection_button.dart';
-import '../../services/launch_service.dart';
 
 class TopStatusBar extends StatelessWidget {
   final String statusText;
@@ -114,10 +113,11 @@ class TopStatusBar extends StatelessWidget {
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    TopStatusNetworkInfo(
-                      height: height,
-                      connectionStatusColor: connectionStatusColor,
-                    ),
+                    if (connection.isConnected)
+                      TopStatusNetworkInfo(
+                        height: height,
+                        connectionStatusColor: connectionStatusColor,
+                      ),
                     TopStatusConnectionButton(
                       height: height,
                       connectionStatusColor: connectionStatusColor,

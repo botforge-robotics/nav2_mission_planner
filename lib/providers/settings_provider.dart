@@ -31,6 +31,9 @@ class SettingsProvider extends ChangeNotifier {
   // Add new properties
   String _odomTopic = DefaultSettings.defaultOdomTopic;
 
+  // Add to existing properties
+  String _lidarTopic = DefaultSettings.defaultLidarTopic;
+
   // Getters
   String get cmdVelTopic => _cmdVelTopic;
   double get linearVelocity => _linearVelocity;
@@ -45,6 +48,8 @@ class SettingsProvider extends ChangeNotifier {
   String get odomTopic => _odomTopic;
   String get saveMapLaunchFile => _saveMapLaunchFile;
   List<Map<String, String>> get saveMapArgs => _saveMapArgs;
+  String get lidarTopic => _lidarTopic;
+
   SettingsProvider() {
     _loadSettings();
   }
@@ -102,6 +107,10 @@ class SettingsProvider extends ChangeNotifier {
           argsList.map((item) => Map<String, String>.from(item)));
     }
 
+    // Load lidar topic and enabled status
+    _lidarTopic =
+        prefs.getString('lidarTopic') ?? DefaultSettings.defaultLidarTopic;
+
     notifyListeners();
   }
 
@@ -121,11 +130,12 @@ class SettingsProvider extends ChangeNotifier {
     await prefs.setString('odomTopic', _odomTopic);
     await prefs.setString('saveMapLaunchFile', _saveMapLaunchFile);
     await prefs.setString('saveMapArgs', json.encode(_saveMapArgs));
+    await prefs.setString('lidarTopic', _lidarTopic);
   }
 
   // Setters with validation
   void setCmdVelTopic(String topic) {
-    _cmdVelTopic = topic;
+    _cmdVelTopic = topic.trim();
     _saveSettings(); // Save after updating
     notifyListeners();
   }
@@ -167,19 +177,19 @@ class SettingsProvider extends ChangeNotifier {
 
   // Mapping Setters
   void setMapsPath(String path) {
-    _mapsPath = path;
+    _mapsPath = path.trim();
     _saveSettings(); // Save after updating
     notifyListeners();
   }
 
   void setMappingLaunchFile(String file) {
-    _mappingLaunchFile = file;
+    _mappingLaunchFile = file.trim();
     _saveSettings(); // Save after updating
     notifyListeners();
   }
 
   void addMappingArg(String name, String value) {
-    _mappingArgs.add({'name': name, 'value': value});
+    _mappingArgs.add({'name': name.trim(), 'value': value.trim()});
     _saveSettings(); // Save after updating
     notifyListeners();
   }
@@ -194,7 +204,7 @@ class SettingsProvider extends ChangeNotifier {
 
   void updateMappingArg(int index, String name, String value) {
     if (index >= 0 && index < _mappingArgs.length) {
-      _mappingArgs[index] = {'name': name, 'value': value};
+      _mappingArgs[index] = {'name': name.trim(), 'value': value.trim()};
       _saveSettings(); // Save after updating
       notifyListeners();
     }
@@ -202,13 +212,13 @@ class SettingsProvider extends ChangeNotifier {
 
   // Navigation Setters
   void setNavigationLaunchFile(String file) {
-    _navigationLaunchFile = file;
+    _navigationLaunchFile = file.trim();
     _saveSettings(); // Save after updating
     notifyListeners();
   }
 
   void addNavigationArg(String name, String value) {
-    _navigationArgs.add({'name': name, 'value': value});
+    _navigationArgs.add({'name': name.trim(), 'value': value.trim()});
     _saveSettings(); // Save after updating
     notifyListeners();
   }
@@ -223,7 +233,7 @@ class SettingsProvider extends ChangeNotifier {
 
   void updateNavigationArg(int index, String name, String value) {
     if (index >= 0 && index < _navigationArgs.length) {
-      _navigationArgs[index] = {'name': name, 'value': value};
+      _navigationArgs[index] = {'name': name.trim(), 'value': value.trim()};
       _saveSettings(); // Save after updating
       notifyListeners();
     }
@@ -231,7 +241,7 @@ class SettingsProvider extends ChangeNotifier {
 
   // General Setters
   void setCameraImageTopic(String topic) {
-    _cameraImageTopic = topic;
+    _cameraImageTopic = topic.trim();
     _saveSettings();
     notifyListeners();
   }
@@ -245,20 +255,20 @@ class SettingsProvider extends ChangeNotifier {
 
   // Add new setters
   void setOdomTopic(String topic) {
-    _odomTopic = topic;
+    _odomTopic = topic.trim();
     _saveSettings();
     notifyListeners();
   }
 
   // Save Map Configuration Setters
   void setSaveMapLaunchFile(String file) {
-    _saveMapLaunchFile = file;
+    _saveMapLaunchFile = file.trim();
     _saveSettings();
     notifyListeners();
   }
 
   void addSaveMapArg(String name, String value) {
-    _saveMapArgs.add({'name': name, 'value': value});
+    _saveMapArgs.add({'name': name.trim(), 'value': value.trim()});
     _saveSettings();
     notifyListeners();
   }
@@ -273,9 +283,16 @@ class SettingsProvider extends ChangeNotifier {
 
   void updateSaveMapArg(int index, String name, String value) {
     if (index >= 0 && index < _saveMapArgs.length) {
-      _saveMapArgs[index] = {'name': name, 'value': value};
+      _saveMapArgs[index] = {'name': name.trim(), 'value': value.trim()};
       _saveSettings();
       notifyListeners();
     }
+  }
+
+  // Lidar Setters
+  void setLidarTopic(String topic) {
+    _lidarTopic = topic.trim();
+    _saveSettings();
+    notifyListeners();
   }
 }

@@ -1,7 +1,16 @@
+buildscript {
+    repositories {
+        google()
+        mavenCentral()
+        jcenter()  // Required for older FFmpeg versions
+    }
+}
+
 allprojects {
     repositories {
         google()
         mavenCentral()
+        jcenter()  // Required for older FFmpeg versions
     }
 }
 

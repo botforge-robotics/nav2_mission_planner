@@ -25,7 +25,7 @@ class NavigationSettings extends StatelessWidget {
           // Header
           SettingHeader(
             title: 'Navigation Settings',
-            icon: FontAwesomeIcons.locationArrow,
+            icon: FontAwesomeIcons.route,
             screenSize: screenSize,
             modeColor: modeColor,
           ),
@@ -63,6 +63,13 @@ class NavigationSettings extends StatelessWidget {
                     fontSize: 10,
                     color: Colors.grey.shade400,
                     fontStyle: FontStyle.italic,
+                  ),
+                ),
+                Text(
+                  'Note: The "map_name" argument will be asked when starting navigation. Please make sure the argument name is correct in your launch file.',
+                  style: TextStyle(
+                    fontSize: 10,
+                    color: Colors.orange.shade300,
                   ),
                 ),
               ],

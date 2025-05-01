@@ -1,10 +1,11 @@
-import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
 import '../providers/connection_provider.dart';
 import 'package:flutter_mjpeg/flutter_mjpeg.dart';
-import 'dart:async';
+import 'dart:typed_data';
 
 class ImageViewer extends StatefulWidget {
   final String topic;
@@ -18,11 +19,15 @@ class ImageViewer extends StatefulWidget {
   });
 
   @override
-  State<ImageViewer> createState() => _ImageViewerState();
+  ImageViewerState createState() => ImageViewerState();
 }
 
-class _ImageViewerState extends State<ImageViewer> {
+class ImageViewerState extends State<ImageViewer> {
   String _errorText = '';
+  Uint8List? _currentFrame;
+  final GlobalKey _frameKey = GlobalKey();
+
+  Uint8List? get currentFrame => _currentFrame;
 
   @override
   void initState() {
@@ -60,53 +65,57 @@ class _ImageViewerState extends State<ImageViewer> {
                   child: Text(_errorText, style: TextStyle(color: Colors.red)))
               : Stack(
                   children: [
-                    Mjpeg(
-                      stream: streamUrl,
-                      width: constraints.maxWidth,
-                      height: constraints.maxHeight,
-                      fit: BoxFit.contain,
-                      timeout: const Duration(seconds: 5),
-                      isLive: true,
-                      loading: (context) {
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              CircularProgressIndicator(
-                                color: Colors.white70,
-                              ),
-                              SizedBox(height: 16),
-                              Text(
-                                'Connecting to stream...',
-                                style: TextStyle(color: Colors.white70),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                      error: (context, error, stack) {
-                        WidgetsBinding.instance.addPostFrameCallback((_) {
-                          setState(() {
-                            _errorText = 'Stream error: $error';
+                    RepaintBoundary(
+                      key: _frameKey,
+                      child: Mjpeg(
+                        stream: streamUrl,
+                        width: constraints.maxWidth,
+                        height: constraints.maxHeight,
+                        fit: BoxFit.contain,
+                        timeout: const Duration(seconds: 5),
+                        isLive: true,
+                        loading: (context) {
+                          return Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(
+                                  color: Colors.white70,
+                                ),
+                                SizedBox(height: 16),
+                                Text(
+                                  'Connecting to stream...',
+                                  style: TextStyle(color: Colors.white70),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                        error: (context, error, stack) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            setState(() {
+                              _errorText = 'Stream error: $error';
+                            });
                           });
-                        });
-                        return Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(Icons.videocam_off,
-                                  color: Colors.red.withOpacity(0.7), size: 48),
-                              SizedBox(height: 16),
-                              Text(
-                                'No video streaming\nCheck camera settings',
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                    color: Colors.red.withOpacity(0.7)),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
+                          return Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.videocam_off,
+                                    color: Colors.red.withOpacity(0.7),
+                                    size: 48),
+                                SizedBox(height: 16),
+                                Text(
+                                  'No video streaming\nCheck camera settings',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Colors.red.withOpacity(0.7)),
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      ),
                     ),
                     if (!widget.hideTopic)
                       Positioned(
@@ -134,5 +143,19 @@ class _ImageViewerState extends State<ImageViewer> {
         );
       },
     );
+  }
+
+  Future<Uint8List?> captureFrame() async {
+    try {
+      final boundary = _frameKey.currentContext?.findRenderObject();
+      if (boundary is RenderRepaintBoundary) {
+        final image = await boundary.toImage();
+        final byteData = await image.toByteData(format: ImageByteFormat.png);
+        return byteData?.buffer.asUint8List();
+      }
+    } catch (e) {
+      print('Frame capture error: $e');
+    }
+    return null;
   }
 }

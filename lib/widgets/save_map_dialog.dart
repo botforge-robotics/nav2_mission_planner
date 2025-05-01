@@ -18,6 +18,7 @@ class _MapSaveDialogState extends State<MapSaveDialog> {
   final _formKey = GlobalKey<FormState>();
   final _controller = TextEditingController();
   bool _shouldStopMapping = true; // Default to stopping mapping
+  bool _isSaving = false;
 
   bool _isValidMapName(String value) {
     if (value.isEmpty) return false;
@@ -116,49 +117,81 @@ class _MapSaveDialogState extends State<MapSaveDialog> {
 
                 const SizedBox(height: 20),
 
-                // Buttons
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    TextButton(
-                      onPressed: () => Navigator.pop(context),
-                      style: TextButton.styleFrom(
-                        foregroundColor: Colors.white,
-                      ),
-                      child: const Text(
-                        'Cancel',
-                        style: TextStyle(fontSize: 16),
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-                    ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: widget.modeColor,
-                        foregroundColor: Colors.white,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 12,
+                if (_isSaving)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      children: [
+                        CircularProgressIndicator(
+                          color: widget.modeColor,
                         ),
-                      ),
-                      onPressed: () {
-                        if (_formKey.currentState!.validate()) {
-                          // Return both map name and whether to stop mapping
-                          Navigator.pop(context, {
-                            'mapName': _controller.text.trim(),
-                            'stopMapping': _shouldStopMapping,
-                          });
-                        }
-                      },
-                      child: const Text(
-                        'Save Map',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
+                        const SizedBox(height: 16),
+                        Text(
+                          'Saving Map...',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                          ),
                         ),
-                      ),
+                      ],
                     ),
-                  ],
-                ),
+                  )
+                else
+                  Column(
+                    children: [
+                      // Buttons
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          TextButton(
+                            onPressed:
+                                _isSaving ? null : () => Navigator.pop(context),
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.white,
+                            ),
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(fontSize: 16),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: widget.modeColor,
+                              foregroundColor: Colors.white,
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                                vertical: 12,
+                              ),
+                            ),
+                            onPressed: _isSaving
+                                ? null
+                                : () async {
+                                    if (_formKey.currentState!.validate()) {
+                                      setState(() => _isSaving = true);
+                                      // Delay to show loading state
+                                      await Future.delayed(
+                                          const Duration(milliseconds: 50));
+                                      if (mounted) {
+                                        Navigator.pop(context, {
+                                          'mapName': _controller.text.trim(),
+                                          'stopMapping': _shouldStopMapping,
+                                        });
+                                      }
+                                    }
+                                  },
+                            child: const Text(
+                              'Save Map',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
               ],
             ),
           ),

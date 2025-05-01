@@ -2,7 +2,6 @@ import 'dart:typed_data';
 import 'dart:ui' as ui;
 import 'dart:async';
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:geometry_msgs/msg.dart' as geometry_msgs;
 import 'package:nav2_mission_planner/providers/settings_provider.dart';
@@ -430,14 +429,9 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
           message.pose.pose.position.y,
           message.pose.pose.orientation,
         );
-
-        // Directly use map coordinates (already in pixels)
         _robotX = mapPose.x;
         _robotY = mapPose.y;
         _robotTheta = mapPose.theta;
-
-        // Debug print
-        // print('Robot Position: ($_robotX, $_robotY) Theta: $_robotTheta');
       });
     } catch (e) {
       // print('Odometry error: $e');

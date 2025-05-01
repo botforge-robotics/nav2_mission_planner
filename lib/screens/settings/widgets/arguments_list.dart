@@ -69,7 +69,7 @@ class ArgumentsList extends StatelessWidget {
                       onTap: () => onRemove(index),
                       child: Icon(
                         Icons.close,
-                        size: screenSize.height * 0.022,
+                        size: 12,
                         color: modeColor,
                       ),
                     ),

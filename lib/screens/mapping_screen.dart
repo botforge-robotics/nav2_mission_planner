@@ -241,10 +241,40 @@ class _MappingScreenState extends State<MappingScreen> {
                       final String mapName = result['mapName'];
                       final bool stopMapping = result['stopMapping'];
 
+                      // Show saving overlay
+                      showDialog(
+                        context: context,
+                        barrierDismissible: false,
+                        builder: (context) => AlertDialog(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          content: Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                CircularProgressIndicator(
+                                    color: widget.modeColor),
+                                const SizedBox(height: 16),
+                                Text(
+                                  'Saving Map...',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      );
+
                       final launchManager =
                           Provider.of<LaunchManager>(context, listen: false);
                       final success =
                           await launchManager.saveMap(context, mapName);
+
+                      // Dismiss saving overlay
+                      if (mounted) Navigator.pop(context);
 
                       if (success) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -254,7 +284,7 @@ class _MappingScreenState extends State<MappingScreen> {
                           ),
                         );
 
-                        // Stop mapping if requested
+                        // Only stop mapping if requested AND save was successful
                         if (stopMapping) {
                           for (final entry
                               in launchManager.activeLaunches.entries) {
@@ -271,13 +301,19 @@ class _MappingScreenState extends State<MappingScreen> {
                             }
                           }
 
-                          // Reset the UI state
                           setState(() {
                             _isMappingStarted = false;
                             _isMappingActive = false;
                             _mapWidget = null;
                           });
                         }
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Failed to save map $mapName'),
+                            backgroundColor: Colors.red,
+                          ),
+                        );
                       }
                     }
                   },

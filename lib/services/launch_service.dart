@@ -102,22 +102,15 @@ class LaunchManager extends ChangeNotifier {
     final settings = Provider.of<SettingsProvider>(context, listen: false);
     final connection = Provider.of<ConnectionProvider>(context, listen: false);
 
-    // Validate launch file format
-    final parts = settings.saveMapLaunchFile.split('/');
-    if (parts.length != 2) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Invalid save map launch file format'),
-          backgroundColor: Colors.red,
-        ),
-      );
-      return false;
-    }
+    // Hardcode the launch file components
+    final package = 'nav2_mission_planner';
+    final launchFile = 'save_map.launch.py';
 
-    // Prepare arguments with map_name and maps_path
+    // Prepare arguments with map_name and map_path
     final args = [
       ...settings.saveMapArgs,
       {'name': 'map_name', 'value': mapName},
+      {'name': 'map_path', 'value': settings.mapsPath}, // Add map_path argument
     ];
 
     try {
@@ -130,10 +123,8 @@ class LaunchManager extends ChangeNotifier {
       );
 
       final request = LaunchWithArgsRequest(
-        package: parts[0],
-        launch_file: parts[1].endsWith('.launch.py')
-            ? parts[1]
-            : '${parts[1]}.launch.py',
+        package: package,
+        launch_file: launchFile,
         arguments:
             args.map((arg) => '${arg['name']}:=${arg['value']}').join(' '),
       );
@@ -144,6 +135,64 @@ class LaunchManager extends ChangeNotifier {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text('Error saving map: ${e.toString()}'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+  }
+
+  Future<bool> startNavigation(BuildContext context, String mapName) async {
+    final settings = Provider.of<SettingsProvider>(context, listen: false);
+    final connection = Provider.of<ConnectionProvider>(context, listen: false);
+
+    final parts = settings.navigationLaunchFile.split('/');
+    if (parts.length != 2) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Invalid navigation launch file format'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return false;
+    }
+
+    try {
+      final serviceClient = ServiceClient<LaunchWithArgs, LaunchWithArgsRequest,
+          LaunchWithArgsResponse>(
+        name: '/launch_with_args',
+        ros2: connection.ros2Client!,
+        type: LaunchWithArgs().fullType,
+        serviceType: LaunchWithArgs(),
+      );
+
+      // Get arguments directly from settings
+      final args = [
+        ...settings.navigationArgs,
+        {'name': 'map_name', 'value': '${mapName}.yaml'},
+      ];
+
+      final request = LaunchWithArgsRequest(
+        package: parts[0],
+        launch_file: parts[1].endsWith('.launch.py')
+            ? parts[1]
+            : '${parts[1]}.launch.py',
+        arguments:
+            args.map((arg) => '${arg['name']}:=${arg['value']}').join(' '),
+      );
+
+      final response = await serviceClient.call(request);
+      if (response.success) {
+        _activeLaunches[response.unique_id] =
+            '${parts[0]}/${parts[1]} ${args.map((a) => '${a['name']}:=${a['value']}').join(' ')}';
+        notifyListeners();
+        return true;
+      }
+      return false;
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Navigation error: ${e.toString()}'),
           backgroundColor: Colors.red,
         ),
       );

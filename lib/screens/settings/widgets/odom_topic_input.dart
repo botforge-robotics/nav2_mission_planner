@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:ros2_api/ros2_api.dart';
-import '../../../../providers/connection_provider.dart';
-import '../../../../providers/settings_provider.dart';
 import 'package:rosapi_msgs/srvs.dart';
+import 'package:nav2_mission_planner/providers/connection_provider.dart';
 
 class OdomTopicInput extends StatefulWidget {
   final String initialValue;

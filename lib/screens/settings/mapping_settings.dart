@@ -73,51 +73,6 @@ class MappingSettings extends StatelessWidget {
               ],
             ),
           ),
-          SettingCard(
-            title: 'Save Map Launch File',
-            description: 'Set Launch File and Arguments for saving map',
-            modeColor: modeColor,
-            screenSize: screenSize,
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                LaunchFileInput(
-                  initialValue: settings.saveMapLaunchFile,
-                  onChanged: settings.setSaveMapLaunchFile,
-                  screenSize: screenSize,
-                  modeColor: modeColor,
-                  hintText: 'nav2_map_server/map_saver',
-                ),
-                SizedBox(height: screenSize.height * 0.015),
-                // Arguments List (right side)
-                ArgumentsList(
-                  arguments: settings.saveMapArgs,
-                  onRemove: settings.removeSaveMapArg,
-                  onAdd: settings.addSaveMapArg,
-                  onUpdate: settings.updateSaveMapArg,
-                  screenSize: screenSize,
-                  modeColor: modeColor,
-                ),
-
-                SizedBox(height: screenSize.height * 0.015),
-                Text(
-                  'Command will be: ros2 launch [input].launch.py [arguments]',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.grey.shade400,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-                Text(
-                  'Note: The "map_name" argument will be automatically added when saving',
-                  style: TextStyle(
-                    fontSize: 10,
-                    color: Colors.orange.shade300,
-                  ),
-                ),
-              ],
-            ),
-          ),
           // Maps Path Setting
           SettingCard(
             title: 'Maps Storage Path',
