@@ -21,10 +21,10 @@ class Odometry extends RosMessage<Odometry> {
       String? child_frame_id,
       geometry_msgs.PoseWithCovariance? pose,
       geometry_msgs.TwistWithCovariance? twist})
-      : this.header = header ?? std_msgs.Header(),
-        this.child_frame_id = child_frame_id ?? '',
-        this.pose = pose ?? geometry_msgs.PoseWithCovariance(),
-        this.twist = twist ?? geometry_msgs.TwistWithCovariance();
+      : header = header ?? std_msgs.Header(),
+        child_frame_id = child_frame_id ?? '',
+        pose = pose ?? geometry_msgs.PoseWithCovariance(),
+        twist = twist ?? geometry_msgs.TwistWithCovariance();
 
   @override
   String get fullType => 'nav_msgs/msg/Odometry';

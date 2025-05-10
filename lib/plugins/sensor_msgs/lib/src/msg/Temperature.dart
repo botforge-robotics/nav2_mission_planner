@@ -15,9 +15,9 @@ class Temperature extends RosMessage<Temperature> {
 
   // Constructor
   Temperature({std_msgs.Header? header, double? temperature, double? variance})
-      : this.header = header ?? std_msgs.Header(),
-        this.temperature = temperature ?? 0.0,
-        this.variance = variance ?? 0.0;
+      : header = header ?? std_msgs.Header(),
+        temperature = temperature ?? 0.0,
+        variance = variance ?? 0.0;
 
   @override
   String get fullType => 'sensor_msgs/msg/Temperature';

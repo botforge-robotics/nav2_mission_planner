@@ -11,7 +11,7 @@ class ManageLifecycleNodesRequest
   static ManageLifecycleNodesRequest $prototype = ManageLifecycleNodesRequest();
 
   // Constructor
-  ManageLifecycleNodesRequest({int? command}) : this.command = command ?? 0;
+  ManageLifecycleNodesRequest({int? command}) : command = command ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/srv/ManageLifecycleNodes_Request';
@@ -44,8 +44,7 @@ class ManageLifecycleNodesResponse
       ManageLifecycleNodesResponse();
 
   // Constructor
-  ManageLifecycleNodesResponse({bool? success})
-      : this.success = success ?? false;
+  ManageLifecycleNodesResponse({bool? success}) : success = success ?? false;
 
   @override
   String get fullType => 'nav2_msgs/srv/ManageLifecycleNodes_Response';

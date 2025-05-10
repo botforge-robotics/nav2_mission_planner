@@ -17,8 +17,8 @@ class BehaviorTreeLog extends RosMessage<BehaviorTreeLog> {
   BehaviorTreeLog(
       {builtin_interfaces.Time? timestamp,
       List<BehaviorTreeStatusChange>? event_log})
-      : this.timestamp = timestamp ?? builtin_interfaces.Time(),
-        this.event_log = event_log ?? const [];
+      : timestamp = timestamp ?? builtin_interfaces.Time(),
+        event_log = event_log ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/msg/BehaviorTreeLog';

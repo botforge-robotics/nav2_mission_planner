@@ -14,8 +14,8 @@ class GetGeoPathRequest extends RosMessage<GetGeoPathRequest> {
   static GetGeoPathRequest $prototype = GetGeoPathRequest();
 
   GetGeoPathRequest({GeoPoint? start, GeoPoint? goal})
-      : this.start = start ?? GeoPoint(),
-        this.goal = goal ?? GeoPoint();
+      : start = start ?? GeoPoint(),
+        goal = goal ?? GeoPoint();
 
   @override
   String get fullType => 'geographic_msgs/srv/GetGeoPath_Request';
@@ -63,13 +63,13 @@ class GetGeoPathResponse extends RosMessage<GetGeoPathResponse> {
       unique_identifier_msgs.UUID? start_seg,
       unique_identifier_msgs.UUID? goal_seg,
       double? distance})
-      : this.success = success ?? false,
-        this.status = status ?? '',
-        this.plan = plan ?? GeoPath(),
-        this.network = network ?? unique_identifier_msgs.UUID(),
-        this.start_seg = start_seg ?? unique_identifier_msgs.UUID(),
-        this.goal_seg = goal_seg ?? unique_identifier_msgs.UUID(),
-        this.distance = distance ?? 0.0;
+      : success = success ?? false,
+        status = status ?? '',
+        plan = plan ?? GeoPath(),
+        network = network ?? unique_identifier_msgs.UUID(),
+        start_seg = start_seg ?? unique_identifier_msgs.UUID(),
+        goal_seg = goal_seg ?? unique_identifier_msgs.UUID(),
+        distance = distance ?? 0.0;
 
   @override
   String get fullType => 'geographic_msgs/srv/GetGeoPath_Response';

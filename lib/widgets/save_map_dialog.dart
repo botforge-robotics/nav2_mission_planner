@@ -33,7 +33,7 @@ class _MapSaveDialogState extends State<MapSaveDialog> {
         borderRadius: BorderRadius.circular(16),
       ),
       backgroundColor: Colors.grey.shade900,
-      child: Container(
+      child: SizedBox(
         width:
             widget.screenSize.width * 0.5, // Set width to 50% of screen width
         child: SingleChildScrollView(

@@ -19,9 +19,9 @@ class TimeReference extends RosMessage<TimeReference> {
       {std_msgs.Header? header,
       builtin_interfaces.Time? time_ref,
       String? source})
-      : this.header = header ?? std_msgs.Header(),
-        this.time_ref = time_ref ?? builtin_interfaces.Time(),
-        this.source = source ?? "";
+      : header = header ?? std_msgs.Header(),
+        time_ref = time_ref ?? builtin_interfaces.Time(),
+        source = source ?? "";
 
   @override
   String get fullType => 'sensor_msgs/msg/TimeReference';

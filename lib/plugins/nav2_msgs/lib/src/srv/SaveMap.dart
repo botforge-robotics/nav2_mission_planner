@@ -22,12 +22,12 @@ class SaveMapRequest extends RosMessage<SaveMapRequest> {
       String? map_mode,
       double? free_thresh,
       double? occupied_thresh})
-      : this.map_topic = map_topic ?? '',
-        this.map_url = map_url ?? '',
-        this.image_format = image_format ?? '',
-        this.map_mode = map_mode ?? '',
-        this.free_thresh = free_thresh ?? 0.0,
-        this.occupied_thresh = occupied_thresh ?? 0.0;
+      : map_topic = map_topic ?? '',
+        map_url = map_url ?? '',
+        image_format = image_format ?? '',
+        map_mode = map_mode ?? '',
+        free_thresh = free_thresh ?? 0.0,
+        occupied_thresh = occupied_thresh ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/srv/SaveMap_Request';
@@ -86,7 +86,7 @@ class SaveMapResponse extends RosMessage<SaveMapResponse> {
   static SaveMapResponse $prototype = SaveMapResponse();
 
   // Constructor
-  SaveMapResponse({bool? result}) : this.result = result ?? false;
+  SaveMapResponse({bool? result}) : result = result ?? false;
 
   @override
   String get fullType => 'nav2_msgs/srv/SaveMap_Response';

@@ -25,11 +25,15 @@ dependencies:
     path: ./lib/plugins/ros2_msg_utils
   nav_msgs:
     path: ./lib/plugins/nav_msgs
+  nav2_msgs:
+    path: ./lib/plugins/nav2_msgs
   image_gallery_saver:
     path: ./lib/plugins/image_gallery_saver-2.0.3
   permission_handler: ^12.0.0+1
   rosapi_msgs:
     path: ./lib/plugins/rosapi_msgs
+  builtin_interfaces:
+    path: ./lib/plugins/builtin_interfaces
 
 dev_dependencies:
   flutter_test:

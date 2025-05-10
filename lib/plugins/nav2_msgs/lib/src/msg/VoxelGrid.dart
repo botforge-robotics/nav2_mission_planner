@@ -27,13 +27,13 @@ class VoxelGrid extends RosMessage<VoxelGrid> {
       int? size_x,
       int? size_y,
       int? size_z})
-      : this.header = header ?? std_msgs.Header(),
-        this.data = data ?? const [],
-        this.origin = origin ?? geometry_msgs.Point32(),
-        this.resolutions = resolutions ?? geometry_msgs.Vector3(),
-        this.size_x = size_x ?? 0,
-        this.size_y = size_y ?? 0,
-        this.size_z = size_z ?? 0;
+      : header = header ?? std_msgs.Header(),
+        data = data ?? const [],
+        origin = origin ?? geometry_msgs.Point32(),
+        resolutions = resolutions ?? geometry_msgs.Vector3(),
+        size_x = size_x ?? 0,
+        size_y = size_y ?? 0,
+        size_z = size_z ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/msg/VoxelGrid';

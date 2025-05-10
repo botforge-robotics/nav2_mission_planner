@@ -13,8 +13,8 @@ class GetGeographicMapRequest extends RosMessage<GetGeographicMapRequest> {
   static GetGeographicMapRequest $prototype = GetGeographicMapRequest();
 
   GetGeographicMapRequest({String? url, BoundingBox? bounds})
-      : this.url = url ?? '',
-        this.bounds = bounds ?? BoundingBox();
+      : url = url ?? '',
+        bounds = bounds ?? BoundingBox();
 
   @override
   String get fullType => 'geographic_msgs/srv/GetGeographicMap_Request';
@@ -51,9 +51,9 @@ class GetGeographicMapResponse extends RosMessage<GetGeographicMapResponse> {
   static GetGeographicMapResponse $prototype = GetGeographicMapResponse();
 
   GetGeographicMapResponse({bool? success, String? status, GeographicMap? map})
-      : this.success = success ?? false,
-        this.status = status ?? '',
-        this.map = map ?? GeographicMap();
+      : success = success ?? false,
+        status = status ?? '',
+        map = map ?? GeographicMap();
 
   @override
   String get fullType => 'geographic_msgs/srv/GetGeographicMap_Response';

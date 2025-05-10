@@ -23,11 +23,11 @@ class MapMetaData extends RosMessage<MapMetaData> {
       int? width,
       int? height,
       geometry_msgs.Pose? origin})
-      : this.map_load_time = map_load_time ?? builtin_interfaces.Time(),
-        this.resolution = resolution ?? 0.0,
-        this.width = width ?? 0,
-        this.height = height ?? 0,
-        this.origin = origin ?? geometry_msgs.Pose();
+      : map_load_time = map_load_time ?? builtin_interfaces.Time(),
+        resolution = resolution ?? 0.0,
+        width = width ?? 0,
+        height = height ?? 0,
+        origin = origin ?? geometry_msgs.Pose();
 
   @override
   String get fullType => 'nav_msgs/msg/MapMetaData';

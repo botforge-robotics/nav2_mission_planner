@@ -21,10 +21,10 @@ class GridCells extends RosMessage<GridCells> {
       double? cell_width,
       double? cell_height,
       List<geometry_msgs.Point>? cells})
-      : this.header = header ?? std_msgs.Header(),
-        this.cell_width = cell_width ?? 0.0,
-        this.cell_height = cell_height ?? 0.0,
-        this.cells = cells ?? const [];
+      : header = header ?? std_msgs.Header(),
+        cell_width = cell_width ?? 0.0,
+        cell_height = cell_height ?? 0.0,
+        cells = cells ?? const [];
 
   @override
   String get fullType => 'nav_msgs/msg/GridCells';

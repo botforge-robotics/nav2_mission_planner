@@ -13,8 +13,8 @@ class GeoPoseWithCovariance extends RosMessage<GeoPoseWithCovariance> {
 
   // Constructor
   GeoPoseWithCovariance({GeoPose? pose, List<double>? covariance})
-      : this.pose = pose ?? GeoPose(),
-        this.covariance = covariance ?? const [];
+      : pose = pose ?? GeoPose(),
+        covariance = covariance ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/GeoPoseWithCovariance';

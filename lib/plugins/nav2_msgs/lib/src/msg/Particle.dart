@@ -14,8 +14,8 @@ class Particle extends RosMessage<Particle> {
 
   // Constructor
   Particle({geometry_msgs.Pose? pose, double? weight})
-      : this.pose = pose ?? geometry_msgs.Pose(),
-        this.weight = weight ?? 0.0;
+      : pose = pose ?? geometry_msgs.Pose(),
+        weight = weight ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/msg/Particle';

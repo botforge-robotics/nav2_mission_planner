@@ -15,9 +15,9 @@ class ProjectedMap extends RosMessage<ProjectedMap> {
 
   // Constructor
   ProjectedMap({nav_msgs.OccupancyGrid? map, double? min_z, double? max_z})
-      : this.map = map ?? nav_msgs.OccupancyGrid(),
-        this.min_z = min_z ?? 0.0,
-        this.max_z = max_z ?? 0.0;
+      : map = map ?? nav_msgs.OccupancyGrid(),
+        min_z = min_z ?? 0.0,
+        max_z = max_z ?? 0.0;
 
   @override
   String get fullType => 'map_msgs/msg/ProjectedMap';

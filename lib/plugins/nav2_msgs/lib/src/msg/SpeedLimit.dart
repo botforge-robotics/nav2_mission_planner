@@ -15,9 +15,9 @@ class SpeedLimit extends RosMessage<SpeedLimit> {
 
   // Constructor
   SpeedLimit({std_msgs.Header? header, bool? percentage, double? speed_limit})
-      : this.header = header ?? std_msgs.Header(),
-        this.percentage = percentage ?? false,
-        this.speed_limit = speed_limit ?? 0.0;
+      : header = header ?? std_msgs.Header(),
+        percentage = percentage ?? false,
+        speed_limit = speed_limit ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/msg/SpeedLimit';

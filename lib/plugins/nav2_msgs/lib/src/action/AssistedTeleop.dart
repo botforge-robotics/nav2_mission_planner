@@ -122,8 +122,11 @@ class AssistedTeleopFeedback extends RosMessage<AssistedTeleopFeedback> {
 
 class AssistedTeleopActionGoal
     extends RosActionGoal<AssistedTeleopGoal, AssistedTeleopActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late AssistedTeleopGoal goal;
 
   static AssistedTeleopActionGoal $prototype = AssistedTeleopActionGoal();
@@ -132,9 +135,9 @@ class AssistedTeleopActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     AssistedTeleopGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? AssistedTeleopGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? AssistedTeleopGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/AssistedTeleop_ActionGoal';
@@ -175,8 +178,11 @@ class AssistedTeleopActionGoal
 
 class AssistedTeleopActionResult
     extends RosActionResult<AssistedTeleopResult, AssistedTeleopActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late AssistedTeleopResult result;
 
   static AssistedTeleopActionResult $prototype = AssistedTeleopActionResult();
@@ -185,9 +191,9 @@ class AssistedTeleopActionResult
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     AssistedTeleopResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? AssistedTeleopResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? AssistedTeleopResult();
 
   @override
   String get fullType => 'nav2_msgs/action/AssistedTeleop_ActionResult';
@@ -229,8 +235,11 @@ uint16 error_code''';
 
 class AssistedTeleopActionFeedback extends RosActionFeedback<
     AssistedTeleopFeedback, AssistedTeleopActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late AssistedTeleopFeedback feedback;
 
   static AssistedTeleopActionFeedback $prototype =
@@ -240,9 +249,9 @@ class AssistedTeleopActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     AssistedTeleopFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? AssistedTeleopFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? AssistedTeleopFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/AssistedTeleop_ActionFeedback';

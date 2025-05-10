@@ -14,8 +14,8 @@ class SpinGoal extends RosMessage<SpinGoal> {
   static SpinGoal $prototype = SpinGoal();
 
   SpinGoal({double? target_yaw, builtin_interfaces.Duration? time_allowance})
-      : this.target_yaw = target_yaw ?? 0.0,
-        this.time_allowance = time_allowance ?? builtin_interfaces.Duration();
+      : target_yaw = target_yaw ?? 0.0,
+        time_allowance = time_allowance ?? builtin_interfaces.Duration();
 
   @override
   String get fullType => 'nav2_msgs/action/Spin_Goal';
@@ -52,9 +52,9 @@ class SpinResult extends RosMessage<SpinResult> {
   static SpinResult $prototype = SpinResult();
 
   SpinResult({builtin_interfaces.Duration? total_elapsed_time, int? error_code})
-      : this.total_elapsed_time =
+      : total_elapsed_time =
             total_elapsed_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/Spin_Result';
@@ -93,7 +93,7 @@ class SpinFeedback extends RosMessage<SpinFeedback> {
   static SpinFeedback $prototype = SpinFeedback();
 
   SpinFeedback({double? angular_distance_traveled})
-      : this.angular_distance_traveled = angular_distance_traveled ?? 0.0;
+      : angular_distance_traveled = angular_distance_traveled ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/action/Spin_Feedback';
@@ -122,8 +122,11 @@ class SpinFeedback extends RosMessage<SpinFeedback> {
 }
 
 class SpinActionGoal extends RosActionGoal<SpinGoal, SpinActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late SpinGoal goal;
 
   static SpinActionGoal $prototype = SpinActionGoal();
@@ -132,9 +135,9 @@ class SpinActionGoal extends RosActionGoal<SpinGoal, SpinActionGoal> {
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     SpinGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? SpinGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? SpinGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/Spin_ActionGoal';
@@ -173,8 +176,11 @@ builtin_interfaces/Duration time_allowance''';
 }
 
 class SpinActionResult extends RosActionResult<SpinResult, SpinActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late SpinResult result;
 
   static SpinActionResult $prototype = SpinActionResult();
@@ -183,9 +189,9 @@ class SpinActionResult extends RosActionResult<SpinResult, SpinActionResult> {
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     SpinResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? SpinResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? SpinResult();
 
   @override
   String get fullType => 'nav2_msgs/action/Spin_ActionResult';
@@ -226,8 +232,11 @@ uint16 error_code''';
 
 class SpinActionFeedback
     extends RosActionFeedback<SpinFeedback, SpinActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late SpinFeedback feedback;
 
   static SpinActionFeedback $prototype = SpinActionFeedback();
@@ -236,9 +245,9 @@ class SpinActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     SpinFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? SpinFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? SpinFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/Spin_ActionFeedback';

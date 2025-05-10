@@ -24,12 +24,12 @@ class OccupancyGridUpdate extends RosMessage<OccupancyGridUpdate> {
       int? width,
       int? height,
       List<int>? data})
-      : this.header = header ?? std_msgs.Header(),
-        this.x = x ?? 0,
-        this.y = y ?? 0,
-        this.width = width ?? 0,
-        this.height = height ?? 0,
-        this.data = data ?? const [];
+      : header = header ?? std_msgs.Header(),
+        x = x ?? 0,
+        y = y ?? 0,
+        width = width ?? 0,
+        height = height ?? 0,
+        data = data ?? const [];
 
   @override
   String get fullType => 'map_msgs/msg/OccupancyGridUpdate';

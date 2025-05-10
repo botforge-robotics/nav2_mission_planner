@@ -13,7 +13,7 @@ class WaitGoal extends RosMessage<WaitGoal> {
   static WaitGoal $prototype = WaitGoal();
 
   WaitGoal({builtin_interfaces.Duration? time})
-      : this.time = time ?? builtin_interfaces.Duration();
+      : time = time ?? builtin_interfaces.Duration();
 
   @override
   String get fullType => 'nav2_msgs/action/Wait_Goal';
@@ -47,9 +47,9 @@ class WaitResult extends RosMessage<WaitResult> {
   static WaitResult $prototype = WaitResult();
 
   WaitResult({builtin_interfaces.Duration? total_elapsed_time, int? error_code})
-      : this.total_elapsed_time =
+      : total_elapsed_time =
             total_elapsed_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/Wait_Result';
@@ -88,7 +88,7 @@ class WaitFeedback extends RosMessage<WaitFeedback> {
   static WaitFeedback $prototype = WaitFeedback();
 
   WaitFeedback({builtin_interfaces.Duration? time_left})
-      : this.time_left = time_left ?? builtin_interfaces.Duration();
+      : time_left = time_left ?? builtin_interfaces.Duration();
 
   @override
   String get fullType => 'nav2_msgs/action/Wait_Feedback';
@@ -116,8 +116,11 @@ class WaitFeedback extends RosMessage<WaitFeedback> {
 }
 
 class WaitActionGoal extends RosActionGoal<WaitGoal, WaitActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late WaitGoal goal;
 
   static WaitActionGoal $prototype = WaitActionGoal();
@@ -126,9 +129,9 @@ class WaitActionGoal extends RosActionGoal<WaitGoal, WaitActionGoal> {
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     WaitGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? WaitGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? WaitGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/Wait_ActionGoal';
@@ -166,8 +169,11 @@ class WaitActionGoal extends RosActionGoal<WaitGoal, WaitActionGoal> {
 }
 
 class WaitActionResult extends RosActionResult<WaitResult, WaitActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late WaitResult result;
 
   static WaitActionResult $prototype = WaitActionResult();
@@ -176,9 +182,9 @@ class WaitActionResult extends RosActionResult<WaitResult, WaitActionResult> {
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     WaitResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? WaitResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? WaitResult();
 
   @override
   String get fullType => 'nav2_msgs/action/Wait_ActionResult';
@@ -219,8 +225,11 @@ uint16 error_code''';
 
 class WaitActionFeedback
     extends RosActionFeedback<WaitFeedback, WaitActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late WaitFeedback feedback;
 
   static WaitActionFeedback $prototype = WaitActionFeedback();
@@ -229,9 +238,9 @@ class WaitActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     WaitFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? WaitFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? WaitFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/Wait_ActionFeedback';

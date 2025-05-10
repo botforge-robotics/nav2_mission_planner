@@ -15,8 +15,8 @@ class ParticleCloud extends RosMessage<ParticleCloud> {
 
   // Constructor
   ParticleCloud({std_msgs.Header? header, List<Particle>? particles})
-      : this.header = header ?? std_msgs.Header(),
-        this.particles = particles ?? const [];
+      : header = header ?? std_msgs.Header(),
+        particles = particles ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/msg/ParticleCloud';

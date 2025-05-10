@@ -19,9 +19,9 @@ class GetPlanRequest extends RosMessage<GetPlanRequest> {
       {geometry_msgs.PoseStamped? start,
       geometry_msgs.PoseStamped? goal,
       double? tolerance})
-      : this.start = start ?? geometry_msgs.PoseStamped(),
-        this.goal = goal ?? geometry_msgs.PoseStamped(),
-        this.tolerance = tolerance ?? 0.0;
+      : start = start ?? geometry_msgs.PoseStamped(),
+        goal = goal ?? geometry_msgs.PoseStamped(),
+        tolerance = tolerance ?? 0.0;
 
   @override
   String get fullType => 'nav_msgs/srv/GetPlan_Request';
@@ -60,7 +60,7 @@ class GetPlanResponse extends RosMessage<GetPlanResponse> {
   static GetPlanResponse $prototype = GetPlanResponse();
 
   // Constructor
-  GetPlanResponse({Path? plan}) : this.plan = plan ?? Path();
+  GetPlanResponse({Path? plan}) : plan = plan ?? Path();
 
   @override
   String get fullType => 'nav_msgs/srv/GetPlan_Response';

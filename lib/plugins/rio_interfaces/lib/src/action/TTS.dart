@@ -21,11 +21,11 @@ class TTSGoal extends RosMessage<TTSGoal> {
       String? start_expression,
       String? end_expression,
       bool? expression_sound})
-      : this.text = text ?? '',
-        this.voice_output = voice_output ?? false,
-        this.start_expression = start_expression ?? '',
-        this.end_expression = end_expression ?? '',
-        this.expression_sound = expression_sound ?? false;
+      : text = text ?? '',
+        voice_output = voice_output ?? false,
+        start_expression = start_expression ?? '',
+        end_expression = end_expression ?? '',
+        expression_sound = expression_sound ?? false;
 
   @override
   String get fullType => 'rio_interfaces/action/TTS_Goal';
@@ -79,8 +79,8 @@ class TTSResult extends RosMessage<TTSResult> {
   static TTSResult $prototype = TTSResult();
 
   TTSResult({bool? success, String? expression})
-      : this.success = success ?? false,
-        this.expression = expression ?? '';
+      : success = success ?? false,
+        expression = expression ?? '';
 
   @override
   String get fullType => 'rio_interfaces/action/TTS_Result';
@@ -118,10 +118,10 @@ class TTSFeedback extends RosMessage<TTSFeedback> {
   static TTSFeedback $prototype = TTSFeedback();
 
   TTSFeedback({int? start_idx, int? end_idx, String? word, String? expression})
-      : this.start_idx = start_idx ?? 0,
-        this.end_idx = end_idx ?? 0,
-        this.word = word ?? '',
-        this.expression = expression ?? '';
+      : start_idx = start_idx ?? 0,
+        end_idx = end_idx ?? 0,
+        word = word ?? '',
+        expression = expression ?? '';
 
   @override
   String get fullType => 'rio_interfaces/action/TTS_Feedback';
@@ -159,8 +159,11 @@ string expression''';
 }
 
 class TTSActionGoal extends RosActionGoal<TTSGoal, TTSActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late TTSGoal goal;
 
   static TTSActionGoal $prototype = TTSActionGoal();
@@ -169,9 +172,9 @@ class TTSActionGoal extends RosActionGoal<TTSGoal, TTSActionGoal> {
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     TTSGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? TTSGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? TTSGoal();
 
   @override
   String get fullType => 'rio_interfaces/action/TTS_ActionGoal';
@@ -213,8 +216,11 @@ bool expression_sound''';
 }
 
 class TTSActionResult extends RosActionResult<TTSResult, TTSActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late TTSResult result;
 
   static TTSActionResult $prototype = TTSActionResult();
@@ -223,9 +229,9 @@ class TTSActionResult extends RosActionResult<TTSResult, TTSActionResult> {
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     TTSResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? TTSResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? TTSResult();
 
   @override
   String get fullType => 'rio_interfaces/action/TTS_ActionResult';
@@ -265,8 +271,11 @@ string expression''';
 
 class TTSActionFeedback
     extends RosActionFeedback<TTSFeedback, TTSActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late TTSFeedback feedback;
 
   static TTSActionFeedback $prototype = TTSActionFeedback();
@@ -275,9 +284,9 @@ class TTSActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     TTSFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? TTSFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? TTSFeedback();
 
   @override
   String get fullType => 'rio_interfaces/action/TTS_ActionFeedback';

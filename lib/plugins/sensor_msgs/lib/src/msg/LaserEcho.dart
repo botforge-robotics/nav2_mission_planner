@@ -10,7 +10,7 @@ class LaserEcho extends RosMessage<LaserEcho> {
   static LaserEcho $prototype = LaserEcho();
 
   // Constructor
-  LaserEcho({List<double>? echoes}) : this.echoes = echoes ?? const [];
+  LaserEcho({List<double>? echoes}) : echoes = echoes ?? const [];
 
   @override
   String get fullType => 'sensor_msgs/msg/LaserEcho';
@@ -24,17 +24,13 @@ class LaserEcho extends RosMessage<LaserEcho> {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'echoes': echoes
-  };
+  Map<String, dynamic> toJson() => {'echoes': echoes};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   LaserEcho fromJson(Map<String, dynamic> jsonMap) {
-    return LaserEcho(
-      echoes: (jsonMap['echoes'] as List).cast<double>()
-    );
+    return LaserEcho(echoes: (jsonMap['echoes'] as List).cast<double>());
   }
 }

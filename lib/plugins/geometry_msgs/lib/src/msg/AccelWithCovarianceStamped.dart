@@ -17,8 +17,8 @@ class AccelWithCovarianceStamped
   // Constructor
   AccelWithCovarianceStamped(
       {std_msgs.Header? header, AccelWithCovariance? accel})
-      : this.header = header ?? std_msgs.Header(),
-        this.accel = accel ?? AccelWithCovariance();
+      : header = header ?? std_msgs.Header(),
+        accel = accel ?? AccelWithCovariance();
 
   @override
   String get fullType => 'geometry_msgs/msg/AccelWithCovarianceStamped';

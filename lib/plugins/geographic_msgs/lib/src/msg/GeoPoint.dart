@@ -13,9 +13,9 @@ class GeoPoint extends RosMessage<GeoPoint> {
 
   // Constructor
   GeoPoint({double? latitude, double? longitude, double? altitude})
-      : this.latitude = latitude ?? 0.0,
-        this.longitude = longitude ?? 0.0,
-        this.altitude = altitude ?? 0.0;
+      : latitude = latitude ?? 0.0,
+        longitude = longitude ?? 0.0,
+        altitude = altitude ?? 0.0;
 
   @override
   String get fullType => 'geographic_msgs/msg/GeoPoint';

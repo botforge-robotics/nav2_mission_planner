@@ -13,8 +13,8 @@ class GoalID extends RosMessage<GoalID> {
   static GoalID $prototype = GoalID();
   // Constructor
   GoalID({Time? stamp, String? id})
-      : this.stamp = stamp ?? Time(),
-        this.id = id ?? '';
+      : stamp = stamp ?? Time(),
+        id = id ?? '';
 
   @override
   String get fullType => 'actionlib_msgs/msg/GoalID';

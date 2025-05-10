@@ -19,9 +19,9 @@ class WayPoint extends RosMessage<WayPoint> {
       {unique_identifier_msgs.UUID? id,
       GeoPoint? position,
       List<KeyValue>? props})
-      : this.id = id ?? unique_identifier_msgs.UUID(),
-        this.position = position ?? GeoPoint(),
-        this.props = props ?? const [];
+      : id = id ?? unique_identifier_msgs.UUID(),
+        position = position ?? GeoPoint(),
+        props = props ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/WayPoint';

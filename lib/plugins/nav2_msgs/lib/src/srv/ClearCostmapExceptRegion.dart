@@ -15,7 +15,7 @@ class ClearCostmapExceptRegionRequest
 
   // Constructor
   ClearCostmapExceptRegionRequest({double? reset_distance})
-      : this.reset_distance = reset_distance ?? 0.0;
+      : reset_distance = reset_distance ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/srv/ClearCostmapExceptRegion_Request';
@@ -50,7 +50,7 @@ class ClearCostmapExceptRegionResponse
 
   // Constructor
   ClearCostmapExceptRegionResponse({std_msgs.Empty? response})
-      : this.response = response ?? std_msgs.Empty();
+      : response = response ?? std_msgs.Empty();
 
   @override
   String get fullType => 'nav2_msgs/srv/ClearCostmapExceptRegion_Response';

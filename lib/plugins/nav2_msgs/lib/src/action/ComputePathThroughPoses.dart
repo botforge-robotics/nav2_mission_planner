@@ -23,10 +23,10 @@ class ComputePathThroughPosesGoal
       geometry_msgs.PoseStamped? start,
       String? planner_id,
       bool? use_start})
-      : this.goals = goals ?? const [],
-        this.start = start ?? geometry_msgs.PoseStamped(),
-        this.planner_id = planner_id ?? '',
-        this.use_start = use_start ?? false;
+      : goals = goals ?? const [],
+        start = start ?? geometry_msgs.PoseStamped(),
+        planner_id = planner_id ?? '',
+        use_start = use_start ?? false;
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathThroughPoses_Goal';
@@ -85,9 +85,9 @@ class ComputePathThroughPosesResult
       {nav_msgs.Path? path,
       builtin_interfaces.Duration? planning_time,
       int? error_code})
-      : this.path = path ?? nav_msgs.Path(),
-        this.planning_time = planning_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+      : path = path ?? nav_msgs.Path(),
+        planning_time = planning_time ?? builtin_interfaces.Duration(),
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathThroughPoses_Result';
@@ -154,8 +154,11 @@ class ComputePathThroughPosesFeedback
 
 class ComputePathThroughPosesActionGoal extends RosActionGoal<
     ComputePathThroughPosesGoal, ComputePathThroughPosesActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late ComputePathThroughPosesGoal goal;
 
   static ComputePathThroughPosesActionGoal $prototype =
@@ -165,9 +168,9 @@ class ComputePathThroughPosesActionGoal extends RosActionGoal<
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     ComputePathThroughPosesGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? ComputePathThroughPosesGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? ComputePathThroughPosesGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathThroughPoses_ActionGoal';
@@ -210,8 +213,11 @@ bool use_start''';
 
 class ComputePathThroughPosesActionResult extends RosActionResult<
     ComputePathThroughPosesResult, ComputePathThroughPosesActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late ComputePathThroughPosesResult result;
 
   static ComputePathThroughPosesActionResult $prototype =
@@ -221,9 +227,9 @@ class ComputePathThroughPosesActionResult extends RosActionResult<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     ComputePathThroughPosesResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? ComputePathThroughPosesResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? ComputePathThroughPosesResult();
 
   @override
   String get fullType =>
@@ -266,8 +272,11 @@ uint16 error_code''';
 
 class ComputePathThroughPosesActionFeedback extends RosActionFeedback<
     ComputePathThroughPosesFeedback, ComputePathThroughPosesActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late ComputePathThroughPosesFeedback feedback;
 
   static ComputePathThroughPosesActionFeedback $prototype =
@@ -277,9 +286,9 @@ class ComputePathThroughPosesActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     ComputePathThroughPosesFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? ComputePathThroughPosesFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? ComputePathThroughPosesFeedback();
 
   @override
   String get fullType =>

@@ -28,12 +28,12 @@ class GeographicMap extends RosMessage<GeographicMap> {
     List<WayPoint>? points,
     List<MapFeature>? features,
     List<KeyValue>? props,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.id = id ?? unique_identifier_msgs.UUID(),
-        this.bounds = bounds ?? BoundingBox(),
-        this.points = points ?? const [],
-        this.features = features ?? const [],
-        this.props = props ?? const [];
+  })  : header = header ?? std_msgs.Header(),
+        id = id ?? unique_identifier_msgs.UUID(),
+        bounds = bounds ?? BoundingBox(),
+        points = points ?? const [],
+        features = features ?? const [],
+        props = props ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/GeographicMap';

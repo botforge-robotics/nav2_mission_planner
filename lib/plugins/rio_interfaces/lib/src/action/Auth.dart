@@ -11,7 +11,7 @@ class AuthGoal extends RosMessage<AuthGoal> {
 
   static AuthGoal $prototype = AuthGoal();
 
-  AuthGoal({String? message}) : this.message = message ?? '';
+  AuthGoal({String? message}) : message = message ?? '';
 
   @override
   String get fullType => 'rio_interfaces/action/Auth_Goal';
@@ -43,8 +43,8 @@ class AuthResult extends RosMessage<AuthResult> {
   static AuthResult $prototype = AuthResult();
 
   AuthResult({bool? success, String? error_message})
-      : this.success = success ?? false,
-        this.error_message = error_message ?? '';
+      : success = success ?? false,
+        error_message = error_message ?? '';
 
   @override
   String get fullType => 'rio_interfaces/action/Auth_Result';
@@ -102,8 +102,11 @@ class AuthFeedback extends RosMessage<AuthFeedback> {
 }
 
 class AuthActionGoal extends RosActionGoal<AuthGoal, AuthActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late AuthGoal goal;
 
   static AuthActionGoal $prototype = AuthActionGoal();
@@ -112,9 +115,9 @@ class AuthActionGoal extends RosActionGoal<AuthGoal, AuthActionGoal> {
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     AuthGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? AuthGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? AuthGoal();
 
   @override
   String get fullType => 'rio_interfaces/action/Auth_ActionGoal';
@@ -152,8 +155,11 @@ class AuthActionGoal extends RosActionGoal<AuthGoal, AuthActionGoal> {
 }
 
 class AuthActionResult extends RosActionResult<AuthResult, AuthActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late AuthResult result;
 
   static AuthActionResult $prototype = AuthActionResult();
@@ -162,9 +168,9 @@ class AuthActionResult extends RosActionResult<AuthResult, AuthActionResult> {
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     AuthResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? AuthResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? AuthResult();
 
   @override
   String get fullType => 'rio_interfaces/action/Auth_ActionResult';
@@ -204,8 +210,11 @@ string error_message''';
 
 class AuthActionFeedback
     extends RosActionFeedback<AuthFeedback, AuthActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late AuthFeedback feedback;
 
   static AuthActionFeedback $prototype = AuthActionFeedback();
@@ -214,9 +223,9 @@ class AuthActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     AuthFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? AuthFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? AuthFeedback();
 
   @override
   String get fullType => 'rio_interfaces/action/Auth_ActionFeedback';

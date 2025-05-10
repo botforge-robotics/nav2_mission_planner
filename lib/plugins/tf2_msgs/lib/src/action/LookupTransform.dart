@@ -161,8 +161,11 @@ class LookupTransformFeedback extends RosMessage<LookupTransformFeedback> {
 
 class LookupTransformActionGoal
     extends RosActionGoal<LookupTransformGoal, LookupTransformActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late LookupTransformGoal goal;
 
   static LookupTransformActionGoal $prototype = LookupTransformActionGoal();
@@ -216,8 +219,11 @@ tf2_msgs/action/LookupTransform_Goal goal''';
 
 class LookupTransformActionResult extends RosActionResult<LookupTransformResult,
     LookupTransformActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late LookupTransformResult result;
 
   static LookupTransformActionResult $prototype = LookupTransformActionResult();
@@ -271,8 +277,11 @@ tf2_msgs/action/LookupTransform_Result result''';
 
 class LookupTransformActionFeedback extends RosActionFeedback<
     LookupTransformFeedback, LookupTransformActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late LookupTransformFeedback feedback;
 
   static LookupTransformActionFeedback $prototype =
@@ -282,9 +291,9 @@ class LookupTransformActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     LookupTransformFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? LookupTransformFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? LookupTransformFeedback();
 
   @override
   String get fullType => 'tf2_msgs/action/LookupTransform_ActionFeedback';

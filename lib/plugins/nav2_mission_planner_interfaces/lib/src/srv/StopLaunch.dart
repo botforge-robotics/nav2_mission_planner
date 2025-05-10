@@ -9,10 +9,11 @@ class StopLaunchRequest extends RosMessage<StopLaunchRequest> {
 
   static StopLaunchRequest $prototype = StopLaunchRequest();
 
-  StopLaunchRequest({String? unique_id}) : this.unique_id = unique_id ?? '';
+  StopLaunchRequest({String? unique_id}) : unique_id = unique_id ?? '';
 
   @override
-  String get fullType => 'nav2_mission_planner_interfaces/srv/StopLaunch_Request';
+  String get fullType =>
+      'nav2_mission_planner_interfaces/srv/StopLaunch_Request';
 
   @override
   String get messageDefinition => '''string unique_id''';
@@ -23,18 +24,14 @@ class StopLaunchRequest extends RosMessage<StopLaunchRequest> {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'unique_id': unique_id
-  };
+  Map<String, dynamic> toJson() => {'unique_id': unique_id};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   StopLaunchRequest fromJson(Map<String, dynamic> jsonMap) {
-    return StopLaunchRequest(
-      unique_id: jsonMap['unique_id'] as String
-    );
+    return StopLaunchRequest(unique_id: jsonMap['unique_id'] as String);
   }
 }
 
@@ -44,10 +41,13 @@ class StopLaunchResponse extends RosMessage<StopLaunchResponse> {
 
   static StopLaunchResponse $prototype = StopLaunchResponse();
 
-  StopLaunchResponse({bool? success, String? message}) : this.success = success ?? false, this.message = message ?? '';
+  StopLaunchResponse({bool? success, String? message})
+      : success = success ?? false,
+        message = message ?? '';
 
   @override
-  String get fullType => 'nav2_mission_planner_interfaces/srv/StopLaunch_Response';
+  String get fullType =>
+      'nav2_mission_planner_interfaces/srv/StopLaunch_Response';
 
   @override
   String get messageDefinition => '''bool success
@@ -59,10 +59,7 @@ string message''';
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'success': success,
-    'message': message
-  };
+  Map<String, dynamic> toJson() => {'success': success, 'message': message};
 
   @override
   String toJsonString() => json.encode(toJson());
@@ -70,22 +67,22 @@ string message''';
   @override
   StopLaunchResponse fromJson(Map<String, dynamic> jsonMap) {
     return StopLaunchResponse(
-      success: jsonMap['success'] as bool,
-      message: jsonMap['message'] as String
-    );
+        success: jsonMap['success'] as bool,
+        message: jsonMap['message'] as String);
   }
 }
 
-class StopLaunch extends RosServiceMessage<StopLaunchRequest, StopLaunchResponse> {
+class StopLaunch
+    extends RosServiceMessage<StopLaunchRequest, StopLaunchResponse> {
   @override
   StopLaunchRequest get request => StopLaunchRequest();
-  
+
   @override
   StopLaunchResponse get response => StopLaunchResponse();
-  
+
   @override
   String get fullType => 'nav2_mission_planner_interfaces/srv/StopLaunch';
-  
+
   @override
   String get messageDefinition => '''
 string unique_id

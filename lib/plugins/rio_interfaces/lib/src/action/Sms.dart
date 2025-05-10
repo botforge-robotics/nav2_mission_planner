@@ -14,9 +14,9 @@ class SmsGoal extends RosMessage<SmsGoal> {
   static SmsGoal $prototype = SmsGoal();
 
   SmsGoal({int? number, String? message, int? sim_slot})
-      : this.number = number ?? 0,
-        this.message = message ?? '',
-        this.sim_slot = sim_slot ?? 0;
+      : number = number ?? 0,
+        message = message ?? '',
+        sim_slot = sim_slot ?? 0;
 
   @override
   String get fullType => 'rio_interfaces/action/Sms_Goal';
@@ -54,8 +54,8 @@ class SmsResult extends RosMessage<SmsResult> {
   static SmsResult $prototype = SmsResult();
 
   SmsResult({bool? success, String? error_message})
-      : this.success = success ?? false,
-        this.error_message = error_message ?? '';
+      : success = success ?? false,
+        error_message = error_message ?? '';
 
   @override
   String get fullType => 'rio_interfaces/action/Sms_Result';
@@ -113,8 +113,11 @@ class SmsFeedback extends RosMessage<SmsFeedback> {
 }
 
 class SmsActionGoal extends RosActionGoal<SmsGoal, SmsActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late SmsGoal goal;
 
   static SmsActionGoal $prototype = SmsActionGoal();
@@ -123,9 +126,9 @@ class SmsActionGoal extends RosActionGoal<SmsGoal, SmsActionGoal> {
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     SmsGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? SmsGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? SmsGoal();
 
   @override
   String get fullType => 'rio_interfaces/action/Sms_ActionGoal';
@@ -165,8 +168,11 @@ uint8 sim_slot''';
 }
 
 class SmsActionResult extends RosActionResult<SmsResult, SmsActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late SmsResult result;
 
   static SmsActionResult $prototype = SmsActionResult();
@@ -175,9 +181,9 @@ class SmsActionResult extends RosActionResult<SmsResult, SmsActionResult> {
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     SmsResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? SmsResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? SmsResult();
 
   @override
   String get fullType => 'rio_interfaces/action/Sms_ActionResult';
@@ -217,8 +223,11 @@ string error_message''';
 
 class SmsActionFeedback
     extends RosActionFeedback<SmsFeedback, SmsActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late SmsFeedback feedback;
 
   static SmsActionFeedback $prototype = SmsActionFeedback();
@@ -227,9 +236,9 @@ class SmsActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     SmsFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? SmsFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? SmsFeedback();
 
   @override
   String get fullType => 'rio_interfaces/action/Sms_ActionFeedback';

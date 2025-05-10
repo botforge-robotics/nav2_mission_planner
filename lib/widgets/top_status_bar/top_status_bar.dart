@@ -47,28 +47,64 @@ class TopStatusBar extends StatelessWidget {
                 displayStatusText: displayStatusText,
                 currentMode: currentMode,
                 onModeChanged: (newMode) async {
-                  // ONLY handle stopping mapping, NEVER start mapping
-                  if (currentMode == AppModes.mapping &&
+                  final launchManager =
+                      Provider.of<LaunchManager>(context, listen: false);
+                  final activeSession = launchManager.activeSession;
+
+                  // Allow only specific mode transitions when sessions are active
+                  if (activeSession == SessionType.mapping &&
+                      newMode != AppModes.settings &&
                       newMode != AppModes.mapping) {
-                    // Confirm stopping active mapping when LEAVING mapping mode
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Stop mapping before changing modes'),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    return;
+                  }
+
+                  // Handle active navigation session
+                  if (activeSession == SessionType.navigation &&
+                      newMode != AppModes.settings &&
+                      newMode != AppModes.navigation) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Stop navigation before changing modes'),
+                        backgroundColor: Colors.red,
+                        duration: Duration(seconds: 2),
+                      ),
+                    );
+                    return;
+                  }
+
+                  if (newMode == AppModes.settings) {
+                    onModeChanged(newMode);
+                    return;
+                  }
+
+                  // Handle stopping active navigation or mapping sessions
+                  if ((currentMode == AppModes.mapping ||
+                          currentMode == AppModes.navigation) &&
+                      newMode != currentMode) {
                     final launchManager =
                         Provider.of<LaunchManager>(context, listen: false);
                     if (launchManager.activeLaunches.isNotEmpty) {
                       final shouldStop = await showDialog<bool>(
                         context: context,
                         builder: (context) => AlertDialog(
-                          title: const Text('Active Mapping Session'),
-                          content: const Text(
-                              'You have an active mapping session. Stop it before changing modes?'),
+                          title: const Text('Active Session'),
+                          content: Text(
+                              'You have an active ${currentMode.name} session. Stop it before changing modes?'),
                           actions: [
                             TextButton(
                               onPressed: () => Navigator.pop(context, false),
-                              child: const Text('Keep Mapping'),
+                              child: const Text('Keep Running'),
                             ),
                             TextButton(
                               onPressed: () => Navigator.pop(context),
-                              child: const Text('Cancel',
-                                  style: TextStyle(color: Colors.white)),
+                              child: const Text('Cancel'),
                             ),
                             ElevatedButton(
                               style: ElevatedButton.styleFrom(
@@ -76,7 +112,7 @@ class TopStatusBar extends StatelessWidget {
                                 foregroundColor: Colors.white,
                               ),
                               onPressed: () => Navigator.pop(context, true),
-                              child: const Text('Stop Mapping'),
+                              child: const Text('Stop Session'),
                             ),
                           ],
                         ),
@@ -91,7 +127,7 @@ class TopStatusBar extends StatelessWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               SnackBar(
                                 content: Text(
-                                    'Failed to stop mapping: ${e.toString()}'),
+                                    'Failed to stop session: ${e.toString()}'),
                                 backgroundColor: Colors.red,
                               ),
                             );
@@ -103,7 +139,7 @@ class TopStatusBar extends StatelessWidget {
                     }
                   }
 
-                  // Simply change the mode, nothing else
+                  // Proceed with mode change
                   onModeChanged(newMode);
                 },
               ),

@@ -19,9 +19,9 @@ class BackUpGoal extends RosMessage<BackUpGoal> {
       {geometry_msgs.Point? target,
       double? speed,
       builtin_interfaces.Duration? time_allowance})
-      : this.target = target ?? geometry_msgs.Point(),
-        this.speed = speed ?? 0.0,
-        this.time_allowance = time_allowance ?? builtin_interfaces.Duration();
+      : target = target ?? geometry_msgs.Point(),
+        speed = speed ?? 0.0,
+        time_allowance = time_allowance ?? builtin_interfaces.Duration();
 
   @override
   String get fullType => 'nav2_msgs/action/BackUp_Goal';
@@ -65,9 +65,9 @@ class BackUpResult extends RosMessage<BackUpResult> {
 
   BackUpResult(
       {builtin_interfaces.Duration? total_elapsed_time, int? error_code})
-      : this.total_elapsed_time =
+      : total_elapsed_time =
             total_elapsed_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/BackUp_Result';
@@ -106,7 +106,7 @@ class BackUpFeedback extends RosMessage<BackUpFeedback> {
   static BackUpFeedback $prototype = BackUpFeedback();
 
   BackUpFeedback({double? distance_traveled})
-      : this.distance_traveled = distance_traveled ?? 0.0;
+      : distance_traveled = distance_traveled ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/action/BackUp_Feedback';
@@ -133,8 +133,11 @@ class BackUpFeedback extends RosMessage<BackUpFeedback> {
 }
 
 class BackUpActionGoal extends RosActionGoal<BackUpGoal, BackUpActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late BackUpGoal goal;
 
   static BackUpActionGoal $prototype = BackUpActionGoal();
@@ -143,9 +146,9 @@ class BackUpActionGoal extends RosActionGoal<BackUpGoal, BackUpActionGoal> {
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     BackUpGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? BackUpGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? BackUpGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/BackUp_ActionGoal';
@@ -186,8 +189,11 @@ builtin_interfaces/Duration time_allowance''';
 
 class BackUpActionResult
     extends RosActionResult<BackUpResult, BackUpActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late BackUpResult result;
 
   static BackUpActionResult $prototype = BackUpActionResult();
@@ -196,9 +202,9 @@ class BackUpActionResult
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     BackUpResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? BackUpResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? BackUpResult();
 
   @override
   String get fullType => 'nav2_msgs/action/BackUp_ActionResult';
@@ -240,8 +246,11 @@ uint16 error_code''';
 
 class BackUpActionFeedback
     extends RosActionFeedback<BackUpFeedback, BackUpActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late BackUpFeedback feedback;
 
   static BackUpActionFeedback $prototype = BackUpActionFeedback();
@@ -250,9 +259,9 @@ class BackUpActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     BackUpFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? BackUpFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? BackUpFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/BackUp_ActionFeedback';

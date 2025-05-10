@@ -12,7 +12,7 @@ class LoadMapRequest extends RosMessage<LoadMapRequest> {
   static LoadMapRequest $prototype = LoadMapRequest();
 
   // Constructor
-  LoadMapRequest({String? map_url}) : this.map_url = map_url ?? '';
+  LoadMapRequest({String? map_url}) : map_url = map_url ?? '';
 
   @override
   String get fullType => 'nav_msgs/srv/LoadMap_Request';
@@ -45,8 +45,8 @@ class LoadMapResponse extends RosMessage<LoadMapResponse> {
 
   // Constructor
   LoadMapResponse({OccupancyGrid? map, int? result})
-      : this.map = map ?? OccupancyGrid(),
-        this.result = result ?? 0;
+      : map = map ?? OccupancyGrid(),
+        result = result ?? 0;
 
   @override
   String get fullType => 'nav_msgs/srv/LoadMap_Response';

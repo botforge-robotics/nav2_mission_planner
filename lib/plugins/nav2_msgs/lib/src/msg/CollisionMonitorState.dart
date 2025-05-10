@@ -12,8 +12,8 @@ class CollisionMonitorState extends RosMessage<CollisionMonitorState> {
 
   // Constructor
   CollisionMonitorState({int? action_type, String? polygon_name})
-      : this.action_type = action_type ?? 0,
-        this.polygon_name = polygon_name ?? '';
+      : action_type = action_type ?? 0,
+        polygon_name = polygon_name ?? '';
 
   @override
   String get fullType => 'nav2_msgs/msg/CollisionMonitorState';

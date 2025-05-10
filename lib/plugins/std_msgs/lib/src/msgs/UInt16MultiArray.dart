@@ -16,8 +16,8 @@ class UInt16MultiArray extends RosMessage<UInt16MultiArray> {
   UInt16MultiArray({
     MultiArrayLayout? layout,
     List<int>? data,
-  })  : this.layout = layout ?? MultiArrayLayout(),
-        this.data = data ?? [];
+  })  : layout = layout ?? MultiArrayLayout(),
+        data = data ?? [];
 
   @override
   String get fullType => 'std_msgs/msg/UInt16MultiArray';

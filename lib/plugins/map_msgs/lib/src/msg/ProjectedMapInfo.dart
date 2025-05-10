@@ -24,13 +24,13 @@ class ProjectedMapInfo extends RosMessage<ProjectedMapInfo> {
       double? height,
       double? min_z,
       double? max_z})
-      : this.frame_id = frame_id ?? '',
-        this.x = x ?? 0.0,
-        this.y = y ?? 0.0,
-        this.width = width ?? 0.0,
-        this.height = height ?? 0.0,
-        this.min_z = min_z ?? 0.0,
-        this.max_z = max_z ?? 0.0;
+      : frame_id = frame_id ?? '',
+        x = x ?? 0.0,
+        y = y ?? 0.0,
+        width = width ?? 0.0,
+        height = height ?? 0.0,
+        min_z = min_z ?? 0.0,
+        max_z = max_z ?? 0.0;
 
   @override
   String get fullType => 'map_msgs/msg/ProjectedMapInfo';

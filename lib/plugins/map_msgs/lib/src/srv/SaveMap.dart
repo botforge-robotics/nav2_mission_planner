@@ -13,7 +13,7 @@ class SaveMapRequest extends RosMessage<SaveMapRequest> {
 
   // Constructor
   SaveMapRequest({std_msgs.StringMessage? filename})
-      : this.filename = filename ?? std_msgs.StringMessage();
+      : filename = filename ?? std_msgs.StringMessage();
 
   @override
   String get fullType => 'map_msgs/srv/SaveMap_Request';

@@ -15,8 +15,8 @@ class GeoPath extends RosMessage<GeoPath> {
 
   // Constructor
   GeoPath({std_msgs.Header? header, List<GeoPoseStamped>? poses})
-      : this.header = header ?? std_msgs.Header(),
-        this.poses = poses ?? const [];
+      : header = header ?? std_msgs.Header(),
+        poses = poses ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/GeoPath';

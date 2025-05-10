@@ -5,8 +5,6 @@ import 'dart:convert';
 import 'package:ros2_msg_utils/ros2_msg_utils.dart';
 
 class GetExpressionRequest extends RosMessage<GetExpressionRequest> {
-  
-
   static GetExpressionRequest $prototype = GetExpressionRequest();
 
   GetExpressionRequest();
@@ -23,18 +21,14 @@ class GetExpressionRequest extends RosMessage<GetExpressionRequest> {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    
-  };
+  Map<String, dynamic> toJson() => {};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   GetExpressionRequest fromJson(Map<String, dynamic> jsonMap) {
-    return GetExpressionRequest(
-      
-    );
+    return GetExpressionRequest();
   }
 }
 
@@ -43,7 +37,7 @@ class GetExpressionResponse extends RosMessage<GetExpressionResponse> {
 
   static GetExpressionResponse $prototype = GetExpressionResponse();
 
-  GetExpressionResponse({String? expression}) : this.expression = expression ?? '';
+  GetExpressionResponse({String? expression}) : expression = expression ?? '';
 
   @override
   String get fullType => 'rio_interfaces/srv/GetExpression_Response';
@@ -57,31 +51,28 @@ class GetExpressionResponse extends RosMessage<GetExpressionResponse> {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'expression': expression
-  };
+  Map<String, dynamic> toJson() => {'expression': expression};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   GetExpressionResponse fromJson(Map<String, dynamic> jsonMap) {
-    return GetExpressionResponse(
-      expression: jsonMap['expression'] as String
-    );
+    return GetExpressionResponse(expression: jsonMap['expression'] as String);
   }
 }
 
-class GetExpression extends RosServiceMessage<GetExpressionRequest, GetExpressionResponse> {
+class GetExpression
+    extends RosServiceMessage<GetExpressionRequest, GetExpressionResponse> {
   @override
   GetExpressionRequest get request => GetExpressionRequest();
-  
+
   @override
   GetExpressionResponse get response => GetExpressionResponse();
-  
+
   @override
   String get fullType => 'rio_interfaces/srv/GetExpression';
-  
+
   @override
   String get messageDefinition => '''
 

@@ -28,13 +28,13 @@ class Image extends RosMessage<Image> {
       int? is_bigendian,
       int? step,
       List<int>? data})
-      : this.header = header ?? std_msgs.Header(),
+      : header = header ?? std_msgs.Header(),
         height = height ?? 0,
         width = width ?? 0,
         encoding = encoding ?? '',
         is_bigendian = is_bigendian ?? 0,
         step = step ?? 0,
-        this.data = data ?? const [];
+        data = data ?? const [];
 
   @override
   String get fullType => 'sensor_msgs/msg/Image';

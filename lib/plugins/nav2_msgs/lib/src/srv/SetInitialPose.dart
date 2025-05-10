@@ -13,7 +13,7 @@ class SetInitialPoseRequest extends RosMessage<SetInitialPoseRequest> {
 
   // Constructor
   SetInitialPoseRequest({geometry_msgs.PoseWithCovarianceStamped? pose})
-      : this.pose = pose ?? geometry_msgs.PoseWithCovarianceStamped();
+      : pose = pose ?? geometry_msgs.PoseWithCovarianceStamped();
 
   @override
   String get fullType => 'nav2_msgs/srv/SetInitialPose_Request';

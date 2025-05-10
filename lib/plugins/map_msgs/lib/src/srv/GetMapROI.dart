@@ -16,10 +16,10 @@ class GetMapROIRequest extends RosMessage<GetMapROIRequest> {
 
   // Constructor
   GetMapROIRequest({double? x, double? y, double? l_x, double? l_y})
-      : this.x = x ?? 0.0,
-        this.y = y ?? 0.0,
-        this.l_x = l_x ?? 0.0,
-        this.l_y = l_y ?? 0.0;
+      : x = x ?? 0.0,
+        y = y ?? 0.0,
+        l_x = l_x ?? 0.0,
+        l_y = l_y ?? 0.0;
 
   @override
   String get fullType => 'map_msgs/srv/GetMapROI_Request';
@@ -58,7 +58,7 @@ class GetMapROIResponse extends RosMessage<GetMapROIResponse> {
 
   // Constructor
   GetMapROIResponse({nav_msgs.OccupancyGrid? sub_map})
-      : this.sub_map = sub_map ?? nav_msgs.OccupancyGrid();
+      : sub_map = sub_map ?? nav_msgs.OccupancyGrid();
 
   @override
   String get fullType => 'map_msgs/srv/GetMapROI_Response';

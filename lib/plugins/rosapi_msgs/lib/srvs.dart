@@ -1,4 +1,4 @@
-library rosapi_msgs;
+library;
 
 export 'src/srvs/DeleteParam.dart';
 export 'src/srvs/GetActionServers.dart';

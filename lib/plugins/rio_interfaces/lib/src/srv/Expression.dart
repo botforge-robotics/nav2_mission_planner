@@ -10,7 +10,9 @@ class ExpressionRequest extends RosMessage<ExpressionRequest> {
 
   static ExpressionRequest $prototype = ExpressionRequest();
 
-  ExpressionRequest({String? expression, bool? expression_sound}) : this.expression = expression ?? '', this.expression_sound = expression_sound ?? false;
+  ExpressionRequest({String? expression, bool? expression_sound})
+      : expression = expression ?? '',
+        expression_sound = expression_sound ?? false;
 
   @override
   String get fullType => 'rio_interfaces/srv/Expression_Request';
@@ -25,10 +27,8 @@ bool expression_sound''';
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'expression': expression,
-    'expression_sound': expression_sound
-  };
+  Map<String, dynamic> toJson() =>
+      {'expression': expression, 'expression_sound': expression_sound};
 
   @override
   String toJsonString() => json.encode(toJson());
@@ -36,9 +36,8 @@ bool expression_sound''';
   @override
   ExpressionRequest fromJson(Map<String, dynamic> jsonMap) {
     return ExpressionRequest(
-      expression: jsonMap['expression'] as String,
-      expression_sound: jsonMap['expression_sound'] as bool
-    );
+        expression: jsonMap['expression'] as String,
+        expression_sound: jsonMap['expression_sound'] as bool);
   }
 }
 
@@ -47,7 +46,7 @@ class ExpressionResponse extends RosMessage<ExpressionResponse> {
 
   static ExpressionResponse $prototype = ExpressionResponse();
 
-  ExpressionResponse({bool? success}) : this.success = success ?? false;
+  ExpressionResponse({bool? success}) : success = success ?? false;
 
   @override
   String get fullType => 'rio_interfaces/srv/Expression_Response';
@@ -61,31 +60,28 @@ class ExpressionResponse extends RosMessage<ExpressionResponse> {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'success': success
-  };
+  Map<String, dynamic> toJson() => {'success': success};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   ExpressionResponse fromJson(Map<String, dynamic> jsonMap) {
-    return ExpressionResponse(
-      success: jsonMap['success'] as bool
-    );
+    return ExpressionResponse(success: jsonMap['success'] as bool);
   }
 }
 
-class Expression extends RosServiceMessage<ExpressionRequest, ExpressionResponse> {
+class Expression
+    extends RosServiceMessage<ExpressionRequest, ExpressionResponse> {
   @override
   ExpressionRequest get request => ExpressionRequest();
-  
+
   @override
   ExpressionResponse get response => ExpressionResponse();
-  
+
   @override
   String get fullType => 'rio_interfaces/srv/Expression';
-  
+
   @override
   String get messageDefinition => '''
 string expression

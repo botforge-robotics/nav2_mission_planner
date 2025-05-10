@@ -13,9 +13,9 @@ class LaunchWithArgsRequest extends RosMessage<LaunchWithArgsRequest> {
 
   LaunchWithArgsRequest(
       {String? package, String? launch_file, String? arguments})
-      : this.package = package ?? '',
-        this.launch_file = launch_file ?? '',
-        this.arguments = arguments ?? '';
+      : package = package ?? '',
+        launch_file = launch_file ?? '',
+        arguments = arguments ?? '';
 
   @override
   String get fullType =>
@@ -55,9 +55,9 @@ class LaunchWithArgsResponse extends RosMessage<LaunchWithArgsResponse> {
   static LaunchWithArgsResponse $prototype = LaunchWithArgsResponse();
 
   LaunchWithArgsResponse({bool? success, String? message, String? unique_id})
-      : this.success = success ?? false,
-        this.message = message ?? '',
-        this.unique_id = unique_id ?? '';
+      : success = success ?? false,
+        message = message ?? '',
+        unique_id = unique_id ?? '';
 
   @override
   String get fullType =>

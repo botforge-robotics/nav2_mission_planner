@@ -12,8 +12,8 @@ class KeyValue extends RosMessage<KeyValue> {
 
   // Constructor
   KeyValue({String? key, String? value})
-      : this.key = key ?? '',
-        this.value = value ?? '';
+      : key = key ?? '',
+        value = value ?? '';
 
   @override
   String get fullType => 'geographic_msgs/msg/KeyValue';

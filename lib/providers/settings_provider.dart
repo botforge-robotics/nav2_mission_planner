@@ -34,6 +34,10 @@ class SettingsProvider extends ChangeNotifier {
   // Add to existing properties
   String _lidarTopic = DefaultSettings.defaultLidarTopic;
 
+  // Add these to the class
+  bool _cameraVisible = DefaultSettings.defaultCameraVisible;
+  bool _joystickVisible = DefaultSettings.defaultJoystickVisible;
+
   // Getters
   String get cmdVelTopic => _cmdVelTopic;
   double get linearVelocity => _linearVelocity;
@@ -49,6 +53,8 @@ class SettingsProvider extends ChangeNotifier {
   String get saveMapLaunchFile => _saveMapLaunchFile;
   List<Map<String, String>> get saveMapArgs => _saveMapArgs;
   String get lidarTopic => _lidarTopic;
+  bool get cameraVisible => _cameraVisible;
+  bool get joystickVisible => _joystickVisible;
 
   SettingsProvider() {
     _loadSettings();
@@ -111,6 +117,12 @@ class SettingsProvider extends ChangeNotifier {
     _lidarTopic =
         prefs.getString('lidarTopic') ?? DefaultSettings.defaultLidarTopic;
 
+    // Load visibility settings
+    _cameraVisible =
+        prefs.getBool('cameraVisible') ?? DefaultSettings.defaultCameraVisible;
+    _joystickVisible = prefs.getBool('joystickVisible') ??
+        DefaultSettings.defaultJoystickVisible;
+
     notifyListeners();
   }
 
@@ -131,6 +143,8 @@ class SettingsProvider extends ChangeNotifier {
     await prefs.setString('saveMapLaunchFile', _saveMapLaunchFile);
     await prefs.setString('saveMapArgs', json.encode(_saveMapArgs));
     await prefs.setString('lidarTopic', _lidarTopic);
+    await prefs.setBool('cameraVisible', _cameraVisible);
+    await prefs.setBool('joystickVisible', _joystickVisible);
   }
 
   // Setters with validation
@@ -293,6 +307,16 @@ class SettingsProvider extends ChangeNotifier {
   void setLidarTopic(String topic) {
     _lidarTopic = topic.trim();
     _saveSettings();
+    notifyListeners();
+  }
+
+  void toggleCameraVisibility() {
+    _cameraVisible = !_cameraVisible;
+    notifyListeners();
+  }
+
+  void toggleJoystickVisibility() {
+    _joystickVisible = !_joystickVisible;
     notifyListeners();
   }
 }

@@ -90,10 +90,6 @@ class _LidarWidgetState extends State<LidarWidget> {
 
       for (int i = 0; i < scan.ranges.length; i++) {
         final element = scan.ranges[i];
-        if (element is! num) {
-          currentAngle += angleIncrement;
-          continue;
-        }
         final double range = element.toDouble();
         if (!range.isFinite ||
             range < scan.range_min ||

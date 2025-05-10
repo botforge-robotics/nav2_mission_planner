@@ -12,7 +12,7 @@ class ProjectedMapsInfoRequest extends RosMessage<ProjectedMapsInfoRequest> {
 
   // Constructor
   ProjectedMapsInfoRequest({List<ProjectedMapInfo>? projected_maps_info})
-      : this.projected_maps_info = projected_maps_info ?? const [];
+      : projected_maps_info = projected_maps_info ?? const [];
 
   @override
   String get fullType => 'map_msgs/srv/ProjectedMapsInfo_Request';

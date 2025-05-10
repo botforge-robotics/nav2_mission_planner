@@ -42,7 +42,7 @@ class GetPointMapResponse extends RosMessage<GetPointMapResponse> {
 
   // Constructor
   GetPointMapResponse({sensor_msgs.PointCloud2? map})
-      : this.map = map ?? sensor_msgs.PointCloud2();
+      : map = map ?? sensor_msgs.PointCloud2();
 
   @override
   String get fullType => 'map_msgs/srv/GetPointMap_Response';

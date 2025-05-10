@@ -16,8 +16,8 @@ class Float32MultiArray extends RosMessage<Float32MultiArray> {
   Float32MultiArray({
     MultiArrayLayout? layout,
     List<double>? data,
-  })  : this.layout = layout ?? MultiArrayLayout(),
-        this.data = data ?? const [];
+  })  : layout = layout ?? MultiArrayLayout(),
+        data = data ?? const [];
 
   @override
   String get fullType => 'std_msgs/msg/Float32MultiArray';

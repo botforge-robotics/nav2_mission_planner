@@ -11,8 +11,9 @@ class CollisionDetectorState extends RosMessage<CollisionDetectorState> {
   static CollisionDetectorState $prototype = CollisionDetectorState();
 
   // Constructor
-  CollisionDetectorState({List<String>? polygons, List<bool>? detections}) : this.polygons = polygons ?? const [],
-        this.detections = detections ?? const [];
+  CollisionDetectorState({List<String>? polygons, List<bool>? detections})
+      : polygons = polygons ?? const [],
+        detections = detections ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/msg/CollisionDetectorState';
@@ -27,10 +28,8 @@ bool[] detections''';
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'polygons': polygons,
-      'detections': detections
-  };
+  Map<String, dynamic> toJson() =>
+      {'polygons': polygons, 'detections': detections};
 
   @override
   String toJsonString() => json.encode(toJson());
@@ -38,8 +37,7 @@ bool[] detections''';
   @override
   CollisionDetectorState fromJson(Map<String, dynamic> jsonMap) {
     return CollisionDetectorState(
-      polygons: (jsonMap['polygons'] as List).cast<String>(),
-      detections: (jsonMap['detections'] as List).cast<bool>()
-    );
+        polygons: (jsonMap['polygons'] as List).cast<String>(),
+        detections: (jsonMap['detections'] as List).cast<bool>());
   }
 }

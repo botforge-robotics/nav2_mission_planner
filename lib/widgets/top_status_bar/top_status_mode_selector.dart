@@ -110,6 +110,36 @@ class TopStatusModeSelector extends StatelessWidget {
       ],
     ).then((selectedMode) async {
       if (selectedMode != null) {
+        final launchManager =
+            Provider.of<LaunchManager>(context, listen: false);
+        final activeSession = launchManager.activeSession;
+
+        if (activeSession == SessionType.mapping &&
+            selectedMode != AppModes.mapping &&
+            selectedMode != AppModes.settings) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cannot switch modes while mapping is active'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+
+        if (activeSession == SessionType.navigation &&
+            selectedMode != AppModes.navigation &&
+            selectedMode != AppModes.settings) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Cannot switch modes while navigation is active'),
+              backgroundColor: Colors.red,
+              duration: Duration(seconds: 2),
+            ),
+          );
+          return;
+        }
+
         onModeChanged(selectedMode);
       }
     });
@@ -117,37 +147,53 @@ class TopStatusModeSelector extends StatelessWidget {
 
   PopupMenuEntry<AppModes> _buildDropdownItem(
       BuildContext context, AppModes mode, IconData icon) {
-    final currentMode =
-        Provider.of<LaunchManager>(context, listen: false).activeLaunches;
-    final bool isSelected = mode == this.currentMode;
-    final Color modeColor = ModeColors.modeColorMap[mode]!;
+    final activeSession =
+        Provider.of<LaunchManager>(context, listen: false).activeSession;
+
+    final bool isDisabled =
+        // Disable when mapping is active
+        (activeSession == SessionType.mapping &&
+                mode != AppModes.mapping &&
+                mode != AppModes.settings) ||
+            // Disable when navigation is active
+            (activeSession == SessionType.navigation &&
+                mode != AppModes.navigation &&
+                mode != AppModes.settings);
 
     return PopupMenuItem<AppModes>(
-      value: mode,
+      value: isDisabled ? null : mode,
       height: 45,
+      onTap: isDisabled ? null : () {},
       child: Container(
         decoration: BoxDecoration(
-          color: isSelected ? modeColor.withOpacity(0.1) : Colors.transparent,
+          color: mode == currentMode
+              ? ModeColors.modeColorMap[mode]!.withOpacity(0.1)
+              : Colors.transparent,
           borderRadius: BorderRadius.circular(6),
         ),
         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
         child: Row(
           children: [
-            Icon(icon, size: 20, color: modeColor),
+            Icon(icon,
+                size: 20,
+                color:
+                    isDisabled ? Colors.grey : ModeColors.modeColorMap[mode]!),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 mode.toString().split('.').last,
                 style: TextStyle(
-                  color: Colors.white,
+                  color: isDisabled ? Colors.grey : Colors.white,
                   fontSize: 14,
-                  fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+                  fontWeight:
+                      mode == currentMode ? FontWeight.bold : FontWeight.normal,
                 ),
               ),
             ),
-            if (isSelected) ...[
+            if (mode == currentMode && !isDisabled) ...[
               const SizedBox(width: 8),
-              Icon(Icons.check, size: 18, color: modeColor),
+              Icon(Icons.check,
+                  size: 18, color: ModeColors.modeColorMap[mode]!),
             ],
           ],
         ),

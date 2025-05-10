@@ -17,8 +17,8 @@ class GeoPoseWithCovarianceStamped
   // Constructor
   GeoPoseWithCovarianceStamped(
       {std_msgs.Header? header, GeoPoseWithCovariance? pose})
-      : this.header = header ?? std_msgs.Header(),
-        this.pose = pose ?? GeoPoseWithCovariance();
+      : header = header ?? std_msgs.Header(),
+        pose = pose ?? GeoPoseWithCovariance();
 
   @override
   String get fullType => 'geographic_msgs/msg/GeoPoseWithCovarianceStamped';

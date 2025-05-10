@@ -16,8 +16,8 @@ class UInt8MultiArray extends RosMessage<UInt8MultiArray> {
   UInt8MultiArray({
     MultiArrayLayout? layout,
     List<int>? data,
-  })  : this.layout = layout ?? MultiArrayLayout(),
-        this.data = data ?? const [];
+  })  : layout = layout ?? MultiArrayLayout(),
+        data = data ?? const [];
 
   @override
   String get fullType => 'std_msgs/msg/UInt8MultiArray';

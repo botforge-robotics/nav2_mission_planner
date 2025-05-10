@@ -14,8 +14,8 @@ class GoalStatusArray extends RosMessage<GoalStatusArray> {
   static GoalStatusArray $prototype = GoalStatusArray();
   // Constructor
   GoalStatusArray({Header? header, List<GoalStatus>? status_list})
-      : this.header = header ?? Header(),
-        this.status_list = status_list ?? [];
+      : header = header ?? Header(),
+        status_list = status_list ?? [];
 
   @override
   String get fullType => 'actionlib_msgs/msg/GoalStatusArray';

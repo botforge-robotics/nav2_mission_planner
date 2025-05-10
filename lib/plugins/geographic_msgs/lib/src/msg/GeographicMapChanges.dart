@@ -19,9 +19,9 @@ class GeographicMapChanges extends RosMessage<GeographicMapChanges> {
       {std_msgs.Header? header,
       GeographicMap? diffs,
       List<unique_identifier_msgs.UUID>? deletes})
-      : this.header = header ?? std_msgs.Header(),
-        this.diffs = diffs ?? GeographicMap(),
-        this.deletes = deletes ?? const [];
+      : header = header ?? std_msgs.Header(),
+        diffs = diffs ?? GeographicMap(),
+        deletes = deletes ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/GeographicMapChanges';

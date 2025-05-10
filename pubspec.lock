@@ -39,7 +39,7 @@ packages:
     source: hosted
     version: "2.1.2"
   builtin_interfaces:
-    dependency: transitive
+    dependency: "direct main"
     description:
       path: "lib/plugins/builtin_interfaces"
       relative: true
@@ -148,6 +148,13 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.8.0"
+  geographic_msgs:
+    dependency: transitive
+    description:
+      path: "lib/plugins/geographic_msgs"
+      relative: true
+    source: path
+    version: "0.1.0"
   geometry_msgs:
     dependency: "direct main"
     description:
@@ -238,6 +245,13 @@ packages:
     dependency: "direct main"
     description:
       path: "lib/plugins/nav2_mission_planner_interfaces"
+      relative: true
+    source: path
+    version: "0.1.0"
+  nav2_msgs:
+    dependency: "direct main"
+    description:
+      path: "lib/plugins/nav2_msgs"
       relative: true
     source: path
     version: "0.1.0"

@@ -27,13 +27,13 @@ class CostmapMetaData extends RosMessage<CostmapMetaData> {
       int? size_x,
       int? size_y,
       geometry_msgs.Pose? origin})
-      : this.map_load_time = map_load_time ?? builtin_interfaces.Time(),
-        this.update_time = update_time ?? builtin_interfaces.Time(),
-        this.layer = layer ?? '',
-        this.resolution = resolution ?? 0.0,
-        this.size_x = size_x ?? 0,
-        this.size_y = size_y ?? 0,
-        this.origin = origin ?? geometry_msgs.Pose();
+      : map_load_time = map_load_time ?? builtin_interfaces.Time(),
+        update_time = update_time ?? builtin_interfaces.Time(),
+        layer = layer ?? '',
+        resolution = resolution ?? 0.0,
+        size_x = size_x ?? 0,
+        size_y = size_y ?? 0,
+        origin = origin ?? geometry_msgs.Pose();
 
   @override
   String get fullType => 'nav2_msgs/msg/CostmapMetaData';

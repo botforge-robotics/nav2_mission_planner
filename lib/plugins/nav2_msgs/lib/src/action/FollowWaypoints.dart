@@ -19,9 +19,9 @@ class FollowWaypointsGoal extends RosMessage<FollowWaypointsGoal> {
       {int? number_of_loops,
       int? goal_index,
       List<geometry_msgs.PoseStamped>? poses})
-      : this.number_of_loops = number_of_loops ?? 0,
-        this.goal_index = goal_index ?? 0,
-        this.poses = poses ?? const [];
+      : number_of_loops = number_of_loops ?? 0,
+        goal_index = goal_index ?? 0,
+        poses = poses ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/action/FollowWaypoints_Goal';
@@ -67,7 +67,7 @@ class FollowWaypointsResult extends RosMessage<FollowWaypointsResult> {
   static FollowWaypointsResult $prototype = FollowWaypointsResult();
 
   FollowWaypointsResult({List<MissedWaypoint>? missed_waypoints})
-      : this.missed_waypoints = missed_waypoints ?? const [];
+      : missed_waypoints = missed_waypoints ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/action/FollowWaypoints_Result';
@@ -107,7 +107,7 @@ class FollowWaypointsFeedback extends RosMessage<FollowWaypointsFeedback> {
   static FollowWaypointsFeedback $prototype = FollowWaypointsFeedback();
 
   FollowWaypointsFeedback({int? current_waypoint})
-      : this.current_waypoint = current_waypoint ?? 0;
+      : current_waypoint = current_waypoint ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/FollowWaypoints_Feedback';
@@ -135,8 +135,11 @@ class FollowWaypointsFeedback extends RosMessage<FollowWaypointsFeedback> {
 
 class FollowWaypointsActionGoal
     extends RosActionGoal<FollowWaypointsGoal, FollowWaypointsActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late FollowWaypointsGoal goal;
 
   static FollowWaypointsActionGoal $prototype = FollowWaypointsActionGoal();
@@ -145,9 +148,9 @@ class FollowWaypointsActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     FollowWaypointsGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? FollowWaypointsGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? FollowWaypointsGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/FollowWaypoints_ActionGoal';
@@ -189,8 +192,11 @@ geometry_msgs/PoseStamped[] poses''';
 
 class FollowWaypointsActionResult extends RosActionResult<FollowWaypointsResult,
     FollowWaypointsActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late FollowWaypointsResult result;
 
   static FollowWaypointsActionResult $prototype = FollowWaypointsActionResult();
@@ -199,9 +205,9 @@ class FollowWaypointsActionResult extends RosActionResult<FollowWaypointsResult,
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     FollowWaypointsResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? FollowWaypointsResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? FollowWaypointsResult();
 
   @override
   String get fullType => 'nav2_msgs/action/FollowWaypoints_ActionResult';
@@ -241,8 +247,11 @@ class FollowWaypointsActionResult extends RosActionResult<FollowWaypointsResult,
 
 class FollowWaypointsActionFeedback extends RosActionFeedback<
     FollowWaypointsFeedback, FollowWaypointsActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late FollowWaypointsFeedback feedback;
 
   static FollowWaypointsActionFeedback $prototype =
@@ -252,9 +261,9 @@ class FollowWaypointsActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     FollowWaypointsFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? FollowWaypointsFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? FollowWaypointsFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/FollowWaypoints_ActionFeedback';

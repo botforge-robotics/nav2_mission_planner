@@ -25,4 +25,8 @@ class DefaultSettings {
   static const String defaultLidarTopic = '/scan';
 
   static const defaultSaveMapLaunchFile = 'rio_mapping/save_map';
+
+  // Add these new constants
+  static const bool defaultCameraVisible = true;
+  static const bool defaultJoystickVisible = true;
 }

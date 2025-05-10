@@ -3,13 +3,19 @@ import 'dart:ui' as ui;
 import 'dart:async';
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
-import 'package:geometry_msgs/msg.dart' as geometry_msgs;
+import 'package:nav2_mission_planner/helpers/conversions.dart';
 import 'package:nav2_mission_planner/providers/settings_provider.dart';
+import 'package:nav2_mission_planner/services/goal_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ros2_api/ros2_api.dart';
 import '../providers/connection_provider.dart';
 import 'package:nav_msgs/msg.dart';
 import 'robot_position_marker.dart';
+import 'package:nav2_mission_planner/providers/nav_tool_provider.dart';
+import 'package:nav2_mission_planner/services/pose_estimation_service.dart';
+import 'dart:ui' as ui show Path;
+import 'Arrow_painter.dart';
+import 'Simple_rotation_slider.dart';
 
 class OccupancyGridViewer extends StatefulWidget {
   final bool enabled;
@@ -17,15 +23,16 @@ class OccupancyGridViewer extends StatefulWidget {
   final double scale;
   final Function(double)? onScaleChanged;
   final Color appModeColor;
+  final bool showMarkers;
 
-  const OccupancyGridViewer({
-    super.key,
-    required this.enabled,
-    required this.topic,
-    this.scale = 1.0,
-    this.onScaleChanged,
-    required this.appModeColor,
-  });
+  const OccupancyGridViewer(
+      {super.key,
+      required this.enabled,
+      required this.topic,
+      this.scale = 1.0,
+      this.onScaleChanged,
+      required this.appModeColor,
+      this.showMarkers = true});
 
   @override
   State<OccupancyGridViewer> createState() => _OccupancyGridViewerState();
@@ -34,9 +41,9 @@ class OccupancyGridViewer extends StatefulWidget {
 class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
   Subscriber<OccupancyGrid>? _subscriber;
   ui.Image? _mapImage;
-  double _resolution = 0.05;
-  int _width = 0;
-  int _height = 0;
+  double _mapResolution = 0.05;
+  int _mapWidth = 0;
+  int _mapHeight = 0;
   bool _isLoading = false;
   String _statusMessage = 'Waiting for map data...';
   bool _hasError = false;
@@ -59,9 +66,23 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
   double _robotTheta = 0.0;
 
   // Add these variables to store map origin information
-  double _originX = 0.0;
-  double _originY = 0.0;
-  double _originTheta = 0.0;
+  double _mapOriginX = 0.0;
+  double _mapOriginY = 0.0;
+  double _mapOriginTheta = 0.0;
+
+  // Add to class properties
+  bool _poseEstimationMode = false;
+  bool _goalMode = false;
+  double _markerX = 0.0;
+  double _markerY = 0.0;
+  double _markerTheta = 0.0;
+  bool _isDraggingMarker = false;
+
+  // Add to class state variables
+  bool _showRotationSlider = false;
+  Offset _rotationSliderCenter = Offset.zero;
+
+  GoalService _goalService = GoalService();
 
   @override
   void initState() {
@@ -70,6 +91,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     _transformationController.value = Matrix4.identity();
     _subscribeToTopic();
     _subscribeToOdometry();
+    _goalService.initialize(context: context);
   }
 
   @override
@@ -88,6 +110,33 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
         oldWidget.appModeColor != widget.appModeColor) {
       _unsubscribe();
       _subscribeToTopic();
+    }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final navToolProvider = Provider.of<NavToolProvider>(context);
+    if (navToolProvider.poseEstimationEnabled != _poseEstimationMode) {
+      setState(() {
+        _showRotationSlider = false;
+        _poseEstimationMode = navToolProvider.poseEstimationEnabled;
+        if (!_poseEstimationMode) {
+          _markerX = 0.0;
+          _markerY = 0.0;
+          _markerTheta = 0.0;
+        }
+      });
+    } else if (navToolProvider.goalMode != _goalMode) {
+      setState(() {
+        _showRotationSlider = false;
+        _goalMode = navToolProvider.goalMode;
+        if (!_goalMode) {
+          _markerX = 0.0;
+          _markerY = 0.0;
+          _markerTheta = 0.0;
+        }
+      });
     }
   }
 
@@ -273,27 +322,22 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
 
     try {
       // Extract map metadata including origin
-      _width = message.info.width;
-      _height = message.info.height;
-      _resolution = message.info.resolution;
+      _mapWidth = message.info.width;
+      _mapHeight = message.info.height;
+      _mapResolution = message.info.resolution;
 
       // Store origin information
-      _originX = message.info.origin.position.x;
-      _originY = message.info.origin.position.y;
+      _mapOriginX = message.info.origin.position.x;
+      _mapOriginY = message.info.origin.position.y;
 
-      // Extract yaw from origin quaternion
-      final qx = message.info.origin.orientation.x;
-      final qy = message.info.origin.orientation.y;
-      final qz = message.info.origin.orientation.z;
-      final qw = message.info.origin.orientation.w;
-      _originTheta = math.atan2(
-          2.0 * (qw * qz + qx * qy), 1.0 - 2.0 * (qy * qy + qz * qz));
+      _mapOriginTheta =
+          extractYawFromOriginQuaternion(message.info.origin.orientation);
 
-      //print('Map origin: ($_originX, $_originY), theta: $_originTheta');
+      //print('Map origin: ($_mapOriginX, $_mapOriginY), theta: $_mapOriginTheta');
 
-      if (_width <= 0 || _height <= 0) {
+      if (_mapWidth <= 0 || _mapHeight <= 0) {
         setState(() {
-          _statusMessage = 'Invalid map dimensions: $_width x $_height';
+          _statusMessage = 'Invalid map dimensions: $_mapWidth x $_mapHeight';
           _hasError = true;
           _isLoading = false;
         });
@@ -424,10 +468,16 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
 
     try {
       setState(() {
-        final mapPose = _transformToMapFrame(
+        final mapPose = transformToMapFrame(
           message.pose.pose.position.x,
           message.pose.pose.position.y,
           message.pose.pose.orientation,
+          _mapOriginX,
+          _mapOriginY,
+          _mapResolution,
+          _mapHeight,
+          _mapWidth,
+          _mapOriginTheta,
         );
         _robotX = mapPose.x;
         _robotY = mapPose.y;
@@ -451,51 +501,205 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
 
         // Map or loading state
         if (_mapImage != null && !_isLoading)
-          InteractiveViewer(
-            transformationController: _transformationController,
-            constrained: false,
-            minScale: 0.1,
-            maxScale: 10.0,
-            boundaryMargin: const EdgeInsets.all(double.infinity),
-            onInteractionStart: (details) {
-              final scale = _transformationController.value.getMaxScaleOnAxis();
-            },
-            onInteractionUpdate: (details) {
-              final scale = _transformationController.value.getMaxScaleOnAxis();
-              _currentScale = scale;
-              if (widget.onScaleChanged != null) {
-                widget.onScaleChanged!(scale);
+          // Use a Listener to get pointer events *without* consuming them from InteractiveViewer
+          Listener(
+            onPointerDown: (details) {
+              // Check if pose estimation mode is active on pointer down
+              if (_poseEstimationMode) {
+                // Potential start of a long press for pose estimation
+                // We don't handle it here, let GestureDetector do it
               }
             },
-            onInteractionEnd: (details) {
-              final scale = _transformationController.value.getMaxScaleOnAxis();
-            },
-            child: Stack(
-              children: [
-                RawImage(
-                  key: ValueKey(_mapImage.hashCode),
-                  image: _mapImage,
-                  fit: BoxFit.none,
-                  filterQuality: FilterQuality.medium,
-                ),
+            child: InteractiveViewer(
+              transformationController: _transformationController,
+              constrained: false,
+              minScale: 0.1,
+              maxScale: 10.0,
+              boundaryMargin: const EdgeInsets.all(double.infinity),
+              onInteractionStart: (details) {
+                _isDraggingMarker = false; // Reset flag
+              },
+              onInteractionUpdate: (details) {
+                final scale =
+                    _transformationController.value.getMaxScaleOnAxis();
+                _currentScale = scale;
+                if (widget.onScaleChanged != null) {
+                  widget.onScaleChanged!(scale);
+                }
+                // If we were dragging the pose marker, stop when zoom/pan starts
+                if (_isDraggingMarker) {
+                  setState(() {
+                    _isDraggingMarker = false;
+                    _markerX = 0.0;
+                    _markerY = 0.0;
+                    _markerTheta = 0.0;
+                  });
+                }
+              },
+              onInteractionEnd: (details) {
+                // Optional: Recalculate scale if needed
+              },
+              // The actual content that can be panned/zoomed
+              child: GestureDetector(
+                // Only listen for long press gestures
+                onLongPressStart: (details) {
+                  if (_poseEstimationMode || _goalMode) {
+                    final Offset mapPixelPos = _transformationController
+                        .toScene(details.globalPosition);
 
-                // Add scale-invariant RobotPositionMarker
-                if (_mapImage != null && !_isLoading)
-                  Positioned(
-                    left: _robotX - 30 / 2,
-                    top: _robotY - 30 / 2,
-                    child: Transform.scale(
-                      scale: 1 / _currentScale, // Counteract map scaling
-                      child: RobotPositionMarker(
-                        x: 0, // Use 0 here since we position with Positioned
-                        y: 0, // Use 0 here since we position with Positioned
-                        theta: _robotTheta,
-                        color: widget.appModeColor,
-                        size: 30.0,
-                      ),
+                    setState(() {
+                      _markerX = mapPixelPos.dx;
+                      _markerY = mapPixelPos.dy;
+                      // Set marker to point right (along x-axis)
+                      _markerTheta = 0;
+                    });
+                    _isDraggingMarker = true;
+                    _showRotationSlider = false;
+                  }
+                },
+                onLongPressMoveUpdate: (details) {
+                  if (_poseEstimationMode || _goalMode) {
+                    final Offset mapPixelPos = _transformationController
+                        .toScene(details.globalPosition);
+
+                    final targetPose = transformFromMapFrame(
+                        mapPixelPos.dx,
+                        mapPixelPos.dy,
+                        0,
+                        _mapOriginX,
+                        _mapOriginY,
+                        _mapResolution,
+                        _mapHeight,
+                        _mapWidth,
+                        _mapOriginTheta);
+
+                    setState(() {
+                      _markerX = mapPixelPos.dx;
+                      _markerY = mapPixelPos.dy;
+                      _markerTheta = extractYawFromOriginQuaternion(
+                          targetPose.orientation);
+                    });
+                    _isDraggingMarker = true;
+                  }
+                },
+                onLongPressEnd: (details) {
+                  if (_poseEstimationMode || _goalMode && _isDraggingMarker) {
+                    _isDraggingMarker = false;
+
+                    // Position slider centered on marker position
+                    setState(() {
+                      _showRotationSlider = true;
+                      _rotationSliderCenter = Offset(_markerX, _markerY);
+                    });
+                  }
+                },
+                // *** IMPORTANT: No onPanStart/Update/End here ***
+                child: Stack(
+                  // Use ClipRect to ensure children (like markers) don't draw outside the map image bounds if needed
+                  // clipBehavior: Clip.hardEdge,
+                  children: [
+                    RawImage(
+                      key: ValueKey(_mapImage.hashCode),
+                      image: _mapImage,
+                      fit: BoxFit.none, // Important for InteractiveViewer
+                      filterQuality: FilterQuality.medium,
                     ),
-                  ),
-              ],
+
+                    // RobotPositionMarker (scale-invariant)
+                    if (_mapImage != null && !_isLoading)
+                      Positioned(
+                        left: _robotX - 15, // 30/2 = 15
+                        top: _robotY - 15,
+                        child: IgnorePointer(
+                          child: Transform.scale(
+                            scale: 1 / _currentScale,
+                            alignment: Alignment.center,
+                            child: RobotPositionMarker(
+                              x: 0,
+                              y: 0,
+                              theta: _robotTheta,
+                              color: widget.appModeColor,
+                              size: 30.0,
+                            ),
+                          ),
+                        ),
+                      ),
+
+                    // Pose estimation marker (drawn during interaction)
+                    if (widget.showMarkers) _buildRobotMarker(),
+
+                    // Rotation slider
+                    if (_showRotationSlider)
+                      Positioned(
+                        left: _rotationSliderCenter.dx - 50,
+                        top: _rotationSliderCenter.dy - 50,
+                        child: Transform.scale(
+                          scale: 1 / _currentScale,
+                          child: GestureDetector(
+                            onPanStart: (details) {
+                              _updateRotation(details.localPosition);
+                            },
+                            onPanUpdate: (details) {
+                              _updateRotation(details.localPosition);
+                            },
+                            onPanEnd: (_) {
+                              setState(() => _showRotationSlider = false);
+                              final targetPose = transformFromMapFrame(
+                                  _markerX,
+                                  _markerY,
+                                  _markerTheta,
+                                  _mapOriginX,
+                                  _mapOriginY,
+                                  _mapResolution,
+                                  _mapHeight,
+                                  _mapWidth,
+                                  _mapOriginTheta);
+                              if (_poseEstimationMode) {
+                                PoseEstimationService.publishPoseEstimate(
+                                  context: context,
+                                  x: targetPose.targetX,
+                                  y: targetPose.targetY,
+                                  theta: targetPose.orientation,
+                                );
+                                Provider.of<NavToolProvider>(context,
+                                        listen: false)
+                                    .setPoseEstimationEnabled(false);
+                              } else if (_goalMode) {
+                                _goalService.sendGoal(
+                                  x: targetPose.targetX,
+                                  y: targetPose.targetY,
+                                  orientation: targetPose.orientation,
+                                  frameId: 'map',
+                                  feedbackHandler: (feedback) {
+                                    print('Feedback: $feedback');
+                                  },
+                                );
+                                Provider.of<NavToolProvider>(context,
+                                        listen: false)
+                                    .setGoalEnabled(false);
+                              }
+                              // Add this line to disable pose estimation mode
+                            },
+                            child: Container(
+                              width: 100,
+                              height: 100,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.black38,
+                              ),
+                              child: CustomPaint(
+                                painter: SimpleRotationSliderPainter(
+                                  angle: _markerTheta,
+                                  color: widget.appModeColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
             ),
           )
         else
@@ -567,69 +771,44 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     assert(info.origin.position.z == 0, 'Z position must be zero for 2D maps');
 
     final q = info.origin.orientation;
-    final rollPitchYaw = _quaternionToEuler(q);
+    final rollPitchYaw = quaternionToEuler(q);
     assert(rollPitchYaw[0].abs() < 1e-4 && rollPitchYaw[1].abs() < 1e-4,
         'Map orientation must be 2D (only yaw rotation supported)');
   }
 
-  // Add comprehensive quaternion conversion
-  List<double> _quaternionToEuler(geometry_msgs.Quaternion q) {
-    final roll = math.atan2(
-        2 * (q.w * q.x + q.y * q.z), 1 - 2 * (q.x * q.x + q.y * q.y));
-    final pitch = math.asin(2 * (q.w * q.y - q.z * q.x));
-    final yaw = math.atan2(
-        2 * (q.w * q.z + q.x * q.y), 1 - 2 * (q.y * q.y + q.z * q.z));
-    return [roll, pitch, yaw];
-  }
-
-  // Add new transformation methods
-  Offset _worldToGridCoordinates(
-    double worldX,
-    double worldY,
-    int gridWidth,
-    int gridHeight,
-    double resolution,
-    geometry_msgs.Pose origin,
-  ) {
-    // Convert to map frame
-    final mapX = worldX - origin.position.x;
-    final mapY = worldY - origin.position.y;
-
-    // Apply rotation
-    final theta = _quaternionToEuler(origin.orientation)[2];
-    final rotatedX = mapX * math.cos(-theta) - mapY * math.sin(-theta);
-    final rotatedY = mapX * math.sin(-theta) + mapY * math.cos(-theta);
-
-    // Convert to grid coordinates with Y inversion
-    return Offset(
-      rotatedX / resolution,
-      gridHeight - (rotatedY / resolution),
+  Widget _buildRobotMarker() {
+    final markerSize = 30.0;
+    return Positioned(
+      // Position custom painter exactly at the marker position
+      left: _markerX - 15, // Center horizontally
+      top: _markerY - 30, // Bottom of arrow at marker point
+      child: IgnorePointer(
+        child: Transform.rotate(
+          angle: -_markerTheta + math.pi / 2,
+          alignment: Alignment.bottomCenter, // Pivot at bottom center
+          child: CustomPaint(
+            size: Size(markerSize, markerSize),
+            painter: ArrowPainter(
+              color: Colors.greenAccent,
+            ),
+          ),
+        ),
+      ),
     );
   }
 
-  ({double x, double y, double theta}) _transformToMapFrame(
-    double worldX,
-    double worldY,
-    geometry_msgs.Quaternion orientation,
-  ) {
-    final originX = _originX;
-    final originY = _originY;
-    final res = _resolution;
-    final gridHeight = _height;
+  // Update the rotation slider positioning and painting logic
+  void _updateRotation(Offset localPosition) {
+    final center = Offset(50, 50);
+    final touchOffset = localPosition - center;
 
-    // Convert position with proper Y inversion
-    final mapX = (worldX - originX) / res;
-    final mapY = (worldY - originY) / res;
+    // Calculate angle where 0 is along x-axis, but CLOCKWISE increases angle
+    // (inverting the standard atan2 behavior)
+    final mapAngle = -math.atan2(touchOffset.dy, touchOffset.dx);
 
-    // Convert orientation
-    final worldYaw = _quaternionToEuler(orientation)[2];
-    final mapYaw = worldYaw - _originTheta;
-
-    return (
-      x: mapX,
-      y: gridHeight - mapY, // Proper Y-axis inversion for image space
-      theta: -mapYaw
-    );
+    setState(() {
+      _markerTheta = mapAngle;
+    });
   }
 }
 
@@ -676,64 +855,5 @@ class MapPainter extends CustomPainter {
   bool shouldRepaint(covariant MapPainter oldDelegate) {
     return mapImage != oldDelegate.mapImage ||
         resolution != oldDelegate.resolution;
-  }
-}
-
-// Update WorldAxisPainter with precise rendering
-class WorldAxisPainter extends CustomPainter {
-  final double originX;
-  final double originY;
-  final double originTheta;
-  final double resolution;
-  final Color color;
-
-  WorldAxisPainter({
-    required this.originX,
-    required this.originY,
-    required this.originTheta,
-    required this.resolution,
-    this.color = Colors.white,
-  });
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    const axisLength = 1.0; // 1 meter
-    final pixelLength = axisLength / resolution;
-
-    final origin = Offset(originX, originY);
-    final rotation = Matrix4.rotationZ(-originTheta);
-
-    canvas.save();
-    canvas.translate(origin.dx, origin.dy);
-    canvas.transform(rotation.storage);
-
-    // X axis (Red)
-    canvas.drawLine(
-      Offset.zero,
-      Offset(pixelLength, 0),
-      Paint()
-        ..color = Colors.red
-        ..strokeWidth = 2,
-    );
-
-    // Y axis (Green) - inverted for image space
-    canvas.drawLine(
-      Offset.zero,
-      Offset(0, -pixelLength),
-      Paint()
-        ..color = Colors.green
-        ..strokeWidth = 2,
-    );
-
-    canvas.restore();
-  }
-
-  @override
-  bool shouldRepaint(covariant WorldAxisPainter oldDelegate) {
-    return originX != oldDelegate.originX ||
-        originY != oldDelegate.originY ||
-        originTheta != oldDelegate.originTheta ||
-        resolution != oldDelegate.resolution ||
-        color != oldDelegate.color;
   }
 }

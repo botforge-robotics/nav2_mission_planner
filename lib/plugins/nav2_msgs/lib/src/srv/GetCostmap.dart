@@ -13,7 +13,7 @@ class GetCostmapRequest extends RosMessage<GetCostmapRequest> {
 
   // Constructor
   GetCostmapRequest({CostmapMetaData? specs})
-      : this.specs = specs ?? CostmapMetaData();
+      : specs = specs ?? CostmapMetaData();
 
   @override
   String get fullType => 'nav2_msgs/srv/GetCostmap_Request';
@@ -46,7 +46,7 @@ class GetCostmapResponse extends RosMessage<GetCostmapResponse> {
   static GetCostmapResponse $prototype = GetCostmapResponse();
 
   // Constructor
-  GetCostmapResponse({Costmap? map}) : this.map = map ?? Costmap();
+  GetCostmapResponse({Costmap? map}) : map = map ?? Costmap();
 
   @override
   String get fullType => 'nav2_msgs/srv/GetCostmap_Response';

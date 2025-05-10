@@ -15,9 +15,9 @@ class GetPointMapROIRequest extends RosMessage<GetPointMapROIRequest> {
 
   // Constructor
   GetPointMapROIRequest({double? x, double? y, double? z})
-      : this.x = x ?? 0.0,
-        this.y = y ?? 0.0,
-        this.z = z ?? 0.0;
+      : x = x ?? 0.0,
+        y = y ?? 0.0,
+        z = z ?? 0.0;
 
   @override
   String get fullType => 'map_msgs/srv/GetPointMapROI_Request';
@@ -54,7 +54,7 @@ class GetPointMapROIResponse extends RosMessage<GetPointMapROIResponse> {
 
   // Constructor
   GetPointMapROIResponse({sensor_msgs.PointCloud2? sub_map})
-      : this.sub_map = sub_map ?? sensor_msgs.PointCloud2();
+      : sub_map = sub_map ?? sensor_msgs.PointCloud2();
 
   @override
   String get fullType => 'map_msgs/srv/GetPointMapROI_Response';

@@ -17,8 +17,8 @@ class SetMapRequest extends RosMessage<SetMapRequest> {
   SetMapRequest(
       {OccupancyGrid? map,
       geometry_msgs.PoseWithCovarianceStamped? initial_pose})
-      : this.map = map ?? OccupancyGrid(),
-        this.initial_pose =
+      : map = map ?? OccupancyGrid(),
+        initial_pose =
             initial_pose ?? geometry_msgs.PoseWithCovarianceStamped();
 
   @override
@@ -55,7 +55,7 @@ class SetMapResponse extends RosMessage<SetMapResponse> {
   static SetMapResponse $prototype = SetMapResponse();
 
   // Constructor
-  SetMapResponse({bool? success}) : this.success = success ?? false;
+  SetMapResponse({bool? success}) : success = success ?? false;
 
   @override
   String get fullType => 'nav_msgs/srv/SetMap_Response';

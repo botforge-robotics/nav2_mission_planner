@@ -15,8 +15,8 @@ class AccelStamped extends RosMessage<AccelStamped> {
 
   // Constructor
   AccelStamped({std_msgs.Header? header, Accel? accel})
-      : this.header = header ?? std_msgs.Header(),
-        this.accel = accel ?? Accel();
+      : header = header ?? std_msgs.Header(),
+        accel = accel ?? Accel();
 
   @override
   String get fullType => 'geometry_msgs/msg/AccelStamped';

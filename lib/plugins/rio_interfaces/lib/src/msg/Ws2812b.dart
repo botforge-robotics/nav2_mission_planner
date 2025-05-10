@@ -13,9 +13,9 @@ class Ws2812b extends RosMessage<Ws2812b> {
 
   // Constructor
   Ws2812b({int? red, int? blue, int? green})
-      : this.red = red ?? 0,
-        this.blue = blue ?? 0,
-        this.green = green ?? 0;
+      : red = red ?? 0,
+        blue = blue ?? 0,
+        green = green ?? 0;
 
   @override
   String get fullType => 'rio_interfaces/msg/Ws2812b';

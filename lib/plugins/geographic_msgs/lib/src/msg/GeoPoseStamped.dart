@@ -14,8 +14,8 @@ class GeoPoseStamped extends RosMessage<GeoPoseStamped> {
 
   // Constructor
   GeoPoseStamped({std_msgs.Header? header, GeoPose? pose})
-      : this.header = header ?? std_msgs.Header(),
-        this.pose = pose ?? GeoPose();
+      : header = header ?? std_msgs.Header(),
+        pose = pose ?? GeoPose();
 
   @override
   String get fullType => 'geographic_msgs/msg/GeoPoseStamped';

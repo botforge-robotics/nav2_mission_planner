@@ -21,7 +21,7 @@ class ArgumentsList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       width: double.infinity,
       child: Wrap(
         spacing: screenSize.width * 0.01, // horizontal spacing
@@ -77,7 +77,7 @@ class ArgumentsList extends StatelessWidget {
                 ),
               ),
             );
-          }).toList(),
+          }),
 
           // Add Argument Pill
           GestureDetector(

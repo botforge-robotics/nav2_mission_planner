@@ -20,10 +20,10 @@ class BehaviorTreeStatusChange extends RosMessage<BehaviorTreeStatusChange> {
       String? node_name,
       String? previous_status,
       String? current_status})
-      : this.timestamp = timestamp ?? builtin_interfaces.Time(),
-        this.node_name = node_name ?? '',
-        this.previous_status = previous_status ?? '',
-        this.current_status = current_status ?? '';
+      : timestamp = timestamp ?? builtin_interfaces.Time(),
+        node_name = node_name ?? '',
+        previous_status = previous_status ?? '',
+        current_status = current_status ?? '';
 
   @override
   String get fullType => 'nav2_msgs/msg/BehaviorTreeStatusChange';

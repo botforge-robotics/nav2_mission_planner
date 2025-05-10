@@ -11,7 +11,7 @@ class TeleopScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ImageViewerState> _imageViewerKey = GlobalKey();
+    final GlobalKey<ImageViewerState> imageViewerKey = GlobalKey();
 
     return Consumer<SettingsProvider>(
       builder: (context, settings, child) {
@@ -23,7 +23,7 @@ class TeleopScreen extends StatelessWidget {
                 child: Container(
                   color: Colors.black,
                   child: ImageViewer(
-                    key: _imageViewerKey,
+                    key: imageViewerKey,
                     topic: settings.cameraImageTopic,
                     enabled: settings.cameraEnabled,
                   ),
@@ -103,7 +103,7 @@ class TeleopScreen extends StatelessWidget {
               isCameraActive: settings.cameraEnabled &&
                   settings.cameraImageTopic.isNotEmpty,
               getCurrentFrame: () async =>
-                  _imageViewerKey.currentState?.captureFrame(),
+                  imageViewerKey.currentState?.captureFrame(),
             ),
           ],
         );

@@ -15,8 +15,8 @@ class Path extends RosMessage<Path> {
 
   // Constructor
   Path({std_msgs.Header? header, List<geometry_msgs.PoseStamped>? poses})
-      : this.header = header ?? std_msgs.Header(),
-        this.poses = poses ?? const [];
+      : header = header ?? std_msgs.Header(),
+        poses = poses ?? const [];
 
   @override
   String get fullType => 'nav_msgs/msg/Path';

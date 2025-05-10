@@ -18,9 +18,9 @@ class MapFeature extends RosMessage<MapFeature> {
       {unique_identifier_msgs.UUID? id,
       List<unique_identifier_msgs.UUID>? components,
       List<KeyValue>? props})
-      : this.id = id ?? unique_identifier_msgs.UUID(),
-        this.components = components ?? const [],
-        this.props = props ?? const [];
+      : id = id ?? unique_identifier_msgs.UUID(),
+        components = components ?? const [],
+        props = props ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/MapFeature';

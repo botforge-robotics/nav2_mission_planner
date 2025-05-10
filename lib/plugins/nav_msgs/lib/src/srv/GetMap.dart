@@ -41,7 +41,7 @@ class GetMapResponse extends RosMessage<GetMapResponse> {
   static GetMapResponse $prototype = GetMapResponse();
 
   // Constructor
-  GetMapResponse({OccupancyGrid? map}) : this.map = map ?? OccupancyGrid();
+  GetMapResponse({OccupancyGrid? map}) : map = map ?? OccupancyGrid();
 
   @override
   String get fullType => 'nav_msgs/srv/GetMap_Response';

@@ -16,8 +16,8 @@ class NavigateThroughPosesGoal extends RosMessage<NavigateThroughPosesGoal> {
 
   NavigateThroughPosesGoal(
       {List<geometry_msgs.PoseStamped>? poses, String? behavior_tree})
-      : this.poses = poses ?? const [],
-        this.behavior_tree = behavior_tree ?? '';
+      : poses = poses ?? const [],
+        behavior_tree = behavior_tree ?? '';
 
   @override
   String get fullType => 'nav2_msgs/action/NavigateThroughPoses_Goal';
@@ -60,8 +60,7 @@ class NavigateThroughPosesResult
 
   static NavigateThroughPosesResult $prototype = NavigateThroughPosesResult();
 
-  NavigateThroughPosesResult({int? error_code})
-      : this.error_code = error_code ?? 0;
+  NavigateThroughPosesResult({int? error_code}) : error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/NavigateThroughPoses_Result';
@@ -105,13 +104,13 @@ class NavigateThroughPosesFeedback
       int? number_of_recoveries,
       double? distance_remaining,
       int? number_of_poses_remaining})
-      : this.current_pose = current_pose ?? geometry_msgs.PoseStamped(),
-        this.navigation_time = navigation_time ?? builtin_interfaces.Duration(),
-        this.estimated_time_remaining =
+      : current_pose = current_pose ?? geometry_msgs.PoseStamped(),
+        navigation_time = navigation_time ?? builtin_interfaces.Duration(),
+        estimated_time_remaining =
             estimated_time_remaining ?? builtin_interfaces.Duration(),
-        this.number_of_recoveries = number_of_recoveries ?? 0,
-        this.distance_remaining = distance_remaining ?? 0.0,
-        this.number_of_poses_remaining = number_of_poses_remaining ?? 0;
+        number_of_recoveries = number_of_recoveries ?? 0,
+        distance_remaining = distance_remaining ?? 0.0,
+        number_of_poses_remaining = number_of_poses_remaining ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/NavigateThroughPoses_Feedback';
@@ -164,8 +163,11 @@ int16 number_of_poses_remaining''';
 
 class NavigateThroughPosesActionGoal extends RosActionGoal<
     NavigateThroughPosesGoal, NavigateThroughPosesActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late NavigateThroughPosesGoal goal;
 
   static NavigateThroughPosesActionGoal $prototype =
@@ -175,9 +177,9 @@ class NavigateThroughPosesActionGoal extends RosActionGoal<
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     NavigateThroughPosesGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? NavigateThroughPosesGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? NavigateThroughPosesGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/NavigateThroughPoses_ActionGoal';
@@ -218,8 +220,11 @@ string behavior_tree''';
 
 class NavigateThroughPosesActionResult extends RosActionResult<
     NavigateThroughPosesResult, NavigateThroughPosesActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late NavigateThroughPosesResult result;
 
   static NavigateThroughPosesActionResult $prototype =
@@ -229,9 +234,9 @@ class NavigateThroughPosesActionResult extends RosActionResult<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     NavigateThroughPosesResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? NavigateThroughPosesResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? NavigateThroughPosesResult();
 
   @override
   String get fullType => 'nav2_msgs/action/NavigateThroughPoses_ActionResult';
@@ -271,8 +276,11 @@ class NavigateThroughPosesActionResult extends RosActionResult<
 
 class NavigateThroughPosesActionFeedback extends RosActionFeedback<
     NavigateThroughPosesFeedback, NavigateThroughPosesActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late NavigateThroughPosesFeedback feedback;
 
   static NavigateThroughPosesActionFeedback $prototype =
@@ -282,9 +290,9 @@ class NavigateThroughPosesActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     NavigateThroughPosesFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? NavigateThroughPosesFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? NavigateThroughPosesFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/NavigateThroughPoses_ActionFeedback';

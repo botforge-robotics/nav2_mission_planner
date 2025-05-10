@@ -14,8 +14,8 @@ class Twist extends RosMessage<Twist> {
 
   // Constructor
   Twist({Vector3? linear, Vector3? angular})
-      : this.linear = linear ?? Vector3(),
-        this.angular = angular ?? Vector3();
+      : linear = linear ?? Vector3(),
+        angular = angular ?? Vector3();
 
   @override
   String get fullType => 'geometry_msgs/msg/Twist';

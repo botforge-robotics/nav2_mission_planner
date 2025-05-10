@@ -14,8 +14,8 @@ class GeoPose extends RosMessage<GeoPose> {
 
   // Constructor
   GeoPose({GeoPoint? position, geometry_msgs.Quaternion? orientation})
-      : this.position = position ?? GeoPoint(),
-        this.orientation = orientation ?? geometry_msgs.Quaternion();
+      : position = position ?? GeoPoint(),
+        orientation = orientation ?? geometry_msgs.Quaternion();
 
   @override
   String get fullType => 'geographic_msgs/msg/GeoPose';

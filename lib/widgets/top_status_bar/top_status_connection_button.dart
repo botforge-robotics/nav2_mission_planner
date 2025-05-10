@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
@@ -5,7 +7,7 @@ import '../../providers/connection_provider.dart';
 import '../../theme/app_theme.dart';
 import '../../services/launch_service.dart';
 
-class TopStatusConnectionButton extends StatelessWidget {
+class TopStatusConnectionButton extends StatefulWidget {
   final double height;
   final Color connectionStatusColor;
 
@@ -15,8 +17,36 @@ class TopStatusConnectionButton extends StatelessWidget {
     required this.connectionStatusColor,
   });
 
+  @override
+  _TopStatusConnectionButtonState createState() =>
+      _TopStatusConnectionButtonState();
+}
+
+class _TopStatusConnectionButtonState extends State<TopStatusConnectionButton> {
+  StreamSubscription? _connectionSub;
+  bool _disposed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    final connectionProvider =
+        Provider.of<ConnectionProvider>(context, listen: false);
+    _connectionSub = connectionProvider.connectionStream.listen((state) {
+      if (!mounted || _disposed) return;
+      // Handle connection state changes here
+    });
+  }
+
+  @override
+  void dispose() {
+    _disposed = true;
+    _connectionSub?.cancel();
+    super.dispose();
+  }
+
   // Standardized SnackBar colors
   void _showInfoSnackBar(BuildContext context, String message) {
+    if (!mounted || _disposed) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -28,6 +58,7 @@ class TopStatusConnectionButton extends StatelessWidget {
   }
 
   void _showErrorSnackBar(BuildContext context, String message) {
+    if (!mounted || _disposed) return;
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(message),
@@ -351,20 +382,26 @@ class TopStatusConnectionButton extends StatelessWidget {
                                             ),
                                             onPressed: () async {
                                               Navigator.pop(context);
+                                              if (!mounted) return;
+
                                               try {
                                                 _showInfoSnackBar(context,
                                                     'Checking robot availability...');
 
-                                                await Provider.of<
-                                                            ConnectionProvider>(
-                                                        context,
-                                                        listen: false)
+                                                final success = await Provider
+                                                        .of<ConnectionProvider>(
+                                                            context,
+                                                            listen: false)
                                                     .connect(ipController.text,
                                                         portController.text);
 
-                                                _showInfoSnackBar(context,
-                                                    'Connected successfully!');
+                                                if (!mounted) return;
+                                                if (success) {
+                                                  _showInfoSnackBar(context,
+                                                      'Connected successfully!');
+                                                }
                                               } catch (e) {
+                                                if (!mounted) return;
                                                 _showErrorSnackBar(context,
                                                     'Connection failed: ${e.toString()}');
                                               }
@@ -512,6 +549,8 @@ class TopStatusConnectionButton extends StatelessWidget {
                                                       BorderRadius.circular(16),
                                                   onTap: () async {
                                                     Navigator.pop(context);
+                                                    if (!mounted) return;
+
                                                     try {
                                                       _showInfoSnackBar(context,
                                                           'Connecting...');
@@ -521,9 +560,11 @@ class TopStatusConnectionButton extends StatelessWidget {
                                                           connection['port'] ??
                                                               '9090');
 
+                                                      if (!mounted) return;
                                                       _showInfoSnackBar(context,
                                                           'Connected successfully!');
                                                     } catch (e) {
+                                                      if (!mounted) return;
                                                       _showErrorSnackBar(
                                                           context,
                                                           'Connection failed: ${e.toString()}');
@@ -597,6 +638,12 @@ class TopStatusConnectionButton extends StatelessWidget {
                                                             ),
                                                             onPressed:
                                                                 () async {
+                                                              Navigator.pop(
+                                                                  context);
+                                                              if (!mounted) {
+                                                                return;
+                                                              }
+
                                                               try {
                                                                 _showInfoSnackBar(
                                                                     context,
@@ -608,12 +655,16 @@ class TopStatusConnectionButton extends StatelessWidget {
                                                                     connection[
                                                                             'port'] ??
                                                                         '9090');
-                                                                Navigator.pop(
-                                                                    context);
+                                                                if (!mounted) {
+                                                                  return;
+                                                                }
                                                                 _showInfoSnackBar(
                                                                     context,
                                                                     'Connected successfully!');
                                                               } catch (e) {
+                                                                if (!mounted) {
+                                                                  return;
+                                                                }
                                                                 _showErrorSnackBar(
                                                                     context,
                                                                     'Connection failed: ${e.toString()}');

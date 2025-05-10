@@ -9,10 +9,11 @@ class GetMapListRequest extends RosMessage<GetMapListRequest> {
 
   static GetMapListRequest $prototype = GetMapListRequest();
 
-  GetMapListRequest({String? path}) : this.path = path ?? '';
+  GetMapListRequest({String? path}) : path = path ?? '';
 
   @override
-  String get fullType => 'nav2_mission_planner_interfaces/srv/GetMapList_Request';
+  String get fullType =>
+      'nav2_mission_planner_interfaces/srv/GetMapList_Request';
 
   @override
   String get messageDefinition => '''string path''';
@@ -23,18 +24,14 @@ class GetMapListRequest extends RosMessage<GetMapListRequest> {
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'path': path
-  };
+  Map<String, dynamic> toJson() => {'path': path};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   GetMapListRequest fromJson(Map<String, dynamic> jsonMap) {
-    return GetMapListRequest(
-      path: jsonMap['path'] as String
-    );
+    return GetMapListRequest(path: jsonMap['path'] as String);
   }
 }
 
@@ -45,10 +42,14 @@ class GetMapListResponse extends RosMessage<GetMapListResponse> {
 
   static GetMapListResponse $prototype = GetMapListResponse();
 
-  GetMapListResponse({bool? success, String? message, List<String>? maplist}) : this.success = success ?? false, this.message = message ?? '', this.maplist = maplist ?? const [];
+  GetMapListResponse({bool? success, String? message, List<String>? maplist})
+      : success = success ?? false,
+        message = message ?? '',
+        maplist = maplist ?? const [];
 
   @override
-  String get fullType => 'nav2_mission_planner_interfaces/srv/GetMapList_Response';
+  String get fullType =>
+      'nav2_mission_planner_interfaces/srv/GetMapList_Response';
 
   @override
   String get messageDefinition => '''bool success
@@ -61,11 +62,8 @@ string[] maplist''';
   }
 
   @override
-  Map<String, dynamic> toJson() => {
-    'success': success,
-    'message': message,
-    'maplist': maplist
-  };
+  Map<String, dynamic> toJson() =>
+      {'success': success, 'message': message, 'maplist': maplist};
 
   @override
   String toJsonString() => json.encode(toJson());
@@ -73,23 +71,23 @@ string[] maplist''';
   @override
   GetMapListResponse fromJson(Map<String, dynamic> jsonMap) {
     return GetMapListResponse(
-      success: jsonMap['success'] as bool,
-      message: jsonMap['message'] as String,
-      maplist: (jsonMap['maplist'] as List<dynamic>).cast<String>().toList()
-    );
+        success: jsonMap['success'] as bool,
+        message: jsonMap['message'] as String,
+        maplist: (jsonMap['maplist'] as List<dynamic>).cast<String>().toList());
   }
 }
 
-class GetMapList extends RosServiceMessage<GetMapListRequest, GetMapListResponse> {
+class GetMapList
+    extends RosServiceMessage<GetMapListRequest, GetMapListResponse> {
   @override
   GetMapListRequest get request => GetMapListRequest();
-  
+
   @override
   GetMapListResponse get response => GetMapListResponse();
-  
+
   @override
   String get fullType => 'nav2_mission_planner_interfaces/srv/GetMapList';
-  
+
   @override
   String get messageDefinition => '''
 string path

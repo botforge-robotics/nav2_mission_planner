@@ -22,10 +22,10 @@ class ComputePathToPoseGoal extends RosMessage<ComputePathToPoseGoal> {
       geometry_msgs.PoseStamped? start,
       String? planner_id,
       bool? use_start})
-      : this.goal = goal ?? geometry_msgs.PoseStamped(),
-        this.start = start ?? geometry_msgs.PoseStamped(),
-        this.planner_id = planner_id ?? '',
-        this.use_start = use_start ?? false;
+      : goal = goal ?? geometry_msgs.PoseStamped(),
+        start = start ?? geometry_msgs.PoseStamped(),
+        planner_id = planner_id ?? '',
+        use_start = use_start ?? false;
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathToPose_Goal';
@@ -79,9 +79,9 @@ class ComputePathToPoseResult extends RosMessage<ComputePathToPoseResult> {
       {nav_msgs.Path? path,
       builtin_interfaces.Duration? planning_time,
       int? error_code})
-      : this.path = path ?? nav_msgs.Path(),
-        this.planning_time = planning_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+      : path = path ?? nav_msgs.Path(),
+        planning_time = planning_time ?? builtin_interfaces.Duration(),
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathToPose_Result';
@@ -146,8 +146,11 @@ class ComputePathToPoseFeedback extends RosMessage<ComputePathToPoseFeedback> {
 
 class ComputePathToPoseActionGoal
     extends RosActionGoal<ComputePathToPoseGoal, ComputePathToPoseActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late ComputePathToPoseGoal goal;
 
   static ComputePathToPoseActionGoal $prototype = ComputePathToPoseActionGoal();
@@ -156,9 +159,9 @@ class ComputePathToPoseActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     ComputePathToPoseGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? ComputePathToPoseGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? ComputePathToPoseGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathToPose_ActionGoal';
@@ -201,8 +204,11 @@ bool use_start''';
 
 class ComputePathToPoseActionResult extends RosActionResult<
     ComputePathToPoseResult, ComputePathToPoseActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late ComputePathToPoseResult result;
 
   static ComputePathToPoseActionResult $prototype =
@@ -212,9 +218,9 @@ class ComputePathToPoseActionResult extends RosActionResult<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     ComputePathToPoseResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? ComputePathToPoseResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? ComputePathToPoseResult();
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathToPose_ActionResult';
@@ -256,8 +262,11 @@ uint16 error_code''';
 
 class ComputePathToPoseActionFeedback extends RosActionFeedback<
     ComputePathToPoseFeedback, ComputePathToPoseActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late ComputePathToPoseFeedback feedback;
 
   static ComputePathToPoseActionFeedback $prototype =
@@ -267,9 +276,9 @@ class ComputePathToPoseActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     ComputePathToPoseFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? ComputePathToPoseFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? ComputePathToPoseFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/ComputePathToPose_ActionFeedback';

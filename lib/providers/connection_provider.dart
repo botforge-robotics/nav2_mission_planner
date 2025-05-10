@@ -1,5 +1,6 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:ros2_api/ros2_api.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:convert';
@@ -11,6 +12,12 @@ class ConnectionProvider extends ChangeNotifier {
   bool _isConnected = false;
   List<Map<String, String>> _recentConnections = [];
   Ros2? _ros2Client;
+
+  // Add this stream controller
+  final StreamController<ConnectionState> _connectionController =
+      StreamController<ConnectionState>.broadcast();
+
+  Stream<ConnectionState> get connectionStream => _connectionController.stream;
 
   // Getters
   String get ip => _ip;
@@ -54,8 +61,9 @@ class ConnectionProvider extends ChangeNotifier {
   }
 
   // Modified connect method
-  Future<void> connect(String ip, String port) async {
+  Future<bool> connect(String ip, String port) async {
     try {
+      _connectionController.add(ConnectionState.connecting);
       if (!await _isRobotAvailable(ip)) {
         throw Exception('Robot not available at $ip');
       }
@@ -92,19 +100,27 @@ class ConnectionProvider extends ChangeNotifier {
       }
 
       notifyListeners();
+      _connectionController.add(ConnectionState.connected);
+      return true;
     } catch (e) {
+      _connectionController.add(ConnectionState.disconnected);
       rethrow;
     }
   }
 
   // Disconnect from ROS2
   Future<void> disconnect() async {
+    _connectionController.add(ConnectionState.disconnecting);
     try {
       await _ros2Client?.close();
       _isConnected = false;
       notifyListeners();
     } catch (e) {
       rethrow;
+    } finally {
+      _connectionController.add(ConnectionState.disconnected);
     }
   }
 }
+
+enum ConnectionState { connecting, connected, disconnecting, disconnected }

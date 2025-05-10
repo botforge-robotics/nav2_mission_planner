@@ -13,7 +13,7 @@ class DummyBehaviorGoal extends RosMessage<DummyBehaviorGoal> {
   static DummyBehaviorGoal $prototype = DummyBehaviorGoal();
 
   DummyBehaviorGoal({std_msgs.StringMessage? command})
-      : this.command = command ?? std_msgs.StringMessage();
+      : command = command ?? std_msgs.StringMessage();
 
   @override
   String get fullType => 'nav2_msgs/action/DummyBehavior_Goal';
@@ -48,9 +48,9 @@ class DummyBehaviorResult extends RosMessage<DummyBehaviorResult> {
 
   DummyBehaviorResult(
       {builtin_interfaces.Duration? total_elapsed_time, int? error_code})
-      : this.total_elapsed_time =
+      : total_elapsed_time =
             total_elapsed_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/DummyBehavior_Result';
@@ -113,8 +113,11 @@ class DummyBehaviorFeedback extends RosMessage<DummyBehaviorFeedback> {
 
 class DummyBehaviorActionGoal
     extends RosActionGoal<DummyBehaviorGoal, DummyBehaviorActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late DummyBehaviorGoal goal;
 
   static DummyBehaviorActionGoal $prototype = DummyBehaviorActionGoal();
@@ -123,9 +126,9 @@ class DummyBehaviorActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     DummyBehaviorGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? DummyBehaviorGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? DummyBehaviorGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/DummyBehavior_ActionGoal';
@@ -165,8 +168,11 @@ class DummyBehaviorActionGoal
 
 class DummyBehaviorActionResult
     extends RosActionResult<DummyBehaviorResult, DummyBehaviorActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late DummyBehaviorResult result;
 
   static DummyBehaviorActionResult $prototype = DummyBehaviorActionResult();
@@ -175,9 +181,9 @@ class DummyBehaviorActionResult
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     DummyBehaviorResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? DummyBehaviorResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? DummyBehaviorResult();
 
   @override
   String get fullType => 'nav2_msgs/action/DummyBehavior_ActionResult';
@@ -219,8 +225,11 @@ uint16 error_code''';
 
 class DummyBehaviorActionFeedback extends RosActionFeedback<
     DummyBehaviorFeedback, DummyBehaviorActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late DummyBehaviorFeedback feedback;
 
   static DummyBehaviorActionFeedback $prototype = DummyBehaviorActionFeedback();
@@ -229,9 +238,9 @@ class DummyBehaviorActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     DummyBehaviorFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? DummyBehaviorFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? DummyBehaviorFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/DummyBehavior_ActionFeedback';

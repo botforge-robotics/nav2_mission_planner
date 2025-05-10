@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 
 class LaunchManager extends ChangeNotifier {
   final Map<String, String> _activeLaunches = {}; // unique_id -> description
+  SessionType _activeSession = SessionType.none;
+  SessionType get activeSession => _activeSession;
 
   Map<String, String> get activeLaunches => Map.unmodifiable(_activeLaunches);
 
@@ -50,20 +52,22 @@ class LaunchManager extends ChangeNotifier {
       print(
           'Request: $request. ${settings.mappingArgs.map((arg) => '${arg['name']}:=${arg['value']}').join(' ')}');
       final response = await serviceClient.call(request);
-      if (response?.success ?? false) {
+      if (response.success ?? false) {
         // Track the unique_id and description
-        _activeLaunches[response!.unique_id] =
+        _activeLaunches[response.unique_id] =
             '${parts[0]}/${parts[1]} ${settings.mappingArgs.map((arg) => '${arg['name']}:=${arg['value']}').join(' ')}';
         notifyListeners();
+        _activeSession = SessionType.mapping;
         return true;
       } else {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-                'Failed to start mapping: ${response?.message ?? "Unknown error"}'),
+                'Failed to start mapping: ${response.message ?? "Unknown error"}'),
             backgroundColor: Colors.red,
           ),
         );
+        _activeSession = SessionType.none;
         return false;
       }
     } catch (e) {
@@ -73,6 +77,7 @@ class LaunchManager extends ChangeNotifier {
           backgroundColor: Colors.red,
         ),
       );
+      _activeSession = SessionType.none;
       return false;
     }
   }
@@ -92,6 +97,7 @@ class LaunchManager extends ChangeNotifier {
       await serviceClient.call(request);
       _activeLaunches.remove(uniqueId);
       notifyListeners();
+      _activeSession = SessionType.none;
     } catch (e) {
       print('Error stopping launch: $e');
       rethrow;
@@ -130,7 +136,7 @@ class LaunchManager extends ChangeNotifier {
       );
 
       final response = await serviceClient.call(request);
-      return response?.success ?? false;
+      return response.success ?? false;
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -169,7 +175,7 @@ class LaunchManager extends ChangeNotifier {
       // Get arguments directly from settings
       final args = [
         ...settings.navigationArgs,
-        {'name': 'map_name', 'value': '${mapName}.yaml'},
+        {'name': 'map_name', 'value': '$mapName.yaml'},
       ];
 
       final request = LaunchWithArgsRequest(
@@ -186,6 +192,7 @@ class LaunchManager extends ChangeNotifier {
         _activeLaunches[response.unique_id] =
             '${parts[0]}/${parts[1]} ${args.map((a) => '${a['name']}:=${a['value']}').join(' ')}';
         notifyListeners();
+        _activeSession = SessionType.navigation;
         return true;
       }
       return false;
@@ -200,3 +207,5 @@ class LaunchManager extends ChangeNotifier {
     }
   }
 }
+
+enum SessionType { none, mapping, navigation }

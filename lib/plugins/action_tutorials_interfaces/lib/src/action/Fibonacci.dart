@@ -41,7 +41,7 @@ class FibonacciResult extends RosMessage<FibonacciResult> {
 
   static FibonacciResult $prototype = FibonacciResult();
 
-  FibonacciResult({List<int>? sequence}) : this.sequence = sequence ?? const [];
+  FibonacciResult({List<int>? sequence}) : sequence = sequence ?? const [];
 
   @override
   String get fullType => 'action_tutorials_interfaces/action/Fibonacci_Result';
@@ -73,7 +73,7 @@ class FibonacciFeedback extends RosMessage<FibonacciFeedback> {
   static FibonacciFeedback $prototype = FibonacciFeedback();
 
   FibonacciFeedback({List<int>? partial_sequence})
-      : this.partial_sequence = partial_sequence ?? const [];
+      : partial_sequence = partial_sequence ?? const [];
 
   @override
   String get fullType =>
@@ -104,8 +104,11 @@ class FibonacciFeedback extends RosMessage<FibonacciFeedback> {
 
 class FibonacciActionGoal
     extends RosActionGoal<FibonacciGoal, FibonacciActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late FibonacciGoal goal;
 
   static FibonacciActionGoal $prototype = FibonacciActionGoal();
@@ -114,9 +117,9 @@ class FibonacciActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     FibonacciGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? FibonacciGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? FibonacciGoal();
 
   @override
   String get fullType =>
@@ -156,8 +159,11 @@ class FibonacciActionGoal
 
 class FibonacciActionResult
     extends RosActionResult<FibonacciResult, FibonacciActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late FibonacciResult result;
 
   static FibonacciActionResult $prototype = FibonacciActionResult();
@@ -166,9 +172,9 @@ class FibonacciActionResult
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     FibonacciResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? FibonacciResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? FibonacciResult();
 
   @override
   String get fullType =>
@@ -209,8 +215,11 @@ class FibonacciActionResult
 
 class FibonacciActionFeedback
     extends RosActionFeedback<FibonacciFeedback, FibonacciActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late FibonacciFeedback feedback;
 
   static FibonacciActionFeedback $prototype = FibonacciActionFeedback();
@@ -219,9 +228,9 @@ class FibonacciActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     FibonacciFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? FibonacciFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? FibonacciFeedback();
 
   @override
   String get fullType =>

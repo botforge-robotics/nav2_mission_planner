@@ -16,9 +16,9 @@ class OccupancyGrid extends RosMessage<OccupancyGrid> {
 
   // Constructor
   OccupancyGrid({std_msgs.Header? header, MapMetaData? info, List<int>? data})
-      : this.header = header ?? std_msgs.Header(),
-        this.info = info ?? MapMetaData(),
-        this.data = data ?? const [];
+      : header = header ?? std_msgs.Header(),
+        info = info ?? MapMetaData(),
+        data = data ?? const [];
 
   @override
   String get fullType => 'nav_msgs/msg/OccupancyGrid';

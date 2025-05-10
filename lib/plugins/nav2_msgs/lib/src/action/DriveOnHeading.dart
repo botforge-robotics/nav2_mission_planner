@@ -19,9 +19,9 @@ class DriveOnHeadingGoal extends RosMessage<DriveOnHeadingGoal> {
       {geometry_msgs.Point? target,
       double? speed,
       builtin_interfaces.Duration? time_allowance})
-      : this.target = target ?? geometry_msgs.Point(),
-        this.speed = speed ?? 0.0,
-        this.time_allowance = time_allowance ?? builtin_interfaces.Duration();
+      : target = target ?? geometry_msgs.Point(),
+        speed = speed ?? 0.0,
+        time_allowance = time_allowance ?? builtin_interfaces.Duration();
 
   @override
   String get fullType => 'nav2_msgs/action/DriveOnHeading_Goal';
@@ -65,9 +65,9 @@ class DriveOnHeadingResult extends RosMessage<DriveOnHeadingResult> {
 
   DriveOnHeadingResult(
       {builtin_interfaces.Duration? total_elapsed_time, int? error_code})
-      : this.total_elapsed_time =
+      : total_elapsed_time =
             total_elapsed_time ?? builtin_interfaces.Duration(),
-        this.error_code = error_code ?? 0;
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/DriveOnHeading_Result';
@@ -106,7 +106,7 @@ class DriveOnHeadingFeedback extends RosMessage<DriveOnHeadingFeedback> {
   static DriveOnHeadingFeedback $prototype = DriveOnHeadingFeedback();
 
   DriveOnHeadingFeedback({double? distance_traveled})
-      : this.distance_traveled = distance_traveled ?? 0.0;
+      : distance_traveled = distance_traveled ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/action/DriveOnHeading_Feedback';
@@ -134,8 +134,11 @@ class DriveOnHeadingFeedback extends RosMessage<DriveOnHeadingFeedback> {
 
 class DriveOnHeadingActionGoal
     extends RosActionGoal<DriveOnHeadingGoal, DriveOnHeadingActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late DriveOnHeadingGoal goal;
 
   static DriveOnHeadingActionGoal $prototype = DriveOnHeadingActionGoal();
@@ -144,9 +147,9 @@ class DriveOnHeadingActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     DriveOnHeadingGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? DriveOnHeadingGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? DriveOnHeadingGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/DriveOnHeading_ActionGoal';
@@ -188,8 +191,11 @@ builtin_interfaces/Duration time_allowance''';
 
 class DriveOnHeadingActionResult
     extends RosActionResult<DriveOnHeadingResult, DriveOnHeadingActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late DriveOnHeadingResult result;
 
   static DriveOnHeadingActionResult $prototype = DriveOnHeadingActionResult();
@@ -198,9 +204,9 @@ class DriveOnHeadingActionResult
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     DriveOnHeadingResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? DriveOnHeadingResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? DriveOnHeadingResult();
 
   @override
   String get fullType => 'nav2_msgs/action/DriveOnHeading_ActionResult';
@@ -242,8 +248,11 @@ uint16 error_code''';
 
 class DriveOnHeadingActionFeedback extends RosActionFeedback<
     DriveOnHeadingFeedback, DriveOnHeadingActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late DriveOnHeadingFeedback feedback;
 
   static DriveOnHeadingActionFeedback $prototype =
@@ -253,9 +262,9 @@ class DriveOnHeadingActionFeedback extends RosActionFeedback<
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     DriveOnHeadingFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? DriveOnHeadingFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? DriveOnHeadingFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/DriveOnHeading_ActionFeedback';

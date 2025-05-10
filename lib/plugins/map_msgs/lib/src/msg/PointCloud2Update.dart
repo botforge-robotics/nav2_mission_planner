@@ -17,9 +17,9 @@ class PointCloud2Update extends RosMessage<PointCloud2Update> {
   // Constructor
   PointCloud2Update(
       {std_msgs.Header? header, int? type, sensor_msgs.PointCloud2? points})
-      : this.header = header ?? std_msgs.Header(),
-        this.type = type ?? 0,
-        this.points = points ?? sensor_msgs.PointCloud2();
+      : header = header ?? std_msgs.Header(),
+        type = type ?? 0,
+        points = points ?? sensor_msgs.PointCloud2();
 
   @override
   String get fullType => 'map_msgs/msg/PointCloud2Update';

@@ -16,9 +16,9 @@ class Costmap extends RosMessage<Costmap> {
 
   // Constructor
   Costmap({std_msgs.Header? header, CostmapMetaData? metadata, List<int>? data})
-      : this.header = header ?? std_msgs.Header(),
-        this.metadata = metadata ?? CostmapMetaData(),
-        this.data = data ?? const [];
+      : header = header ?? std_msgs.Header(),
+        metadata = metadata ?? CostmapMetaData(),
+        data = data ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/msg/Costmap';

@@ -14,9 +14,9 @@ class GoalStatus extends RosMessage<GoalStatus> {
   static GoalStatus $prototype = GoalStatus();
   // Constructor
   GoalStatus({GoalID? goal_id, int? status, String? text})
-      : this.goal_id = goal_id ?? GoalID(),
-        this.status = status ?? 0,
-        this.text = text ?? '';
+      : goal_id = goal_id ?? GoalID(),
+        status = status ?? 0,
+        text = text ?? '';
 
   @override
   String get fullType => 'actionlib_msgs/msg/GoalStatus';

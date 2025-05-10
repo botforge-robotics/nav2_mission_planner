@@ -7,6 +7,7 @@ import '../services/launch_service.dart';
 import '../widgets/joystick_thumb_widget.dart';
 import '../widgets/occupancy_grid_viewer.dart';
 import '../widgets/image_viwer.dart';
+import 'package:nav2_mission_planner/providers/nav_tool_provider.dart';
 
 class MappingScreen extends StatefulWidget {
   final Color modeColor;
@@ -29,10 +30,10 @@ class _MappingScreenState extends State<MappingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final settings = Provider.of<SettingsProvider>(context);
-    return Consumer<ConnectionProvider>(
-      builder: (context, connection, _) {
-        return Stack(
+    return ChangeNotifierProvider(
+      create: (context) => NavToolProvider(),
+      child: Scaffold(
+        body: Stack(
           children: [
             // Background
             Positioned.fill(
@@ -116,16 +117,20 @@ class _MappingScreenState extends State<MappingScreen> {
                                 },
                                 child: Transform.translate(
                                   offset: _offset,
-                                  child: OccupancyGridViewer(
-                                    topic: '/map',
-                                    enabled: true,
-                                    scale: _scale,
-                                    appModeColor: widget.modeColor,
-                                    onScaleChanged: (newScale) {
-                                      setState(() {
-                                        _scale = newScale;
-                                      });
-                                    },
+                                  child: Consumer<NavToolProvider>(
+                                    builder: (context, navTools, child) =>
+                                        OccupancyGridViewer(
+                                      topic: '/map',
+                                      enabled: true,
+                                      scale: _scale,
+                                      appModeColor: widget.modeColor,
+                                      showMarkers: false,
+                                      onScaleChanged: (newScale) {
+                                        setState(() {
+                                          _scale = newScale;
+                                        });
+                                      },
+                                    ),
                                   ),
                                 ),
                               );
@@ -221,77 +226,49 @@ class _MappingScreenState extends State<MappingScreen> {
                 ),
               ),
             if (_isMappingStarted && _isMappingActive)
-              // mapping_screen.dart
               Positioned(
                 top: 65,
                 right: 16,
-                child: FloatingActionButton(
-                  mini: true,
-                  backgroundColor: widget.modeColor,
-                  onPressed: () async {
-                    final result = await showDialog<Map<String, dynamic>>(
-                      context: context,
-                      builder: (context) => MapSaveDialog(
-                        screenSize: MediaQuery.of(context).size,
-                        modeColor: widget.modeColor,
-                      ),
-                    );
-
-                    if (result != null) {
-                      final String mapName = result['mapName'];
-                      final bool stopMapping = result['stopMapping'];
-
-                      // Show saving overlay
-                      showDialog(
-                        context: context,
-                        barrierDismissible: false,
-                        builder: (context) => AlertDialog(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          content: Center(
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CircularProgressIndicator(
-                                    color: widget.modeColor),
-                                const SizedBox(height: 16),
-                                Text(
-                                  'Saving Map...',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
+                child: Row(
+                  children: [
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: Colors.red,
+                      onPressed: () async {
+                        showDialog(
+                          context: context,
+                          barrierDismissible: false,
+                          builder: (context) => AlertDialog(
+                            backgroundColor: Colors.transparent,
+                            elevation: 0,
+                            content: Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  CircularProgressIndicator(color: Colors.red),
+                                  const SizedBox(height: 16),
+                                  const Text(
+                                    'Stopping Mapping...',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ),
-                      );
-
-                      final launchManager =
-                          Provider.of<LaunchManager>(context, listen: false);
-                      final success =
-                          await launchManager.saveMap(context, mapName);
-
-                      // Dismiss saving overlay
-                      if (mounted) Navigator.pop(context);
-
-                      if (success) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Map saved as $mapName'),
-                            backgroundColor: Colors.green,
                           ),
                         );
 
-                        // Only stop mapping if requested AND save was successful
-                        if (stopMapping) {
-                          for (final entry
-                              in launchManager.activeLaunches.entries) {
-                            try {
-                              await launchManager.stopLaunch(
-                                  context, entry.key);
-                            } catch (e) {
+                        final launchManager =
+                            Provider.of<LaunchManager>(context, listen: false);
+
+                        for (final entry
+                            in launchManager.activeLaunches.entries) {
+                          try {
+                            await launchManager.stopLaunch(context, entry.key);
+                          } catch (e) {
+                            if (mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 SnackBar(
                                   content: Text('Error stopping mapping: $e'),
@@ -300,56 +277,155 @@ class _MappingScreenState extends State<MappingScreen> {
                               );
                             }
                           }
+                        }
 
+                        if (mounted) {
+                          Navigator.pop(context); // Dismiss loading
                           setState(() {
                             _isMappingStarted = false;
                             _isMappingActive = false;
                             _mapWidget = null;
                           });
                         }
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('Failed to save map $mapName'),
-                            backgroundColor: Colors.red,
+                      },
+                      child: const Icon(Icons.stop, color: Colors.white),
+                    ),
+                    const SizedBox(width: 8),
+                    FloatingActionButton(
+                      mini: true,
+                      backgroundColor: widget.modeColor,
+                      onPressed: () async {
+                        final result = await showDialog<Map<String, dynamic>>(
+                          context: context,
+                          builder: (context) => MapSaveDialog(
+                            screenSize: MediaQuery.of(context).size,
+                            modeColor: widget.modeColor,
                           ),
                         );
-                      }
-                    }
-                  },
-                  child: const Icon(Icons.save, color: Colors.white),
+
+                        if (result != null) {
+                          final String mapName = result['mapName'];
+                          final bool stopMapping = result['stopMapping'];
+
+                          // Show saving overlay
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (context) => AlertDialog(
+                              backgroundColor: Colors.transparent,
+                              elevation: 0,
+                              content: Center(
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    CircularProgressIndicator(
+                                        color: widget.modeColor),
+                                    const SizedBox(height: 16),
+                                    Text(
+                                      'Saving Map...',
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+
+                          final launchManager = Provider.of<LaunchManager>(
+                              context,
+                              listen: false);
+                          final success =
+                              await launchManager.saveMap(context, mapName);
+
+                          // Dismiss saving overlay
+                          if (mounted) Navigator.pop(context);
+
+                          if (success) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Map saved as $mapName'),
+                                backgroundColor: Colors.green,
+                              ),
+                            );
+
+                            // Only stop mapping if requested AND save was successful
+                            if (stopMapping) {
+                              for (final entry
+                                  in launchManager.activeLaunches.entries) {
+                                try {
+                                  await launchManager.stopLaunch(
+                                      context, entry.key);
+                                } catch (e) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                      content:
+                                          Text('Error stopping mapping: $e'),
+                                      backgroundColor: Colors.red,
+                                    ),
+                                  );
+                                }
+                              }
+
+                              setState(() {
+                                _isMappingStarted = false;
+                                _isMappingActive = false;
+                                _mapWidget = null;
+                              });
+                            }
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Failed to save map $mapName'),
+                                backgroundColor: Colors.red,
+                              ),
+                            );
+                          }
+                        }
+                      },
+                      child: const Icon(Icons.save, color: Colors.white),
+                    ),
+                  ],
                 ),
               ),
-            if (settings.cameraEnabled &&
-                settings.cameraImageTopic.isNotEmpty &&
-                _isMappingStarted &&
-                _isMappingActive)
-              Positioned(
-                bottom: 20,
-                left: 20,
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.25,
-                  height: MediaQuery.of(context).size.width * 0.25 * (9 / 16),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: widget.modeColor, width: 2),
-                    ),
-                    child: ClipRRect(
-                      borderRadius: BorderRadius.circular(6),
-                      child: ImageViewer(
-                        topic: settings.cameraImageTopic,
-                        enabled: settings.cameraEnabled,
-                        hideTopic: true,
+            if (_isMappingStarted && _isMappingActive)
+              Consumer<SettingsProvider>(
+                builder: (context, settings, child) {
+                  if (!settings.cameraEnabled ||
+                      settings.cameraImageTopic.isEmpty) {
+                    return const SizedBox.shrink();
+                  }
+                  return Positioned(
+                    bottom: 20,
+                    left: 20,
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.25,
+                      height:
+                          MediaQuery.of(context).size.width * 0.25 * (9 / 16),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black,
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: widget.modeColor, width: 2),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(6),
+                          child: ImageViewer(
+                            topic: settings.cameraImageTopic,
+                            enabled: settings.cameraEnabled,
+                            hideTopic: true,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                ),
+                  );
+                },
               ),
           ],
-        );
-      },
+        ),
+      ),
     );
   }
 

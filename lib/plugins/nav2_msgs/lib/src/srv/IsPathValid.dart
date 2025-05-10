@@ -12,8 +12,7 @@ class IsPathValidRequest extends RosMessage<IsPathValidRequest> {
   static IsPathValidRequest $prototype = IsPathValidRequest();
 
   // Constructor
-  IsPathValidRequest({nav_msgs.Path? path})
-      : this.path = path ?? nav_msgs.Path();
+  IsPathValidRequest({nav_msgs.Path? path}) : path = path ?? nav_msgs.Path();
 
   @override
   String get fullType => 'nav2_msgs/srv/IsPathValid_Request';
@@ -48,8 +47,8 @@ class IsPathValidResponse extends RosMessage<IsPathValidResponse> {
 
   // Constructor
   IsPathValidResponse({bool? is_valid, List<int>? invalid_pose_indices})
-      : this.is_valid = is_valid ?? false,
-        this.invalid_pose_indices = invalid_pose_indices ?? const [];
+      : is_valid = is_valid ?? false,
+        invalid_pose_indices = invalid_pose_indices ?? const [];
 
   @override
   String get fullType => 'nav2_msgs/srv/IsPathValid_Response';

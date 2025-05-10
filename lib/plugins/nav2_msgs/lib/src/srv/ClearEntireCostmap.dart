@@ -13,7 +13,7 @@ class ClearEntireCostmapRequest extends RosMessage<ClearEntireCostmapRequest> {
 
   // Constructor
   ClearEntireCostmapRequest({std_msgs.Empty? request})
-      : this.request = request ?? std_msgs.Empty();
+      : request = request ?? std_msgs.Empty();
 
   @override
   String get fullType => 'nav2_msgs/srv/ClearEntireCostmap_Request';
@@ -48,7 +48,7 @@ class ClearEntireCostmapResponse
 
   // Constructor
   ClearEntireCostmapResponse({std_msgs.Empty? response})
-      : this.response = response ?? std_msgs.Empty();
+      : response = response ?? std_msgs.Empty();
 
   @override
   String get fullType => 'nav2_msgs/srv/ClearEntireCostmap_Response';

@@ -46,8 +46,8 @@ class CameraResponse extends RosMessage<CameraResponse> {
   static CameraResponse $prototype = CameraResponse();
 
   CameraResponse({bool? success, String? message})
-      : this.success = success ?? false,
-        this.message = message ?? '';
+      : success = success ?? false,
+        message = message ?? '';
 
   @override
   String get fullType => 'rio_interfaces/srv/Camera_Response';

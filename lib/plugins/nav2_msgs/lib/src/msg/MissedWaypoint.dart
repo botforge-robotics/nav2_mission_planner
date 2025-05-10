@@ -15,9 +15,9 @@ class MissedWaypoint extends RosMessage<MissedWaypoint> {
 
   // Constructor
   MissedWaypoint({int? index, geometry_msgs.PoseStamped? goal, int? error_code})
-      : this.index = index ?? 0,
-        this.goal = goal ?? geometry_msgs.PoseStamped(),
-        this.error_code = error_code ?? 0;
+      : index = index ?? 0,
+        goal = goal ?? geometry_msgs.PoseStamped(),
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/msg/MissedWaypoint';

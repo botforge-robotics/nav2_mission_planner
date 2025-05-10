@@ -16,8 +16,9 @@ class Int64MultiArray extends RosMessage<Int64MultiArray> {
   Int64MultiArray({
     MultiArrayLayout? layout,
     List<int>? data,
-  })  : this.layout = layout ?? MultiArrayLayout(),
-        this.data = data ?? [];
+  })  : layout = layout ?? MultiArrayLayout(),
+        data = data ?? [];
+  @override
   String get fullType => 'std_msgs/msg/Int64MultiArray';
 
   @override

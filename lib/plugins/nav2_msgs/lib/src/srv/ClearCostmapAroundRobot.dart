@@ -15,7 +15,7 @@ class ClearCostmapAroundRobotRequest
 
   // Constructor
   ClearCostmapAroundRobotRequest({double? reset_distance})
-      : this.reset_distance = reset_distance ?? 0.0;
+      : reset_distance = reset_distance ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/srv/ClearCostmapAroundRobot_Request';
@@ -50,7 +50,7 @@ class ClearCostmapAroundRobotResponse
 
   // Constructor
   ClearCostmapAroundRobotResponse({std_msgs.Empty? response})
-      : this.response = response ?? std_msgs.Empty();
+      : response = response ?? std_msgs.Empty();
 
   @override
   String get fullType => 'nav2_msgs/srv/ClearCostmapAroundRobot_Response';

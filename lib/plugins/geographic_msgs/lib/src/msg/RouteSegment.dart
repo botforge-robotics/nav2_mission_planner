@@ -20,10 +20,10 @@ class RouteSegment extends RosMessage<RouteSegment> {
       unique_identifier_msgs.UUID? start,
       unique_identifier_msgs.UUID? end,
       List<KeyValue>? props})
-      : this.id = id ?? unique_identifier_msgs.UUID(),
-        this.start = start ?? unique_identifier_msgs.UUID(),
-        this.end = end ?? unique_identifier_msgs.UUID(),
-        this.props = props ?? const [];
+      : id = id ?? unique_identifier_msgs.UUID(),
+        start = start ?? unique_identifier_msgs.UUID(),
+        end = end ?? unique_identifier_msgs.UUID(),
+        props = props ?? const [];
 
   @override
   String get fullType => 'geographic_msgs/msg/RouteSegment';

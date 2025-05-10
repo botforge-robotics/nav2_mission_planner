@@ -41,7 +41,7 @@ class SetMapProjectionsResponse extends RosMessage<SetMapProjectionsResponse> {
 
   // Constructor
   SetMapProjectionsResponse({List<ProjectedMapInfo>? projected_maps_info})
-      : this.projected_maps_info = projected_maps_info ?? const [];
+      : projected_maps_info = projected_maps_info ?? const [];
 
   @override
   String get fullType => 'map_msgs/srv/SetMapProjections_Response';

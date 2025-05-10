@@ -13,8 +13,8 @@ class BoundingBox extends RosMessage<BoundingBox> {
 
   // Constructor
   BoundingBox({GeoPoint? min_pt, GeoPoint? max_pt})
-      : this.min_pt = min_pt ?? GeoPoint(),
-        this.max_pt = max_pt ?? GeoPoint();
+      : min_pt = min_pt ?? GeoPoint(),
+        max_pt = max_pt ?? GeoPoint();
 
   @override
   String get fullType => 'geographic_msgs/msg/BoundingBox';

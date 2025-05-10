@@ -21,11 +21,11 @@ class SmoothPathGoal extends RosMessage<SmoothPathGoal> {
       String? smoother_id,
       builtin_interfaces.Duration? max_smoothing_duration,
       bool? check_for_collisions})
-      : this.path = path ?? nav_msgs.Path(),
-        this.smoother_id = smoother_id ?? '',
-        this.max_smoothing_duration =
+      : path = path ?? nav_msgs.Path(),
+        smoother_id = smoother_id ?? '',
+        max_smoothing_duration =
             max_smoothing_duration ?? builtin_interfaces.Duration(),
-        this.check_for_collisions = check_for_collisions ?? false;
+        check_for_collisions = check_for_collisions ?? false;
 
   @override
   String get fullType => 'nav2_msgs/action/SmoothPath_Goal';
@@ -80,11 +80,11 @@ class SmoothPathResult extends RosMessage<SmoothPathResult> {
       builtin_interfaces.Duration? smoothing_duration,
       bool? was_completed,
       int? error_code})
-      : this.path = path ?? nav_msgs.Path(),
-        this.smoothing_duration =
+      : path = path ?? nav_msgs.Path(),
+        smoothing_duration =
             smoothing_duration ?? builtin_interfaces.Duration(),
-        this.was_completed = was_completed ?? false,
-        this.error_code = error_code ?? 0;
+        was_completed = was_completed ?? false,
+        error_code = error_code ?? 0;
 
   @override
   String get fullType => 'nav2_msgs/action/SmoothPath_Result';
@@ -155,8 +155,11 @@ class SmoothPathFeedback extends RosMessage<SmoothPathFeedback> {
 
 class SmoothPathActionGoal
     extends RosActionGoal<SmoothPathGoal, SmoothPathActionGoal> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalID goal_id;
+  @override
   late SmoothPathGoal goal;
 
   static SmoothPathActionGoal $prototype = SmoothPathActionGoal();
@@ -165,9 +168,9 @@ class SmoothPathActionGoal
     std_msgs.Header? header,
     actionlib_msgs.GoalID? goal_id,
     SmoothPathGoal? goal,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.goal_id = goal_id ?? actionlib_msgs.GoalID(),
-        this.goal = goal ?? SmoothPathGoal();
+  })  : header = header ?? std_msgs.Header(),
+        goal_id = goal_id ?? actionlib_msgs.GoalID(),
+        goal = goal ?? SmoothPathGoal();
 
   @override
   String get fullType => 'nav2_msgs/action/SmoothPath_ActionGoal';
@@ -209,8 +212,11 @@ bool check_for_collisions''';
 
 class SmoothPathActionResult
     extends RosActionResult<SmoothPathResult, SmoothPathActionResult> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late SmoothPathResult result;
 
   static SmoothPathActionResult $prototype = SmoothPathActionResult();
@@ -219,9 +225,9 @@ class SmoothPathActionResult
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     SmoothPathResult? result,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.result = result ?? SmoothPathResult();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        result = result ?? SmoothPathResult();
 
   @override
   String get fullType => 'nav2_msgs/action/SmoothPath_ActionResult';
@@ -264,8 +270,11 @@ uint16 error_code''';
 
 class SmoothPathActionFeedback
     extends RosActionFeedback<SmoothPathFeedback, SmoothPathActionFeedback> {
+  @override
   late std_msgs.Header header;
+  @override
   late actionlib_msgs.GoalStatus status;
+  @override
   late SmoothPathFeedback feedback;
 
   static SmoothPathActionFeedback $prototype = SmoothPathActionFeedback();
@@ -274,9 +283,9 @@ class SmoothPathActionFeedback
     std_msgs.Header? header,
     actionlib_msgs.GoalStatus? status,
     SmoothPathFeedback? feedback,
-  })  : this.header = header ?? std_msgs.Header(),
-        this.status = status ?? actionlib_msgs.GoalStatus(),
-        this.feedback = feedback ?? SmoothPathFeedback();
+  })  : header = header ?? std_msgs.Header(),
+        status = status ?? actionlib_msgs.GoalStatus(),
+        feedback = feedback ?? SmoothPathFeedback();
 
   @override
   String get fullType => 'nav2_msgs/action/SmoothPath_ActionFeedback';

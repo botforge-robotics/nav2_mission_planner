@@ -22,11 +22,11 @@ class CostmapFilterInfo extends RosMessage<CostmapFilterInfo> {
       String? filter_mask_topic,
       double? base,
       double? multiplier})
-      : this.header = header ?? std_msgs.Header(),
-        this.type = type ?? 0,
-        this.filter_mask_topic = filter_mask_topic ?? '',
-        this.base = base ?? 0.0,
-        this.multiplier = multiplier ?? 0.0;
+      : header = header ?? std_msgs.Header(),
+        type = type ?? 0,
+        filter_mask_topic = filter_mask_topic ?? '',
+        base = base ?? 0.0,
+        multiplier = multiplier ?? 0.0;
 
   @override
   String get fullType => 'nav2_msgs/msg/CostmapFilterInfo';
