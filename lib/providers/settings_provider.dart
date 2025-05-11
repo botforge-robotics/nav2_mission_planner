@@ -12,6 +12,8 @@ class SettingsProvider extends ChangeNotifier {
   // Mapping Settings
   String _mapsPath = DefaultSettings.defaultMapsFolder;
   String _mappingLaunchFile = DefaultSettings.defaultMappingLaunchFile;
+  late String _mappingOdomTopic;
+  late String _mappingOdomTopicType;
   List<Map<String, String>> _mappingArgs = [];
 
   // Add new save map settings
@@ -20,6 +22,8 @@ class SettingsProvider extends ChangeNotifier {
 
   // Navigation Settings
   String _navigationLaunchFile = DefaultSettings.defaultNavigationLaunchFile;
+  late String _navigationOdomTopic;
+  late String _navigationOdomTopicType;
   List<Map<String, String>> _navigationArgs = [];
 
   // General Settings
@@ -30,7 +34,7 @@ class SettingsProvider extends ChangeNotifier {
 
   // Add new properties
   String _odomTopic = DefaultSettings.defaultOdomTopic;
-
+  String _odomTopicType = DefaultSettings.defaultOdomTopicType;
   // Add to existing properties
   String _lidarTopic = DefaultSettings.defaultLidarTopic;
 
@@ -44,12 +48,17 @@ class SettingsProvider extends ChangeNotifier {
   double get angularVelocity => _angularVelocity;
   String get mapsPath => _mapsPath;
   String get mappingLaunchFile => _mappingLaunchFile;
+  String get mappingOdomTopic => _mappingOdomTopic;
+  String get mappingOdomTopicType => _mappingOdomTopicType;
   List<Map<String, String>> get mappingArgs => _mappingArgs;
   String get navigationLaunchFile => _navigationLaunchFile;
+  String get navigationOdomTopic => _navigationOdomTopic;
+  String get navigationOdomTopicType => _navigationOdomTopicType;
   List<Map<String, String>> get navigationArgs => _navigationArgs;
   String get cameraImageTopic => _cameraImageTopic;
   bool get cameraEnabled => _cameraEnabled;
   String get odomTopic => _odomTopic;
+  String get odomTopicType => _odomTopicType;
   String get saveMapLaunchFile => _saveMapLaunchFile;
   List<Map<String, String>> get saveMapArgs => _saveMapArgs;
   String get lidarTopic => _lidarTopic;
@@ -73,9 +82,16 @@ class SettingsProvider extends ChangeNotifier {
         prefs.getString('mapsPath') ?? DefaultSettings.defaultMapsFolder;
     _mappingLaunchFile = prefs.getString('mappingLaunchFile') ??
         DefaultSettings.defaultMappingLaunchFile;
+    _mappingOdomTopic = prefs.getString('mappingOdomTopic') ??
+        DefaultSettings.defaultMappingOdomTopic;
+    _mappingOdomTopicType = prefs.getString('mappingOdomTopicType') ??
+        DefaultSettings.defaultMappingOdomTopicType;
     _navigationLaunchFile = prefs.getString('navigationLaunchFile') ??
         DefaultSettings.defaultNavigationLaunchFile;
-
+    _navigationOdomTopic = prefs.getString('navigationOdomTopic') ??
+        DefaultSettings.defaultNavigationOdomTopic;
+    _navigationOdomTopicType = prefs.getString('navigationOdomTopicType') ??
+        DefaultSettings.defaultNavigationOdomTopicType;
     // Load mapping and navigation args
     final String? mappingArgsJson = prefs.getString('mappingArgs');
     if (mappingArgsJson != null) {
@@ -101,6 +117,8 @@ class SettingsProvider extends ChangeNotifier {
     // Load new topics
     _odomTopic =
         prefs.getString('odomTopic') ?? DefaultSettings.defaultOdomTopic;
+    _odomTopicType = prefs.getString('odomTopicType') ??
+        DefaultSettings.defaultOdomTopicType;
 
     // Load save map settings
     _saveMapLaunchFile = prefs.getString('saveMapLaunchFile') ??
@@ -134,12 +152,17 @@ class SettingsProvider extends ChangeNotifier {
     await prefs.setDouble('angularVelocity', _angularVelocity);
     await prefs.setString('mapsPath', _mapsPath);
     await prefs.setString('mappingLaunchFile', _mappingLaunchFile);
+    await prefs.setString('mappingOdomTopic', _mappingOdomTopic);
+    await prefs.setString('mappingOdomTopicType', _mappingOdomTopicType);
     await prefs.setString('navigationLaunchFile', _navigationLaunchFile);
+    await prefs.setString('navigationOdomTopic', _navigationOdomTopic);
+    await prefs.setString('navigationOdomTopicType', _navigationOdomTopicType);
     await prefs.setString('mappingArgs', json.encode(_mappingArgs));
     await prefs.setString('navigationArgs', json.encode(_navigationArgs));
     await prefs.setString('cameraImageTopic', _cameraImageTopic);
     await prefs.setBool('cameraEnabled', _cameraEnabled);
     await prefs.setString('odomTopic', _odomTopic);
+    await prefs.setString('odomTopicType', _odomTopicType);
     await prefs.setString('saveMapLaunchFile', _saveMapLaunchFile);
     await prefs.setString('saveMapArgs', json.encode(_saveMapArgs));
     await prefs.setString('lidarTopic', _lidarTopic);
@@ -202,6 +225,13 @@ class SettingsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  void setMappingOdomTopic(String topic, String type) {
+    _mappingOdomTopic = topic;
+    _mappingOdomTopicType = type;
+    _saveSettings();
+    notifyListeners();
+  }
+
   void addMappingArg(String name, String value) {
     _mappingArgs.add({'name': name.trim(), 'value': value.trim()});
     _saveSettings(); // Save after updating
@@ -228,6 +258,13 @@ class SettingsProvider extends ChangeNotifier {
   void setNavigationLaunchFile(String file) {
     _navigationLaunchFile = file.trim();
     _saveSettings(); // Save after updating
+    notifyListeners();
+  }
+
+  void setNavigationOdomTopic(String topic, String type) {
+    _navigationOdomTopic = topic;
+    _navigationOdomTopicType = type;
+    _saveSettings();
     notifyListeners();
   }
 
@@ -268,8 +305,9 @@ class SettingsProvider extends ChangeNotifier {
   }
 
   // Add new setters
-  void setOdomTopic(String topic) {
+  void setOdomTopic(String topic, String topicType) {
     _odomTopic = topic.trim();
+    _odomTopicType = topicType.trim();
     _saveSettings();
     notifyListeners();
   }

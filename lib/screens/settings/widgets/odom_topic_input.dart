@@ -6,7 +6,8 @@ import 'package:nav2_mission_planner/providers/connection_provider.dart';
 
 class OdomTopicInput extends StatefulWidget {
   final String initialValue;
-  final Function(String) onChanged;
+  final String initialValueType;
+  final Function(String, String) onChanged;
   final Size screenSize;
   final Color modeColor;
 
@@ -16,6 +17,7 @@ class OdomTopicInput extends StatefulWidget {
     required this.onChanged,
     required this.screenSize,
     required this.modeColor,
+    required this.initialValueType,
   });
 
   @override
@@ -23,19 +25,22 @@ class OdomTopicInput extends StatefulWidget {
 }
 
 class _OdomTopicInputState extends State<OdomTopicInput> {
-  static List<String> _sessionTopics = [];
+  static Map<String, String> _sessionTopics = {};
   bool _isLoading = false;
   String? _errorMessage;
 
   @override
   void initState() {
     super.initState();
-    if (_sessionTopics.isEmpty) {
-      _fetchTopics();
-    } else if (!_sessionTopics.contains(widget.initialValue) &&
-        _sessionTopics.isNotEmpty) {
-      widget.onChanged(_sessionTopics.first);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (_sessionTopics.isEmpty) {
+        _fetchTopics();
+      } else if (!_sessionTopics.containsKey(widget.initialValue) &&
+          _sessionTopics.isNotEmpty) {
+        widget.onChanged(
+            _sessionTopics.keys.first, _sessionTopics.values.first);
+      }
+    });
   }
 
   Future<void> _fetchTopics() async {
@@ -45,6 +50,7 @@ class _OdomTopicInputState extends State<OdomTopicInput> {
     setState(() {
       _isLoading = true;
       _errorMessage = null;
+      _sessionTopics = {};
     });
 
     try {
@@ -56,22 +62,35 @@ class _OdomTopicInputState extends State<OdomTopicInput> {
         serviceType: TopicsForType(),
       );
 
-      final response = await client
-          .call(TopicsForTypeRequest(type: 'nav_msgs/msg/Odometry'));
+      final typesToCheck = [
+        'nav_msgs/msg/Odometry',
+        'geometry_msgs/msg/PoseWithCovarianceStamped'
+      ];
 
-      final topics = response.topics.where((t) => t.isNotEmpty).toList();
+      for (final type in typesToCheck) {
+        final response = await client.call(TopicsForTypeRequest(type: type));
+        for (final topic in response.topics) {
+          if (topic.isNotEmpty) {
+            _sessionTopics[topic] = type;
+          }
+        }
+      }
 
-      String? selectedTopic;
-      if (topics.contains(widget.initialValue)) {
-        selectedTopic = widget.initialValue;
-      } else if (topics.isNotEmpty) {
-        selectedTopic = topics.first;
-        widget.onChanged(selectedTopic);
+      String? selectedTopic = widget.initialValue;
+      String? selectedType = widget.initialValueType;
+
+      if (!_sessionTopics.containsKey(selectedTopic) ||
+          _sessionTopics[selectedTopic] != selectedType) {
+        if (_sessionTopics.isNotEmpty) {
+          selectedTopic = _sessionTopics.keys.first;
+          selectedType = _sessionTopics.values.first;
+        }
       }
 
       setState(() {
-        _sessionTopics = topics;
-        if (selectedTopic != null) widget.onChanged(selectedTopic);
+        if (selectedTopic != null && selectedType != null) {
+          widget.onChanged(selectedTopic, selectedType);
+        }
       });
     } catch (e) {
       setState(() => _errorMessage = 'Failed to fetch topics: ${e.toString()}');
@@ -88,7 +107,7 @@ class _OdomTopicInputState extends State<OdomTopicInput> {
         _buildTopicDropdown(),
         SizedBox(height: widget.screenSize.height * 0.01),
         Text(
-          'Type: nav_msgs/msg/Odometry',
+          'Type: nav_msgs/msg/Odometry or geometry_msgs/msg/PoseWithCovarianceStamped',
           style: TextStyle(
             fontSize: 10,
             color: Colors.grey.shade400,
@@ -134,7 +153,9 @@ class _OdomTopicInputState extends State<OdomTopicInput> {
                 child: ButtonTheme(
                   alignedDropdown: true,
                   child: DropdownButton<String>(
-                    value: _sessionTopics.contains(widget.initialValue)
+                    value: _sessionTopics.containsKey(widget.initialValue) &&
+                            _sessionTopics[widget.initialValue] ==
+                                widget.initialValueType
                         ? widget.initialValue
                         : null,
                     items: [
@@ -151,19 +172,37 @@ class _OdomTopicInputState extends State<OdomTopicInput> {
                           ),
                         )
                       else
-                        ..._sessionTopics.map((topic) => DropdownMenuItem(
-                              value: topic,
-                              child: Text(
-                                topic,
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                ),
-                              ),
-                            )),
+                        ..._sessionTopics.entries
+                            .map((entry) => DropdownMenuItem(
+                                  value: entry.key,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Text(entry.key,
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          )),
+                                      Text(
+                                        entry.value,
+                                        style: TextStyle(
+                                          fontSize: 10,
+                                          color: Colors.grey[400],
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                )),
                     ],
                     onChanged: (value) {
-                      if (value != null) widget.onChanged(value);
+                      if (value != null) {
+                        final type = _sessionTopics[value];
+                        if (type != null) {
+                          widget.onChanged(value, type);
+                        }
+                      }
                     },
                     isExpanded: true,
                     icon: Icon(Icons.arrow_drop_down, color: widget.modeColor),

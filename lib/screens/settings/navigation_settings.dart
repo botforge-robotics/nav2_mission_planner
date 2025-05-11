@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nav2_mission_planner/screens/settings/widgets/odom_topic_input.dart';
 import 'package:provider/provider.dart';
 import '../../providers/settings_provider.dart';
 import 'widgets/setting_card.dart';
@@ -50,9 +51,18 @@ class NavigationSettings extends StatelessWidget {
                 SizedBox(height: screenSize.height * 0.02),
                 ArgumentsList(
                   arguments: settings.navigationArgs,
-                  onRemove: settings.removeNavigationArg,
-                  onAdd: settings.addNavigationArg,
-                  onUpdate: settings.updateNavigationArg,
+                  onRemove: (index) =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    settings.removeNavigationArg(index);
+                  }),
+                  onAdd: (key, value) =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    settings.addNavigationArg('', '');
+                  }),
+                  onUpdate: (index, key, value) =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    settings.updateNavigationArg(index, key, value);
+                  }),
                   screenSize: screenSize,
                   modeColor: modeColor,
                 ),
@@ -66,7 +76,7 @@ class NavigationSettings extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  'Note: The "map_name" argument will be asked when starting navigation. Please make sure the argument name is correct in your launch file.',
+                  'Note: The name of map file will be asked when starting navigation. Please make sure the argument name "map" is correct in your launch file.',
                   style: TextStyle(
                     fontSize: 10,
                     color: Colors.orange.shade300,
@@ -75,6 +85,21 @@ class NavigationSettings extends StatelessWidget {
               ],
             ),
           ),
+          // Navigation Odom Topic Setting
+          SettingCard(
+            title: 'Navigation Odom Topic',
+            description: 'Set the topic for navigation odom data',
+            modeColor: modeColor,
+            screenSize: screenSize,
+            content: OdomTopicInput(
+              initialValue: settings.navigationOdomTopic,
+              initialValueType: settings.navigationOdomTopicType,
+              onChanged: settings.setNavigationOdomTopic,
+              screenSize: screenSize,
+              modeColor: modeColor,
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.1),
         ]),
       );
     });

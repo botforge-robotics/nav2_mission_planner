@@ -29,7 +29,7 @@ class GoalService {
     );
   }
 
-  Future<void> sendGoal({
+  Future<NavigateToPoseResult?> sendGoal({
     required double x,
     required double y,
     required geometry_msgs.Quaternion orientation,
@@ -51,14 +51,16 @@ class GoalService {
       );
 
     try {
-      await _client.sendGoal(
+      final result = await _client.sendGoal(
         goal,
         onFeedback: (feedback) {
           feedbackHandler?.call(feedback);
         },
       );
+      return result;
     } catch (e) {
       print('Failed to send goal: $e');
+      return null;
     }
   }
 

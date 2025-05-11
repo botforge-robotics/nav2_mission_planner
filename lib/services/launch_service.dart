@@ -175,7 +175,7 @@ class LaunchManager extends ChangeNotifier {
       // Get arguments directly from settings
       final args = [
         ...settings.navigationArgs,
-        {'name': 'map_name', 'value': '$mapName.yaml'},
+        {'name': 'map', 'value': '$mapName.yaml'},
       ];
 
       final request = LaunchWithArgsRequest(

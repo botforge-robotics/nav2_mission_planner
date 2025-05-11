@@ -9,13 +9,15 @@ import 'package:nav2_mission_planner/services/goal_service.dart';
 import 'package:provider/provider.dart';
 import 'package:ros2_api/ros2_api.dart';
 import '../providers/connection_provider.dart';
-import 'package:nav_msgs/msg.dart';
+import 'package:nav_msgs/msg.dart' as nav_msgs;
 import 'robot_position_marker.dart';
 import 'package:nav2_mission_planner/providers/nav_tool_provider.dart';
 import 'package:nav2_mission_planner/services/pose_estimation_service.dart';
 import 'dart:ui' as ui show Path;
 import 'Arrow_painter.dart';
 import 'Simple_rotation_slider.dart';
+import 'package:geometry_msgs/msg.dart' as geometry_msgs;
+import '../widgets/nav_bottom_bar.dart';
 
 class OccupancyGridViewer extends StatefulWidget {
   final bool enabled;
@@ -39,7 +41,7 @@ class OccupancyGridViewer extends StatefulWidget {
 }
 
 class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
-  Subscriber<OccupancyGrid>? _subscriber;
+  Subscriber<nav_msgs.OccupancyGrid>? _subscriber;
   ui.Image? _mapImage;
   double _mapResolution = 0.05;
   int _mapWidth = 0;
@@ -60,7 +62,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
   bool _isFirstLoad = true;
 
   // Add to the class state
-  Subscriber<Odometry>? _odomSubscriber;
+  Subscriber<dynamic>? _odomSubscriber;
   double _robotX = 0.0;
   double _robotY = 0.0;
   double _robotTheta = 0.0;
@@ -84,9 +86,59 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
 
   GoalService _goalService = GoalService();
 
+  // Add this variable to track current odometry topic
+  String? _currentOdomTopic;
+  String? _currentOdomType;
+
+  // Add this reference
+  late SettingsProvider _settingsProvider;
+
+  bool _showGoalBar = false;
+  bool _showPoseMarker = false;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    // Store the provider reference here
+    _settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
+
+    final navToolProvider = Provider.of<NavToolProvider>(context);
+    if (navToolProvider.poseEstimationEnabled != _poseEstimationMode) {
+      setState(() {
+        _showRotationSlider = false;
+        _showPoseMarker = false;
+        _showGoalBar = false;
+        _poseEstimationMode = navToolProvider.poseEstimationEnabled;
+        _goalMode = false;
+        if (!_poseEstimationMode) {
+          _markerX = 0.0;
+          _markerY = 0.0;
+          _markerTheta = 0.0;
+        }
+      });
+    }
+    if (navToolProvider.goalMode != _goalMode) {
+      setState(() {
+        _showRotationSlider = false;
+        _showPoseMarker = false;
+        _showGoalBar = false;
+        _poseEstimationMode = false;
+        _goalMode = navToolProvider.goalMode;
+        if (!_goalMode) {
+          _markerX = 0.0;
+          _markerY = 0.0;
+          _markerTheta = 0.0;
+        }
+      });
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+    // Use stored provider reference
+    _settingsProvider = Provider.of<SettingsProvider>(context, listen: false);
+    _settingsProvider.addListener(_subscribeToOdometry);
     // Start with identity matrix (no transformations)
     _transformationController.value = Matrix4.identity();
     _subscribeToTopic();
@@ -96,6 +148,8 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
 
   @override
   void dispose() {
+    // Use stored provider reference instead of Provider.of
+    _settingsProvider.removeListener(_subscribeToOdometry);
     _unsubscribe();
     _odomSubscriber?.shutdown();
     _transformationController.dispose();
@@ -107,36 +161,11 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.topic != widget.topic ||
         oldWidget.enabled != widget.enabled ||
-        oldWidget.appModeColor != widget.appModeColor) {
+        oldWidget.appModeColor != widget.appModeColor ||
+        oldWidget.showMarkers != widget.showMarkers) {
       _unsubscribe();
       _subscribeToTopic();
-    }
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    final navToolProvider = Provider.of<NavToolProvider>(context);
-    if (navToolProvider.poseEstimationEnabled != _poseEstimationMode) {
-      setState(() {
-        _showRotationSlider = false;
-        _poseEstimationMode = navToolProvider.poseEstimationEnabled;
-        if (!_poseEstimationMode) {
-          _markerX = 0.0;
-          _markerY = 0.0;
-          _markerTheta = 0.0;
-        }
-      });
-    } else if (navToolProvider.goalMode != _goalMode) {
-      setState(() {
-        _showRotationSlider = false;
-        _goalMode = navToolProvider.goalMode;
-        if (!_goalMode) {
-          _markerX = 0.0;
-          _markerY = 0.0;
-          _markerTheta = 0.0;
-        }
-      });
+      _subscribeToOdometry();
     }
   }
 
@@ -153,12 +182,12 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     }
 
     try {
-      _subscriber = Subscriber<OccupancyGrid>(
+      _subscriber = Subscriber<nav_msgs.OccupancyGrid>(
         name: widget.topic,
-        type: OccupancyGrid().fullType,
+        type: nav_msgs.OccupancyGrid().fullType,
         ros2: connection.ros2Client!,
         callback: _processMapMessage,
-        prototype: OccupancyGrid(),
+        prototype: nav_msgs.OccupancyGrid(),
       );
       //print('Subscribed to ${widget.topic}');
       setState(() {
@@ -187,20 +216,83 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     final connection = Provider.of<ConnectionProvider>(context, listen: false);
     final settings = Provider.of<SettingsProvider>(context, listen: false);
 
+    // Determine which topic and type to use
+    final (String topic, String type) = widget.showMarkers
+        ? (settings.navigationOdomTopic, settings.navigationOdomTopicType)
+        : (settings.mappingOdomTopic, settings.mappingOdomTopicType);
+
+    // Only resubscribe if topic or type changed
+    if (topic == _currentOdomTopic && type == _currentOdomType) return;
+    _currentOdomTopic = topic;
+    _currentOdomType = type;
+
+    // Unsubscribe from old topic
+    if (_odomSubscriber != null) {
+      _odomSubscriber?.shutdown();
+      _odomSubscriber = null;
+    }
+
     if (connection.ros2Client == null) return;
 
     try {
-      _odomSubscriber = Subscriber<Odometry>(
-        name: settings.odomTopic,
-        type: Odometry().fullType,
-        ros2: connection.ros2Client!,
-        callback: _processOdometryMessage,
-        prototype: Odometry(),
-      );
-      //print('Subscribed to ${settings.odomTopic}');
+      // Create subscriber based on message type
+      if (type == 'nav_msgs/msg/Odometry') {
+        _odomSubscriber = Subscriber<nav_msgs.Odometry>(
+          name: topic,
+          type: nav_msgs.Odometry().fullType,
+          ros2: connection.ros2Client!,
+          callback: _processNavOdomMessage,
+          prototype: nav_msgs.Odometry(),
+        );
+      } else if (type == 'geometry_msgs/msg/PoseWithCovarianceStamped') {
+        _odomSubscriber = Subscriber<geometry_msgs.PoseWithCovarianceStamped>(
+          name: topic,
+          type: geometry_msgs.PoseWithCovarianceStamped().fullType,
+          ros2: connection.ros2Client!,
+          callback: _processPoseMessage,
+          prototype: geometry_msgs.PoseWithCovarianceStamped(),
+        );
+      }
     } catch (e) {
-      //print('Error subscribing to odometry: $e');
+      print('Error subscribing to odometry: $e');
     }
+  }
+
+  void _processNavOdomMessage(nav_msgs.Odometry message) {
+    _updateRobotPosition(
+      message.pose.pose.position.x,
+      message.pose.pose.position.y,
+      message.pose.pose.orientation,
+    );
+  }
+
+  void _processPoseMessage(geometry_msgs.PoseWithCovarianceStamped message) {
+    _updateRobotPosition(
+      message.pose.pose.position.x,
+      message.pose.pose.position.y,
+      message.pose.pose.orientation,
+    );
+  }
+
+  void _updateRobotPosition(double x, double y, geometry_msgs.Quaternion q) {
+    if (!mounted) return;
+
+    setState(() {
+      final mapPose = transformToMapFrame(
+        x,
+        y,
+        q,
+        _mapOriginX,
+        _mapOriginY,
+        _mapResolution,
+        _mapHeight,
+        _mapWidth,
+        _mapOriginTheta,
+      );
+      _robotX = mapPose.x;
+      _robotY = mapPose.y;
+      _robotTheta = mapPose.theta;
+    });
   }
 
   // Create a lighter version of the app mode color
@@ -215,7 +307,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     return hsl.withLightness((hsl.lightness - 0.2).clamp(0.0, 1.0)).toColor();
   }
 
-  Future<ui.Image> _createMapImage(OccupancyGrid message) async {
+  Future<ui.Image> _createMapImage(nav_msgs.OccupancyGrid message) async {
     final int width = message.info.width;
     final int height = message.info.height;
     final Uint8List pixels = Uint8List(width * height * 4);
@@ -296,7 +388,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     return completer.future;
   }
 
-  void _processMapMessage(OccupancyGrid message) async {
+  void _processMapMessage(nav_msgs.OccupancyGrid message) async {
     // Add coordinate system validation
     _validateCoordinateSystem(message.info);
 
@@ -463,28 +555,36 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     //print('View reset with scale: $scale');
   }
 
-  void _processOdometryMessage(Odometry message) {
-    if (!mounted) return;
+  void _handleGoalSubmission() async {
+    final targetPose = transformFromMapFrame(
+      _markerX,
+      _markerY,
+      _markerTheta,
+      _mapOriginX,
+      _mapOriginY,
+      _mapResolution,
+      _mapHeight,
+      _mapWidth,
+      _mapOriginTheta,
+    );
+    setState(() {
+      _showGoalBar = false;
+    });
+    final result = await _goalService.sendGoal(
+      x: targetPose.targetX,
+      y: targetPose.targetY,
+      orientation: targetPose.orientation,
+      frameId: 'map',
+      feedbackHandler: (feedback) => print('Feedback: $feedback'),
+    );
 
-    try {
+    if (result != null) {
       setState(() {
-        final mapPose = transformToMapFrame(
-          message.pose.pose.position.x,
-          message.pose.pose.position.y,
-          message.pose.pose.orientation,
-          _mapOriginX,
-          _mapOriginY,
-          _mapResolution,
-          _mapHeight,
-          _mapWidth,
-          _mapOriginTheta,
-        );
-        _robotX = mapPose.x;
-        _robotY = mapPose.y;
-        _robotTheta = mapPose.theta;
+        _showPoseMarker = false;
+        _markerX = 0.0;
+        _markerY = 0.0;
+        _markerTheta = 0.0;
       });
-    } catch (e) {
-      // print('Odometry error: $e');
     }
   }
 
@@ -517,15 +617,25 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
               maxScale: 10.0,
               boundaryMargin: const EdgeInsets.all(double.infinity),
               onInteractionStart: (details) {
-                _isDraggingMarker = false; // Reset flag
+                setState(() {
+                  _isDraggingMarker = false; // Reset flag
+                  final scale =
+                      _transformationController.value.getMaxScaleOnAxis();
+                  _currentScale = scale;
+                  if (widget.onScaleChanged != null) {
+                    widget.onScaleChanged!(scale);
+                  }
+                });
               },
               onInteractionUpdate: (details) {
-                final scale =
-                    _transformationController.value.getMaxScaleOnAxis();
-                _currentScale = scale;
-                if (widget.onScaleChanged != null) {
-                  widget.onScaleChanged!(scale);
-                }
+                setState(() {
+                  final scale =
+                      _transformationController.value.getMaxScaleOnAxis();
+                  _currentScale = scale;
+                  if (widget.onScaleChanged != null) {
+                    widget.onScaleChanged!(scale);
+                  }
+                });
                 // If we were dragging the pose marker, stop when zoom/pan starts
                 if (_isDraggingMarker) {
                   setState(() {
@@ -552,9 +662,13 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
                       _markerY = mapPixelPos.dy;
                       // Set marker to point right (along x-axis)
                       _markerTheta = 0;
+                      _showPoseMarker = true;
                     });
                     _isDraggingMarker = true;
                     _showRotationSlider = false;
+                  }
+                  if (_goalMode) {
+                    _showGoalBar = false;
                   }
                 },
                 onLongPressMoveUpdate: (details) {
@@ -626,7 +740,7 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
                       ),
 
                     // Pose estimation marker (drawn during interaction)
-                    if (widget.showMarkers) _buildRobotMarker(),
+                    if (widget.showMarkers) _buildTargetMarker(),
 
                     // Rotation slider
                     if (_showRotationSlider)
@@ -643,7 +757,15 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
                               _updateRotation(details.localPosition);
                             },
                             onPanEnd: (_) {
-                              setState(() => _showRotationSlider = false);
+                              setState(() {
+                                _showRotationSlider = false;
+                                if (_goalMode) {
+                                  _showGoalBar = true;
+                                } else {
+                                  _showGoalBar = false;
+                                }
+                              });
+
                               final targetPose = transformFromMapFrame(
                                   _markerX,
                                   _markerY,
@@ -654,7 +776,11 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
                                   _mapHeight,
                                   _mapWidth,
                                   _mapOriginTheta);
+
                               if (_poseEstimationMode) {
+                                setState(() {
+                                  _showPoseMarker = false;
+                                });
                                 PoseEstimationService.publishPoseEstimate(
                                   context: context,
                                   x: targetPose.targetX,
@@ -664,21 +790,8 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
                                 Provider.of<NavToolProvider>(context,
                                         listen: false)
                                     .setPoseEstimationEnabled(false);
-                              } else if (_goalMode) {
-                                _goalService.sendGoal(
-                                  x: targetPose.targetX,
-                                  y: targetPose.targetY,
-                                  orientation: targetPose.orientation,
-                                  frameId: 'map',
-                                  feedbackHandler: (feedback) {
-                                    print('Feedback: $feedback');
-                                  },
-                                );
-                                Provider.of<NavToolProvider>(context,
-                                        listen: false)
-                                    .setGoalEnabled(false);
                               }
-                              // Add this line to disable pose estimation mode
+                              // Don't send goal immediately for goal mode - wait for slide action
                             },
                             child: Container(
                               width: 100,
@@ -761,12 +874,20 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
               ),
             ),
           ),
+
+        // Add NavBottomBar to the stack
+        NavBottomBar(
+          visible: _showGoalBar,
+          onSlideRight: _handleGoalSubmission,
+          promptText: 'Slide to send goal',
+          color: widget.appModeColor,
+        ),
       ],
     );
   }
 
   // Add new validation method
-  void _validateCoordinateSystem(MapMetaData info) {
+  void _validateCoordinateSystem(nav_msgs.MapMetaData info) {
     assert(info.resolution > 0, 'Invalid map resolution (must be > 0)');
     assert(info.origin.position.z == 0, 'Z position must be zero for 2D maps');
 
@@ -776,15 +897,20 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
         'Map orientation must be 2D (only yaw rotation supported)');
   }
 
-  Widget _buildRobotMarker() {
-    final markerSize = 30.0;
+  Widget _buildTargetMarker() {
+    // Calculate size based on current scale - larger when zoomed out
+    final markerSize = 60.0 * (1 / _currentScale);
+    // Adjust positioning based on dynamic size
+    final halfWidth = markerSize / 2;
+    final height = markerSize;
+
     return Positioned(
       // Position custom painter exactly at the marker position
-      left: _markerX - 15, // Center horizontally
-      top: _markerY - 30, // Bottom of arrow at marker point
+      left: _markerX - halfWidth, // Center horizontally based on actual size
+      top: _markerY - height, // Bottom of arrow at marker point
       child: IgnorePointer(
         child: Transform.rotate(
-          angle: -_markerTheta + math.pi / 2,
+          angle: _markerTheta + math.pi / 2,
           alignment: Alignment.bottomCenter, // Pivot at bottom center
           child: CustomPaint(
             size: Size(markerSize, markerSize),
@@ -802,9 +928,8 @@ class _OccupancyGridViewerState extends State<OccupancyGridViewer> {
     final center = Offset(50, 50);
     final touchOffset = localPosition - center;
 
-    // Calculate angle where 0 is along x-axis, but CLOCKWISE increases angle
-    // (inverting the standard atan2 behavior)
-    final mapAngle = -math.atan2(touchOffset.dy, touchOffset.dx);
+    // Calculate angle where 0 is along x-axis, counterclockwise increases angle
+    final mapAngle = math.atan2(touchOffset.dy, touchOffset.dx);
 
     setState(() {
       _markerTheta = mapAngle;

@@ -45,43 +45,42 @@ class _MappingScreenState extends State<MappingScreen> {
               Positioned.fill(child: _mapWidget!)
             else
               Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      widget.modeColor.withOpacity(0.1),
-                      widget.modeColor.withOpacity(0.05),
-                    ],
-                  ),
-                ),
+                color: Colors.black87, // 60% - Primary background
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(25),
                         decoration: BoxDecoration(
-                          color: widget.modeColor.withOpacity(0.2),
+                          color: Colors.grey.shade800, // 30% - Secondary color
                           shape: BoxShape.circle,
                         ),
-                        child: Icon(
+                        child: const Icon(
                           Icons.map,
                           size: 80,
-                          color: widget.modeColor,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Text(
+                      const Text(
                         'Mapping Mode',
                         style: TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: widget.modeColor,
+                          color: Colors.white,
                           letterSpacing: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 15),
+                      Text(
+                        'Create a new map of your environment',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey.shade500,
+                        ),
+                      ),
+                      const SizedBox(height: 15),
                       ElevatedButton(
                         onPressed: () async {
                           final launchManager = Provider.of<LaunchManager>(
@@ -138,25 +137,30 @@ class _MappingScreenState extends State<MappingScreen> {
                           }
                         },
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: widget.modeColor.withOpacity(0.2),
+                          backgroundColor: widget
+                              .modeColor, // 10% - Accent for primary action
+                          foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(
-                              horizontal: 25, vertical: 15),
+                              horizontal: 30, vertical: 16),
                           shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            side: BorderSide(color: widget.modeColor, width: 2),
+                            borderRadius: BorderRadius.circular(30),
                           ),
+                          elevation: 4,
                         ),
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Icon(Icons.play_arrow,
-                                color: widget.modeColor, size: 28),
-                            const SizedBox(width: 10),
-                            Text(
+                            const Icon(
+                              Icons.play_arrow,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                            const SizedBox(width: 12),
+                            const Text(
                               'Start Mapping',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: widget.modeColor,
+                                color: Colors.white,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),

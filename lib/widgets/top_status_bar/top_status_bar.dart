@@ -157,6 +157,10 @@ class TopStatusBar extends StatelessWidget {
                     TopStatusConnectionButton(
                       height: height,
                       connectionStatusColor: connectionStatusColor,
+                      isDisabled:
+                          Provider.of<LaunchManager>(context, listen: false)
+                              .activeLaunches
+                              .isNotEmpty,
                     ),
                   ],
                 ),

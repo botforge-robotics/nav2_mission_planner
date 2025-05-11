@@ -47,32 +47,28 @@ string behavior_tree''';
 }
 
 class NavigateToPoseResult extends RosMessage<NavigateToPoseResult> {
-  late int error_code;
-
   static NavigateToPoseResult $prototype = NavigateToPoseResult();
 
-  NavigateToPoseResult({int? error_code}) : error_code = error_code ?? 0;
+  NavigateToPoseResult();
 
   @override
-  String get fullType => 'nav2_msgs/action/NavigateToPose_Result';
+  String get fullType => 'std_msgs/msg/Empty';
 
   @override
-  String get messageDefinition => '''uint16 error_code''';
+  String get messageDefinition => '''''';
 
   @override
-  int getMessageSize() {
-    return 2;
-  }
+  int getMessageSize() => 0;
 
   @override
-  Map<String, dynamic> toJson() => {'error_code': error_code};
+  Map<String, dynamic> toJson() => {};
 
   @override
   String toJsonString() => json.encode(toJson());
 
   @override
   NavigateToPoseResult fromJson(Map<String, dynamic> jsonMap) {
-    return NavigateToPoseResult(error_code: jsonMap['error_code'] as int);
+    return NavigateToPoseResult();
   }
 }
 
@@ -222,7 +218,7 @@ class NavigateToPoseActionResult
   String get fullType => 'nav2_msgs/action/NavigateToPose_ActionResult';
 
   @override
-  String get messageDefinition => '''uint16 error_code''';
+  String get messageDefinition => '''''';
 
   @override
   int getMessageSize() {
@@ -350,7 +346,7 @@ geometry_msgs/PoseStamped pose
 string behavior_tree
 ---
 Result:
-uint16 error_code
+std_msgs/Empty
 ---
 Feedback:
 geometry_msgs/PoseStamped current_pose

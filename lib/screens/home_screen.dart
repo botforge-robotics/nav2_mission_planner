@@ -123,6 +123,17 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Consumer<ConnectionProvider>(
       builder: (context, connectionProvider, child) {
+        // Auto-switch to teleop when disconnected
+        if (!connectionProvider.isConnected &&
+            _currentMode != AppModes.teleop) {
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            setState(() {
+              _currentMode = AppModes.teleop;
+              _previousMode = null;
+            });
+          });
+        }
+
         // Track the active underlying screen (teleop, mapping, navigation)
         final activeScreen = _currentMode == AppModes.settings
             ? _previousMode ?? AppModes.teleop

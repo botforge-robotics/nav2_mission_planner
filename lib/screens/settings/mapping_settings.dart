@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:nav2_mission_planner/screens/settings/widgets/odom_topic_input.dart';
 import 'package:provider/provider.dart';
 import '../../providers/settings_provider.dart';
 import 'widgets/setting_card.dart';
@@ -54,9 +55,18 @@ class MappingSettings extends StatelessWidget {
                 // Arguments List (right side)
                 ArgumentsList(
                   arguments: settings.mappingArgs,
-                  onRemove: settings.removeMappingArg,
-                  onAdd: settings.addMappingArg,
-                  onUpdate: settings.updateMappingArg,
+                  onRemove: (index) =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    settings.removeMappingArg(index);
+                  }),
+                  onAdd: (key, value) =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    settings.addMappingArg('', '');
+                  }),
+                  onUpdate: (index, key, value) =>
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                    settings.updateMappingArg(index, key, value);
+                  }),
                   screenSize: screenSize,
                   modeColor: modeColor,
                 ),
@@ -82,6 +92,20 @@ class MappingSettings extends StatelessWidget {
             content: MapsPathInput(
               initialValue: settings.mapsPath,
               onChanged: settings.setMapsPath,
+              screenSize: screenSize,
+              modeColor: modeColor,
+            ),
+          ),
+          // Mapping Odom Topic Setting
+          SettingCard(
+            title: 'Mapping Odom Topic',
+            description: 'Set the topic for mapping odom data',
+            modeColor: modeColor,
+            screenSize: screenSize,
+            content: OdomTopicInput(
+              initialValue: settings.mappingOdomTopic,
+              initialValueType: settings.mappingOdomTopicType,
+              onChanged: settings.setMappingOdomTopic,
               screenSize: screenSize,
               modeColor: modeColor,
             ),

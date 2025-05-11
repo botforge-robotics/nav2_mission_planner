@@ -33,51 +33,43 @@ class TeleopScreen extends StatelessWidget {
             // Show message when camera is disabled or no topic selected
             if (!settings.cameraEnabled || settings.cameraImageTopic.isEmpty)
               Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topLeft,
-                    end: Alignment.bottomRight,
-                    colors: [
-                      modeColor.withOpacity(0.1),
-                      modeColor.withOpacity(0.05),
-                    ],
-                  ),
-                ),
+                color: Colors.black87,
                 child: Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // Icon and title
                       Container(
-                        padding: const EdgeInsets.all(20),
+                        padding: const EdgeInsets.all(25),
                         decoration: BoxDecoration(
-                          color: modeColor.withOpacity(0.2),
+                          color: Colors.grey.shade800,
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
                           Icons.videocam_off,
                           size: 80,
-                          color: modeColor,
+                          color: Colors.white,
                         ),
                       ),
                       const SizedBox(height: 20),
-                      Text(
-                        'Camera Disabled',
+                      const Text(
+                        'Teleop Mode',
                         style: TextStyle(
-                          fontSize: 32,
+                          fontSize: 28,
                           fontWeight: FontWeight.bold,
-                          color: modeColor,
+                          color: Colors.white,
                           letterSpacing: 1.2,
                         ),
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 15),
                       Text(
-                        'Enable camera in settings',
+                        'Camera feed is disabled',
                         style: TextStyle(
                           fontSize: 16,
-                          color: modeColor.withOpacity(0.8),
-                          fontStyle: FontStyle.italic,
+                          color: Colors.grey.shade500,
                         ),
                       ),
+                      const SizedBox(height: 20),
                     ],
                   ),
                 ),

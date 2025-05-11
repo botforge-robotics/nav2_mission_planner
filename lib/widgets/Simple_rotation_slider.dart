@@ -28,30 +28,29 @@ class SimpleRotationSliderPainter extends CustomPainter {
       ..color = Colors.greenAccent.withOpacity(0.2)
       ..style = PaintingStyle.fill;
 
-    // Use clockwise direction consistently
+    // Use counterclockwise direction consistently
     final arcPath = ui.Path()
       ..moveTo(center.dx, center.dy)
       ..arcTo(
         Rect.fromCircle(center: center, radius: radius),
         0, // Start at 0 degrees (x-axis right)
-        -angle, // Negative angle for clockwise direction
+        angle, // Positive angle for counterclockwise direction
         false,
       )
       ..lineTo(center.dx, center.dy);
 
     canvas.drawPath(arcPath, arcPaint);
 
-    // Calculate handle position using SAME clockwise convention
-    // The handle should use -angle to match the arc direction
-    final handleX = center.dx + radius * math.cos(-angle);
-    final handleY = center.dy + radius * math.sin(-angle);
+    // Calculate handle position using counterclockwise convention
+    final handleX = center.dx + radius * math.cos(angle);
+    final handleY = center.dy + radius * math.sin(angle);
 
     // Draw arrow-shaped handle pointing outward
     final handlePaint = Paint()..color = Colors.greenAccent;
 
-    // Pass the negative angle to match clockwise direction
+    // Pass the positive angle for counterclockwise direction
     _drawDirectionalHandle(
-        canvas, Offset(handleX, handleY), -angle, handlePaint, radius);
+        canvas, Offset(handleX, handleY), angle, handlePaint, radius);
 
     // Draw connecting line with gradient
     final linePaint = Paint()
@@ -114,7 +113,7 @@ class SimpleRotationSliderPainter extends CustomPainter {
   }
 
   void _drawAngleText(Canvas canvas, Offset center, double angle) {
-    // Convert to degrees (0-360) in clockwise direction
+    // Convert to degrees (0-360) in counterclockwise direction
     int angleInDegrees = ((angle * 180 / math.pi) % 360).toInt();
 
     // Handle negative angles (make them positive 0-360)

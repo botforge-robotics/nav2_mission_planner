@@ -11,13 +11,13 @@ class ArrowPainter extends CustomPainter {
     final Paint paint = Paint()
       ..color = color
       ..style = PaintingStyle.stroke
-      ..strokeWidth = 3.0;
+      ..strokeWidth = size.width * 0.05;
 
     final double width = size.width;
     final double height = size.height;
     final double centerX = width / 2;
-    final double shaftLength = height * 0.5;
-    final double arrowHeadSize = width * 0.25;
+    final double shaftLength = height * 0.3;
+    final double arrowHeadSize = width * 0.15;
 
     // Draw pivot dot at bottom center
     final Paint dotPaint = Paint()
@@ -26,7 +26,7 @@ class ArrowPainter extends CustomPainter {
 
     canvas.drawCircle(
         Offset(centerX, height), // Bottom center position
-        3.0, // Dot radius
+        size.width * 0.05, // Dot radius
         dotPaint);
 
     // Draw shaft

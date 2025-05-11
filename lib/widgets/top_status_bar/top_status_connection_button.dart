@@ -10,11 +10,13 @@ import '../../services/launch_service.dart';
 class TopStatusConnectionButton extends StatefulWidget {
   final double height;
   final Color connectionStatusColor;
+  final bool isDisabled;
 
   const TopStatusConnectionButton({
     super.key,
     required this.height,
     required this.connectionStatusColor,
+    this.isDisabled = false,
   });
 
   @override

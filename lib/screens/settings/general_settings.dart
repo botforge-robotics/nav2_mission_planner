@@ -58,6 +58,7 @@ class GeneralSettings extends StatelessWidget {
                   screenSize: screenSize,
                   content: OdomTopicInput(
                     initialValue: settings.odomTopic,
+                    initialValueType: settings.odomTopicType,
                     onChanged: settings.setOdomTopic,
                     screenSize: screenSize,
                     modeColor: modeColor,

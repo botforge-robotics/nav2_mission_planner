@@ -374,172 +374,279 @@ class _NavigationScreenState extends State<NavigationScreen> {
       );
     }
 
-    // Map selection screen (unchanged)
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+    // Map selection screen
+    return Container(
+      color: Colors.black87, // 60% - Primary background
+      child: Row(
         children: [
-          Container(
-            padding: const EdgeInsets.all(20),
-            decoration: BoxDecoration(
-              color: widget.modeColor.withOpacity(0.2),
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              FontAwesomeIcons.route,
-              size: 80,
-              color: widget.modeColor,
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            'Navigation Mode',
-            style: TextStyle(
-              fontSize: 28,
-              fontWeight: FontWeight.bold,
-              color: widget.modeColor,
-              letterSpacing: 1.2,
-            ),
-          ),
-          const SizedBox(height: 10),
+          // Left side - Map List
           Container(
             width: 300,
             decoration: BoxDecoration(
+              color: Colors.grey.shade900, // 30% - Secondary color
               border: Border(
-                bottom: BorderSide(color: widget.modeColor, width: 1.5),
-              ),
+                  right: BorderSide(color: Colors.grey.shade800, width: 1)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  'Select Map',
-                  style: TextStyle(
-                    color: widget.modeColor,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: 0.8,
+                // Header
+                Container(
+                  padding: const EdgeInsets.all(16),
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade800, // 30% - Secondary color
+                    border: Border(
+                        bottom:
+                            BorderSide(color: Colors.grey.shade700, width: 1)),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      const Text(
+                        'Available Maps',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      IconButton(
+                        icon: Icon(Icons.refresh,
+                            color: widget.modeColor), // 10% - Accent for action
+                        onPressed: () {
+                          setState(() => _loadingMaps = true);
+                          _loadMaps();
+                        },
+                      ),
+                    ],
                   ),
                 ),
-                const SizedBox(height: 4),
-                _loadingMaps
-                    ? Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Center(
+
+                // Loading indicator or list
+                Expanded(
+                  child: _loadingMaps
+                      ? Center(
                           child: CircularProgressIndicator(
-                            color: widget.modeColor,
-                            strokeWidth: 2,
-                          ),
-                        ),
-                      )
-                    : DropdownButton<String>(
-                        value: _selectedMap,
-                        dropdownColor: AppTheme.toolbarColor,
-                        icon: Icon(Icons.arrow_drop_down,
-                            color: widget.modeColor),
-                        isExpanded: true,
-                        style: TextStyle(
-                          color: widget.modeColor,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        selectedItemBuilder: (BuildContext context) {
-                          return _mapList.map((map) {
-                            return Align(
-                              alignment: Alignment.centerLeft,
+                              color: widget.modeColor), // 10% - Accent
+                        )
+                      : _mapList.isEmpty
+                          ? Center(
                               child: Text(
-                                map,
-                                style: TextStyle(
-                                  color: widget.modeColor,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w500,
-                                ),
+                                'No maps available',
+                                style: TextStyle(color: Colors.grey.shade500),
                               ),
-                            );
-                          }).toList();
-                        },
-                        itemHeight: null,
-                        menuMaxHeight: 200,
-                        underline: const SizedBox(),
-                        items: _mapList.map((map) {
-                          return DropdownMenuItem<String>(
-                            value: map,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Flexible(
-                                  child: Text(
-                                    map,
-                                    style: TextStyle(
-                                      color: widget.modeColor,
-                                      height: 1.2,
+                            )
+                          : ListView.builder(
+                              itemCount: _mapList.length,
+                              itemBuilder: (context, index) {
+                                final map = _mapList[index];
+                                final isSelected = map == _selectedMap;
+
+                                return Dismissible(
+                                  key: Key(map),
+                                  direction: DismissDirection.endToStart,
+                                  confirmDismiss: (_) async {
+                                    return await showDialog<bool>(
+                                          context: context,
+                                          builder: (context) => AlertDialog(
+                                            title: Text('Delete Map'),
+                                            content: Text(
+                                                'Are you sure you want to delete "$map"?'),
+                                            actions: [
+                                              TextButton(
+                                                style: TextButton.styleFrom(
+                                                  foregroundColor: Colors.white,
+                                                ),
+                                                onPressed: () => Navigator.pop(
+                                                    context, false),
+                                                child: Text('Cancel'),
+                                              ),
+                                              TextButton(
+                                                style: TextButton.styleFrom(
+                                                  foregroundColor: Colors.red,
+                                                ),
+                                                onPressed: () => Navigator.pop(
+                                                    context, true),
+                                                child: Text('Delete'),
+                                              ),
+                                            ],
+                                          ),
+                                        ) ??
+                                        false;
+                                  },
+                                  onDismissed: (_) => _deleteMap(map),
+                                  background: Container(
+                                    color: Colors.transparent,
+                                  ),
+                                  secondaryBackground: Container(
+                                    alignment: Alignment.centerRight,
+                                    padding: EdgeInsets.only(right: 20),
+                                    color: Colors.red.shade800,
+                                    child: Icon(
+                                      Icons.delete_forever,
+                                      color: Colors.white,
                                     ),
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    // Close the dropdown menu
-                                    Navigator.of(context).pop();
-                                    // Then call delete
-                                    _deleteMap(map);
-                                  },
-                                  child: Icon(
-                                    Icons.delete,
-                                    size: 18,
-                                    color: widget.modeColor,
+                                  child: Container(
+                                    margin:
+                                        const EdgeInsets.symmetric(vertical: 4),
+                                    decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? Colors.grey.shade800
+                                          : Colors.grey.shade900,
+                                      borderRadius: BorderRadius.circular(8),
+                                      boxShadow: isSelected
+                                          ? [
+                                              BoxShadow(
+                                                color: Colors.black
+                                                    .withOpacity(0.3),
+                                                blurRadius: 3,
+                                                offset: Offset(0, 2),
+                                              )
+                                            ]
+                                          : null,
+                                      border: Border.all(
+                                        color: isSelected
+                                            ? widget.modeColor
+                                            : Colors.transparent,
+                                        width: isSelected ? 1 : 0,
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      children: [
+                                        if (isSelected)
+                                          Positioned(
+                                            left: 0,
+                                            top: 0,
+                                            bottom: 0,
+                                            width: 4,
+                                            child: Container(
+                                              decoration: BoxDecoration(
+                                                color: widget.modeColor,
+                                                borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(8),
+                                                  bottomLeft:
+                                                      Radius.circular(8),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ListTile(
+                                          contentPadding: EdgeInsets.only(
+                                            left: isSelected ? 16 : 16,
+                                            right: 16,
+                                          ),
+                                          leading: Icon(
+                                            FontAwesomeIcons.map,
+                                            color: isSelected
+                                                ? widget.modeColor
+                                                : Colors.grey.shade600,
+                                            size: 20,
+                                          ),
+                                          title: Text(
+                                            map,
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: isSelected
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                            ),
+                                          ),
+                                          onTap: () => setState(
+                                              () => _selectedMap = map),
+                                        ),
+                                      ],
+                                    ),
                                   ),
-                                ),
-                              ],
+                                );
+                              },
                             ),
-                          );
-                        }).toList(),
-                        onChanged: (value) =>
-                            setState(() => _selectedMap = value),
-                      ),
+                ),
               ],
             ),
           ),
-          const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: _mapList.isEmpty || _isNavigationActive
-                ? null
-                : _startNavigation,
-            style: ElevatedButton.styleFrom(
-              backgroundColor: _isNavigationActive
-                  ? widget.modeColor.withOpacity(0.4)
-                  : widget.modeColor.withOpacity(0.2),
-              padding: const EdgeInsets.symmetric(horizontal: 25, vertical: 15),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
-                side: BorderSide(
-                    color: _mapList.isEmpty
-                        ? widget.modeColor.withOpacity(0.5)
-                        : widget.modeColor,
-                    width: 2),
-              ),
-            ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(
-                  _isNavigationActive ? Icons.stop : Icons.play_arrow,
-                  color: _mapList.isEmpty
-                      ? widget.modeColor.withOpacity(0.5)
-                      : widget.modeColor,
-                  size: 28,
-                ),
-                const SizedBox(width: 10),
-                Text(
-                  _isNavigationActive ? 'Stop Navigation' : 'Start Navigation',
-                  style: TextStyle(
-                    fontSize: 20,
-                    color: _mapList.isEmpty
-                        ? widget.modeColor.withOpacity(0.5)
-                        : widget.modeColor,
-                    fontWeight: FontWeight.bold,
+
+          // Right side - Controls
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Icon and title
+                  Container(
+                    padding: const EdgeInsets.all(25),
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade800, // 30% - Secondary color
+                      shape: BoxShape.circle,
+                    ),
+                    child: Icon(
+                      FontAwesomeIcons.route,
+                      size: 80,
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 20),
+                  const Text(
+                    'Navigation Mode',
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  // Selected map display
+                  Text(
+                    _selectedMap != null
+                        ? 'Selected: $_selectedMap'
+                        : 'No map selected',
+                    style: TextStyle(
+                      fontSize: 16,
+                      color: Colors.grey.shade500,
+                    ),
+                  ),
+                  const SizedBox(height: 15),
+
+                  // Start button - Primary action
+                  ElevatedButton(
+                    onPressed: _mapList.isEmpty || _selectedMap == null
+                        ? null
+                        : _startNavigation,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: widget
+                          .modeColor, // 10% - Primary accent for main action
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 30, vertical: 16),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
+                      ),
+                      elevation: 4,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        const Icon(
+                          Icons.play_arrow,
+                          color: Colors.white,
+                          size: 30,
+                        ),
+                        const SizedBox(width: 12),
+                        const Text(
+                          'Start Navigation',
+                          style: TextStyle(
+                            fontSize: 20,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ],
