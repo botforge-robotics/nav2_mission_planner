@@ -1,0 +1,23 @@
+{
+  "ros.distro": "humble",
+  "python.autoComplete.extraPaths": [
+    "/home/chaitu/nav2_mission_planner_ws/install/nav2_mission_planner_interfaces/local/lib/python3.10/dist-packages",
+    "/home/chaitu/nav2_mission_planner_ws/install/nav2_mission_planner/lib/python3.10/site-packages",
+    "/home/chaitu/rio_ws/install/rio_bringup/lib/python3.10/site-packages",
+    "/home/chaitu/rio_ws/install/rio_teleop/lib/python3.10/site-packages",
+    "/home/chaitu/rio_ws/install/rio_interfaces/local/lib/python3.10/dist-packages",
+    "/home/chaitu/uros_ws/install/micro_ros_msgs/local/lib/python3.10/dist-packages",
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+  ],
+  "python.analysis.extraPaths": [
+    "/home/chaitu/nav2_mission_planner_ws/install/nav2_mission_planner_interfaces/local/lib/python3.10/dist-packages",
+    "/home/chaitu/nav2_mission_planner_ws/install/nav2_mission_planner/lib/python3.10/site-packages",
+    "/home/chaitu/rio_ws/install/rio_bringup/lib/python3.10/site-packages",
+    "/home/chaitu/rio_ws/install/rio_teleop/lib/python3.10/site-packages",
+    "/home/chaitu/rio_ws/install/rio_interfaces/local/lib/python3.10/dist-packages",
+    "/home/chaitu/uros_ws/install/micro_ros_msgs/local/lib/python3.10/dist-packages",
+    "/opt/ros/humble/lib/python3.10/site-packages",
+    "/opt/ros/humble/local/lib/python3.10/dist-packages"
+  ]
+}

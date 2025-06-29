@@ -1,0 +1,7 @@
+string package
+string launch_file
+string arguments
+---
+bool success
+string message
+string unique_id
