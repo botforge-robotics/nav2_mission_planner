@@ -94,6 +94,14 @@ To switch between mapping and localization modes, you need **two** minimal wrapp
 | `mapping_launch.py`      | Mapping / SLAM | Wrapper that launches `slam_toolbox` with sync/async mode options and configurable parameters      |
 | `localization_launch.py` | Localization   | Wrapper that launches only `nav2_bringup/localization_launch.py` with map file and AMCL parameters |
 
+> **⚠️ Important:** For the `localization_launch.py` file, the app will pass only the map name (e.g., `office.yaml`). Your launch file must construct the full path to the map file, typically using `PathJoinSubstitution` like:
+>
+> ```python
+> 'map': PathJoinSubstitution([pkg_robot_navigation, 'maps', LaunchConfiguration('map')])
+> ```
+>
+> See the example localization launch file below for a complete implementation.
+
 > **💡 Note:** The Mission Planner app can pass custom parameters to these launch files (e.g., map paths, use_sim_time, etc.) via the LaunchWithArgs service. Make sure your launch files accept the parameters you want to configure from the app.
 
 Make sure these files run **stand-alone** before hooking them into the Mission Planner.
@@ -229,7 +237,6 @@ Example — start localization with a map:
 # localization_launch.py - Example template
 
 from ament_index_python.packages import get_package_share_directory
-
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -264,7 +271,7 @@ def generate_launch_description():
     map_arg = DeclareLaunchArgument(
         'map',
         default_value='map.yaml',
-        description='Full path to map yaml file to load')
+        description='map yaml file to load')
 
     namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
@@ -306,8 +313,8 @@ ros2 launch <robot_pkg> localization_launch.py map:=office.yaml
 
 ```bash
 # create workspace and setup
-mkdir -p ~/nav2_mission_ws/src
-cd ~/nav2_mission_ws/src
+mkdir -p ~/nav2_mission_planner_ws/src
+cd ~/nav2_mission_planner_ws/src
 # clone the repository
 git clone https://github.com/botforge-robotics/nav2_mission_planner.git
 cd ..
