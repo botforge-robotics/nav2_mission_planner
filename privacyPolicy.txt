@@ -1,0 +1,32 @@
+Privacy Policy for Nav2 Mission Planner
+Introduction
+Nav2 Mission Planner is a ROS2-based navigation and mission planning application designed for robotics applications. This privacy policy explains how we handle your data when you use our application.
+Data Collection
+Nav2 Mission Planner does not collect any personal information from its users. The application operates entirely on your device and the robots you connect to.
+Information Usage
+The application stores the following data locally on your device:
+Map data for navigation
+Bookmarks and waypoints you create
+Robot connection settings
+Application preferences and configurations
+This information is stored locally to provide functionality and is not transmitted to our servers.
+ROS2 Connections
+When you connect to a ROS2-enabled robot:
+The application establishes a connection to your robot using the connection details you provide
+Data is exchanged directly between your device and your robot
+We do not intercept, store, or have access to this communication
+Third-Party Services
+Nav2 Mission Planner does not integrate with any third-party analytics, advertising, or tracking services.
+Data Storage
+All application data is stored locally on your device. You can clear this data by clearing the application data through your device settings.
+Permissions
+The application may request the following permissions:
+Storage: To save maps and mission data
+Camera/Photos: For capturing and saving images during missions
+Network: To connect with your robot
+Changes to This Policy
+We may update this privacy policy as we add new features. Please review this policy periodically.
+Contact Us
+If you have questions about this privacy policy, please contact us at:
+reachus@botforge.in
+Last updated: 5/07/2025
