@@ -65,21 +65,8 @@ Companion package for Nav2 Mission Planner App.
 
 ### 📋 Prerequisites
 
-1. Your robot is powered on and all **sensor drivers** are running:
-   - 2D LiDAR publishing to `/scan`.
-   - Camera streams (optional) publishing to `/image_raw`.
-   - Odometry publishing to `/odom`.
-   - A velocity command topic `/cmd_vel` for tele-operation or autonomous control.
-2. The Nav2 stack is already up and running (e.g. launched via `nav2_bringup`):
-
-   The robot must already be running **Nav2** from the `nav2_bringup` package _with your own navigation parameter file_. In practice this means that `navigation_launch.py` (or your own wrapper launch file) is active and was started like so:
-
-   ```bash
-   ros2 launch nav2_bringup navigation_launch.py params_file:=/path/to/your/nav2_params.yaml
-   ```
-
-   The YAML file should contain your robot-specific costmaps, planners, behaviour trees, etc.
-   You can execute the command above directly, or embed the same include in a larger bring-up launch file so that Nav2 starts automatically on boot.
+1. Your robot is powered on and all **sensor drivers** are running.
+2. Your robot has the Nav2 stack installed and configured with your robot-specific navigation parameters, and can navigate to goal poses using RViz
 
 ### 🔧 Required Wrapper Launch Files
 
@@ -89,12 +76,12 @@ Companion package for Nav2 Mission Planner App.
 
 To switch between mapping and localization modes, you need **two** minimal wrapper launch files in any ROS 2 package:
 
-| Launch file              | Role           | Implementation Details                                                                             |
-| ------------------------ | -------------- | -------------------------------------------------------------------------------------------------- |
-| `mapping_launch.py`      | Mapping / SLAM | Wrapper that launches `slam_toolbox` with sync/async mode options and configurable parameters      |
-| `localization_launch.py` | Localization   | Wrapper that launches only `nav2_bringup/localization_launch.py` with map file and AMCL parameters |
+| Launch file            | Role           | Implementation Details                                                                                 |
+| ---------------------- | -------------- | ------------------------------------------------------------------------------------------------------ |
+| `mapping_launch.py`    | Mapping / SLAM | Wrapper that launches `nav2_bringup` navigation stack + `slam_toolbox` with sync/async mode options    |
+| `navigation_launch.py` | Localization   | Wrapper that launches `nav2_bringup` navigation stack + localization with map file and AMCL parameters |
 
-> **⚠️ Important:** For the `localization_launch.py` file, the app will pass only the map name (e.g., `office.yaml`). Your launch file must construct the full path to the map file, typically using `PathJoinSubstitution` like:
+> **⚠️ Important:** For the `navigation_launch.py` file, the app will pass only the map name (e.g., `office.yaml`). Your launch file must construct the full path to the map file, typically using `PathJoinSubstitution` like:
 >
 > ```python
 > 'map': PathJoinSubstitution([pkg_robot_navigation, 'maps', LaunchConfiguration('map')])
@@ -104,7 +91,7 @@ To switch between mapping and localization modes, you need **two** minimal wrapp
 
 > **💡 Note:** The Mission Planner app can pass custom parameters to these launch files (e.g., map paths, use_sim_time, etc.) via the LaunchWithArgs service. Make sure your launch files accept the parameters you want to configure from the app.
 
-Make sure these files run **stand-alone** before hooking them into the Mission Planner.
+Make sure these files run **stand-alone** and include the complete Nav2 navigation stack before hooking them into the Mission Planner.
 
 </details>
 
@@ -114,7 +101,7 @@ Make sure these files run **stand-alone** before hooking them into the Mission P
 
 Example — start mapping:
 
-````python
+```python
 # mapping_launch.py - Example template
 
 from ament_index_python.packages import get_package_share_directory
@@ -145,23 +132,36 @@ ARGUMENTS = [
     DeclareLaunchArgument('use_lifecycle_manager', default_value='false',
                           choices=['true', 'false'],
                           description='Enable bond connection during node activation'),
-    DeclareLaunchArgument('params',
-                          default_value=PathJoinSubstitution(['<robot_navigation_pkg>', 'config', 'slam.yaml']),
-                          description='Path to the SLAM Toolbox configuration file')
+    DeclareLaunchArgument('slam_params_file',
+                          default_value=PathJoinSubstitution([
+                              get_package_share_directory('<robot_navigation_pkg>'),
+                              'config',
+                              'slam.yaml'
+                          ]),
+                          description='Path to the SLAM Toolbox configuration file'),
+    DeclareLaunchArgument('nav2_params_file',
+                          default_value=PathJoinSubstitution([
+                              get_package_share_directory('<robot_navigation_pkg>'),
+                              'config',
+                              'nav2.yaml'
+                          ]),
+                          description='Path to the Nav2 navigation parameters file')
 ]
 
 
 def launch_setup(context, *args, **kwargs):
-    # Get parameters
+    # Get launch configurations
     namespace = LaunchConfiguration('namespace')
     sync = LaunchConfiguration('sync')
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     use_lifecycle_manager = LaunchConfiguration('use_lifecycle_manager')
-    slam_params = LaunchConfiguration('params')
+    slam_params = LaunchConfiguration('slam_params_file')
+    nav2_params = LaunchConfiguration('nav2_params_file')
 
     # Get package paths
     pkg_slam_toolbox = get_package_share_directory('slam_toolbox')
+    pkg_nav2_bringup = get_package_share_directory('nav2_bringup')
 
     # Handle namespace properly for TF remapping
     namespace_str = namespace.perform(context)
@@ -175,133 +175,173 @@ def launch_setup(context, *args, **kwargs):
     launch_slam_async = PathJoinSubstitution(
         [pkg_slam_toolbox, 'launch', 'online_async_launch.py'])
 
-    # Create SLAM launch action
-    slam = GroupAction([
-        PushRosNamespace(namespace),
+    # Get Nav2 navigation launch path
+    launch_nav2 = PathJoinSubstitution(
+        [pkg_nav2_bringup, 'launch', 'navigation_launch.py'])
 
-        # Set remaps for TF and sensor topics
-        SetRemap('/tf', namespace_str + '/tf'),
-        SetRemap('/tf_static', namespace_str + '/tf_static'),
-        SetRemap('/scan', namespace_str + '/scan'),
-        SetRemap('/map', namespace_str + '/map'),
-        SetRemap('/map_metadata', namespace_str + '/map_metadata'),
+    # Launch Nav2
+    nav2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(launch_nav2),
+        launch_arguments=[
+            ('use_sim_time', use_sim_time),
+            ('params_file', nav2_params.perform(context)),
+            ('namespace', namespace),
+            ('autostart', autostart)
+        ]
+    )
 
-        # Include synchronous SLAM if sync=true
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(launch_slam_sync),
-            launch_arguments=[
-                ('use_sim_time', use_sim_time),
-                ('autostart', autostart),
-                ('use_lifecycle_manager', use_lifecycle_manager),
-                ('slam_params_file', slam_params)
-            ],
-            condition=IfCondition(sync)
-        ),
+    # Launch synchronous SLAM if sync=true
+    slam_sync = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(launch_slam_sync),
+        launch_arguments=[
+            ('use_sim_time', use_sim_time),
+            ('autostart', autostart),
+            ('use_lifecycle_manager', use_lifecycle_manager),
+            ('slam_params_file', slam_params.perform(context))
+        ],
+        condition=IfCondition(sync)
+    )
 
-        # Include asynchronous SLAM if sync=false
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(launch_slam_async),
-            launch_arguments=[
-                ('use_sim_time', use_sim_time),
-                ('autostart', autostart),
-                ('use_lifecycle_manager', use_lifecycle_manager),
-                ('slam_params_file', slam_params)
-            ],
-            condition=UnlessCondition(sync)
-        )
-    ])
+    # Launch asynchronous SLAM if sync=false
+    slam_async = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(launch_slam_async),
+        launch_arguments=[
+            ('use_sim_time', use_sim_time),
+            ('autostart', autostart),
+            ('use_lifecycle_manager', use_lifecycle_manager),
+            ('slam_params_file', slam_params.perform(context))
+        ],
+        condition=UnlessCondition(sync)
+    )
 
-    return [slam]
+    return [nav2, slam_sync, slam_async]
 
 
 def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
     ld.add_action(OpaqueFunction(function=launch_setup))
     return ld
+```
 
 Run it with:
 
 ```bash
-ros2 launch <robot_pkg> mapping_launch.py use_sim_time:=false
-````
+ros2 launch <robot_pkg> mapping_launch.py use_sim_time:=false nav2_params_file:=/path/to/your/nav2.yaml slam_params_file:=/path/to/your/slam.yaml
+```
 
 </details>
 
 <details>
-<summary><b>Example — Localization Launch File</b></summary>
+<summary><b>Example — Navigation Launch File</b></summary>
 <br>
 
 Example — start localization with a map:
 
-````python
-# localization_launch.py - Example template
+```python
+# navigation_launch.py - Example template
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import DeclareLaunchArgument, GroupAction, IncludeLaunchDescription
+from launch.actions import (
+    DeclareLaunchArgument,
+    IncludeLaunchDescription,
+    OpaqueFunction
+)
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PathJoinSubstitution
 
-from launch_ros.actions import PushRosNamespace
-
-
+# Launch Arguments
 ARGUMENTS = [
     DeclareLaunchArgument('use_sim_time', default_value='false',
                           choices=['true', 'false'],
                           description='Use sim time'),
+
+    DeclareLaunchArgument('nav2_params_file',
+                          default_value=PathJoinSubstitution([
+                              get_package_share_directory('<robot_navigation_pkg>'),
+                              'config',
+                              'nav2.yaml'
+                          ]),
+                          description='Nav2 parameters'),
+
+    DeclareLaunchArgument('localization_params_file',
+                          default_value=PathJoinSubstitution([
+                              get_package_share_directory('<robot_navigation_pkg>'),
+                              'config',
+                              'localization.yaml'
+                          ]),
+                          description='Localization parameters'),
+
     DeclareLaunchArgument('namespace', default_value='',
-                          description='Robot namespace')
+                          description='Robot namespace'),
+
+    DeclareLaunchArgument('autostart', default_value='true',
+                          choices=['true', 'false'],
+                          description='Automatically startup the nav2 stack'),
+
+    DeclareLaunchArgument('map', default_value='warehouse.yaml',
+                          description='Full path to map yaml file to load')
 ]
 
 
-def generate_launch_description():
-    # Replace with your robot's navigation package
-    pkg_robot_navigation = get_package_share_directory(
-        '<robot_navigation_pkg>')
-    pkg_nav2_bringup = get_package_share_directory('nav2_bringup')
-
-    # Point to your localization parameters
-    localization_params_arg = DeclareLaunchArgument(
-        'params',
-        default_value=PathJoinSubstitution(
-            [pkg_robot_navigation, 'config', 'localization.yaml']),
-        description='Localization parameters')
-
-    # Map argument
-    map_arg = DeclareLaunchArgument(
-        'map',
-        default_value='map.yaml',
-        description='map yaml file to load')
-
+def launch_setup(context, *args, **kwargs):
+    # Get launch configurations
     namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
+    autostart = LaunchConfiguration('autostart')
+    nav2_params = LaunchConfiguration('nav2_params_file')
+    localization_params = LaunchConfiguration('localization_params_file')
+    map_file = LaunchConfiguration('map')
 
-    # Include only the localization launch since nav2 is already running
-    localization = GroupAction([
-        PushRosNamespace(namespace),
-
-        IncludeLaunchDescription(
-            PythonLaunchDescriptionSource(
-                PathJoinSubstitution(
-                    [pkg_nav2_bringup, 'launch', 'localization_launch.py'])),
-            launch_arguments={'namespace': namespace,
-                              'map': PathJoinSubstitution(
-                                  [pkg_robot_navigation, 'maps', LaunchConfiguration('map')]),
-                              'use_sim_time': use_sim_time,
-                              'params_file': LaunchConfiguration('params')}.items()),
+    # Paths to the launch files
+    nav2_launch = PathJoinSubstitution([
+        get_package_share_directory('<robot_navigation_pkg>'),
+        'launch',
+        'nav2.launch.py'
     ])
 
+    localization_launch = PathJoinSubstitution([
+        get_package_share_directory('<robot_navigation_pkg>'),
+        'launch',
+        'localization.launch.py'
+    ])
+
+    # Launch Nav2
+    nav2 = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(nav2_launch),
+        launch_arguments=[
+            ('use_sim_time', use_sim_time),
+            ('params_file', nav2_params.perform(context)),
+            ('namespace', namespace),
+            ('autostart', autostart)
+        ]
+    )
+
+    # Launch Localization
+    localization = IncludeLaunchDescription(
+        PythonLaunchDescriptionSource(localization_launch),
+        launch_arguments=[
+            ('use_sim_time', use_sim_time),
+            ('namespace', namespace),
+            ('params', localization_params),
+            ('map', map_file)
+        ]
+    )
+
+    return [nav2, localization]
+
+
+def generate_launch_description():
     ld = LaunchDescription(ARGUMENTS)
-    ld.add_action(localization_params_arg)
-    ld.add_action(map_arg)
-    ld.add_action(localization)
+    ld.add_action(OpaqueFunction(function=launch_setup))
     return ld
+```
 
 Run it with:
 
 ```bash
-ros2 launch <robot_pkg> localization_launch.py map:=office.yaml
-````
+ros2 launch <robot_pkg> navigation_launch.py map:=office.yaml nav2_params_file:=/path/to/your/nav2.yaml localization_params_file:=/path/to/your/localization.yaml
+```
 
 </details>
 
