@@ -14,11 +14,18 @@
 
 <h1 align="center">Nav2 Mission Planner</h1>
 
+<div align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80">
+  </a>
+</div>
+
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
 - [📋 Overview](#-overview)
 - [📱 App Showcase](#-app-showcase)
+- [📱 Download App](#-download-app)
 - [✅ Requirements](#-requirements)
 - [⚙️ Configuration](#️-configuration)
   - [📋 Prerequisites](#-prerequisites)
@@ -51,6 +58,23 @@ Companion package for Nav2 Mission Planner App.
     <img src="./images/mockup3.jpg" width="45%" alt="Nav2 Mission Planner Screenshot 3" style="border-radius:10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1)"/>
   </a>
 </p>
+
+---
+
+## 📱 Download App
+
+<div align="center">
+  <a href="https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner">
+    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80">
+  </a>
+</div>
+
+**Download Nav2 Mission Planner for Android:**
+
+- 🚀 **Google Play Store**: [Download Now](https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner)
+- 📱 **Compatible with**: Android 5.0+ (API level 21+)
+- 🔧 **Features**: ROS 2 Mapping, Navigation, Mission Planning, Teleoperation
+- 🌐 **Support**: [Email](mailto:reachus@botforge.in)
 
 ---
 
@@ -376,10 +400,12 @@ source ~/.bashrc
 
 ### Install Mission Planner App
 
-1. Download the Mission Planner app from the [comming soon](https://botforge-robotics.github.io/nav2_mission_planner/)
+1. Download the Mission Planner app from the [Google Play Store](https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner)
 2. Install the app on your Android device
 3. Connect your device to the same network as your robot
 4. Open the app and follow the on-screen instructions to connect to your robot
+
+> **📱 Download Now:** [Nav2 Mission Planner on Google Play](https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner)
 
 ---
 
