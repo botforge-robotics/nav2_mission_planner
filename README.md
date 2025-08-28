@@ -296,7 +296,7 @@ ARGUMENTS = [
 
     DeclareLaunchArgument('localization_params_file',
                           default_value=PathJoinSubstitution([
-                              get_package_share_directory('<robot_package_name_contains_config'),
+                              get_package_share_directory('<robot_package_name_contains_config>'),
                               'config',
                               'localization.yaml'
                           ]),
@@ -317,7 +317,12 @@ def launch_setup(context, *args, **kwargs):
     autostart = LaunchConfiguration('autostart')
     nav2_params = LaunchConfiguration('nav2_params_file')
     localization_params = LaunchConfiguration('localization_params_file')
-    map_file = LaunchConfiguration('map')
+    map_name = LaunchConfiguration('map')
+    map_file = PathJoinSubstitution([
+        get_package_share_directory('<robot_package_name_contains_maps>'),
+        'maps',
+        map_name
+    ])
 
     pkg_nav2_bringup = get_package_share_directory('nav2_bringup')
 
@@ -359,13 +364,25 @@ def generate_launch_description():
 
 > **Note:**
 > In the example code above, replace `<robot_package_name_contains_config>` with the actual name of your robot's package that contains the configuration files (e.g., `ninjabot_navigation`).
-> For example:
+> Similarly, replace `<robot_package_name_contains_maps>` with the name of your robot's package that contains the map files.
+>
+> For example, for configuration files:
 >
 > ```python
 > default_value=PathJoinSubstitution([
 >     get_package_share_directory('my_robot_bringup'),
 >     'config',
 >     'nav2.yaml'
+> ])
+> ```
+>
+> And for map files:
+>
+> ```python
+> map_file = PathJoinSubstitution([
+>     get_package_share_directory('my_robot_bringup'),
+>     'maps',
+>     map_name
 > ])
 > ```
 
