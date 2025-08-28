@@ -150,8 +150,6 @@ ARGUMENTS = [
     DeclareLaunchArgument('sync', default_value='true',
                           choices=['true', 'false'],
                           description='Use synchronous SLAM'),
-    DeclareLaunchArgument('namespace', default_value='',
-                          description='Robot namespace'),
     DeclareLaunchArgument('autostart', default_value='true',
                           choices=['true', 'false'],
                           description='Automatically startup the slamtoolbox. Ignored when use_lifecycle_manager is true.'),
@@ -160,14 +158,14 @@ ARGUMENTS = [
                           description='Enable bond connection during node activation'),
     DeclareLaunchArgument('slam_params_file',
                           default_value=PathJoinSubstitution([
-                              get_package_share_directory('<robot_navigation_pkg>'),
+                              get_package_share_directory('<robot_package_name_contains_config>'),
                               'config',
                               'slam.yaml'
                           ]),
                           description='Path to the SLAM Toolbox configuration file'),
     DeclareLaunchArgument('nav2_params_file',
                           default_value=PathJoinSubstitution([
-                              get_package_share_directory('<robot_navigation_pkg>'),
+                              get_package_share_directory('<robot_package_name_contains_config>'),
                               'config',
                               'nav2.yaml'
                           ]),
@@ -177,7 +175,6 @@ ARGUMENTS = [
 
 def launch_setup(context, *args, **kwargs):
     # Get launch configurations
-    namespace = LaunchConfiguration('namespace')
     sync = LaunchConfiguration('sync')
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
@@ -188,11 +185,6 @@ def launch_setup(context, *args, **kwargs):
     # Get package paths
     pkg_slam_toolbox = get_package_share_directory('slam_toolbox')
     pkg_nav2_bringup = get_package_share_directory('nav2_bringup')
-
-    # Handle namespace properly for TF remapping
-    namespace_str = namespace.perform(context)
-    if (namespace_str and not namespace_str.startswith('/')):
-        namespace_str = '/' + namespace_str
 
     # Get SLAM launch paths
     launch_slam_sync = PathJoinSubstitution(
@@ -211,7 +203,6 @@ def launch_setup(context, *args, **kwargs):
         launch_arguments=[
             ('use_sim_time', use_sim_time),
             ('params_file', nav2_params.perform(context)),
-            ('namespace', namespace),
             ('autostart', autostart)
         ]
     )
@@ -249,6 +240,18 @@ def generate_launch_description():
     return ld
 ```
 
+> **Note:**
+> In the example code above, replace `<robot_package_name_contains_config>` with the actual name of your robot's package that contains the configuration files (e.g., `ninjabot_mapping`).
+> For example:
+>
+> ```python
+> default_value=PathJoinSubstitution([
+>     get_package_share_directory('my_robot_bringup'),
+>     'config',
+>     'nav2.yaml'
+> ])
+> ```
+
 Run it with:
 
 ```bash
@@ -265,6 +268,7 @@ Example — start localization with a map:
 
 ```python
 # navigation_launch.py - Example template
+
 
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
@@ -284,7 +288,7 @@ ARGUMENTS = [
 
     DeclareLaunchArgument('nav2_params_file',
                           default_value=PathJoinSubstitution([
-                              get_package_share_directory('<robot_navigation_pkg>'),
+                              get_package_share_directory('<robot_package_name_contains_config'),
                               'config',
                               'nav2.yaml'
                           ]),
@@ -292,14 +296,11 @@ ARGUMENTS = [
 
     DeclareLaunchArgument('localization_params_file',
                           default_value=PathJoinSubstitution([
-                              get_package_share_directory('<robot_navigation_pkg>'),
+                              get_package_share_directory('<robot_package_name_contains_config'),
                               'config',
                               'localization.yaml'
                           ]),
                           description='Localization parameters'),
-
-    DeclareLaunchArgument('namespace', default_value='',
-                          description='Robot namespace'),
 
     DeclareLaunchArgument('autostart', default_value='true',
                           choices=['true', 'false'],
@@ -312,44 +313,37 @@ ARGUMENTS = [
 
 def launch_setup(context, *args, **kwargs):
     # Get launch configurations
-    namespace = LaunchConfiguration('namespace')
     use_sim_time = LaunchConfiguration('use_sim_time')
     autostart = LaunchConfiguration('autostart')
     nav2_params = LaunchConfiguration('nav2_params_file')
     localization_params = LaunchConfiguration('localization_params_file')
     map_file = LaunchConfiguration('map')
 
-    # Paths to the launch files
-    nav2_launch = PathJoinSubstitution([
-        get_package_share_directory('<robot_navigation_pkg>'),
-        'launch',
-        'nav2.launch.py'
-    ])
+    pkg_nav2_bringup = get_package_share_directory('nav2_bringup')
 
-    localization_launch = PathJoinSubstitution([
-        get_package_share_directory('<robot_navigation_pkg>'),
-        'launch',
-        'localization.launch.py'
-    ])
+    # Get Nav2 navigation launch path
+    launch_nav2 = PathJoinSubstitution(
+        [pkg_nav2_bringup, 'launch', 'navigation_launch.py'])
+
+    launch_localization = PathJoinSubstitution(
+        [pkg_nav2_bringup, 'launch', 'localization_launch.py'])
 
     # Launch Nav2
     nav2 = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(nav2_launch),
+        PythonLaunchDescriptionSource(launch_nav2),
         launch_arguments=[
             ('use_sim_time', use_sim_time),
             ('params_file', nav2_params.perform(context)),
-            ('namespace', namespace),
             ('autostart', autostart)
         ]
     )
 
     # Launch Localization
     localization = IncludeLaunchDescription(
-        PythonLaunchDescriptionSource(localization_launch),
+        PythonLaunchDescriptionSource(launch_localization),
         launch_arguments=[
             ('use_sim_time', use_sim_time),
-            ('namespace', namespace),
-            ('params', localization_params),
+            ('params_file', localization_params),
             ('map', map_file)
         ]
     )
@@ -362,6 +356,18 @@ def generate_launch_description():
     ld.add_action(OpaqueFunction(function=launch_setup))
     return ld
 ```
+
+> **Note:**
+> In the example code above, replace `<robot_package_name_contains_config>` with the actual name of your robot's package that contains the configuration files (e.g., `ninjabot_navigation`).
+> For example:
+>
+> ```python
+> default_value=PathJoinSubstitution([
+>     get_package_share_directory('my_robot_bringup'),
+>     'config',
+>     'nav2.yaml'
+> ])
+> ```
 
 Run it with:
 
