@@ -1,9 +1,18 @@
 from launch import LaunchDescription
+from launch.actions import DeclareLaunchArgument
+from launch.substitutions import LaunchConfiguration
 from launch_ros.actions import Node
 
 
 def generate_launch_description():
     return LaunchDescription([
+        # Launch Arguments
+        DeclareLaunchArgument(
+            'camera_topic',
+            default_value='/oakd/rgb/preview/image_raw',
+            description='Raw camera image topic to subscribe to'
+        ),
+
         # ROS Bridge for WebSocket communication
         Node(
             package='rosbridge_server',
@@ -45,7 +54,7 @@ def generate_launch_description():
             name='rgb_compressed_republisher',
             arguments=[
                 'raw',
-                'in:=/oakd/rgb/preview/image_raw',
+                'in:=' + LaunchConfiguration('camera_topic'),
                 '_image_transport:=compressed'
             ],
             parameters=[

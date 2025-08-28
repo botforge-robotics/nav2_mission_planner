@@ -33,6 +33,8 @@
 - [🚀 Installation](#-installation)
   - [Permanent Workspace Setup](#permanent-workspace-setup)
   - [Install Mission Planner App](#install-mission-planner-app)
+- [📷 Camera Configuration](#-camera-configuration)
+  - [Configure Camera Topic](#configure-camera-topic)
 - [📄 License](#-license)
 
 ---
@@ -406,6 +408,26 @@ source ~/.bashrc
 4. Open the app and follow the on-screen instructions to connect to your robot
 
 > **📱 Download Now:** [Nav2 Mission Planner on Google Play](https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner)
+
+> **📷 Next Step:** After installation, configure your camera topic in the [Camera Configuration](#-camera-configuration) section below.
+
+---
+
+## 📷 Camera Configuration
+
+After installation, you need to configure the camera image topic for the app to display your robot's camera feed.
+
+### Configure Camera Topic
+
+1. **Identify your camera's raw image topic** (e.g., `/camera/image_raw`, `/oakd/rgb/preview/image_raw`, `/turtlebot4_camera/image_raw`)
+
+2. **Launch with your camera topic:**
+
+   ```bash
+   ros2 launch nav2_mission_planner nav2_mission_planner.launch.py camera_topic:=/your_camera/raw_image_topic
+   ```
+
+3. **In the app, select the compressed image topic:** `/out/compressed`
 
 ---
 
