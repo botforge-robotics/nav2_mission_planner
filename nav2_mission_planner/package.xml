@@ -20,6 +20,8 @@
   <depend>nav2_mission_planner_interfaces</depend>
   <exec_depend>web_video_server</exec_depend>
   <exec_depend>image_transport</exec_depend>
+  <exec_depend>image_transport_plugins</exec_depend>
+  <exec_depend>image_transport_dbgsym</exec_depend>
   <exec_depend>launch</exec_depend>
   <exec_depend>launch_ros</exec_depend>
 
