@@ -400,12 +400,27 @@ ros2 launch <robot_pkg> navigation_launch.py map:=office.yaml nav2_params_file:=
 
 ## 🚀 Installation
 
+### Remove System-Installed Rosbridge Suite
+
+First, remove any system-installed rosbridge suite packages:
+
+```bash
+sudo apt remove ros-jazzy-rosbridge* ros-jazzy-rosapi*
+```
+
+### Install Nav2 Mission Planner
+
 ```bash
 # create workspace and setup
 mkdir -p ~/nav2_mission_planner_ws/src
 cd ~/nav2_mission_planner_ws/src
-# clone the repository
+
+# clone the nav2 mission planner repository
 git clone https://github.com/botforge-robotics/nav2_mission_planner.git
+
+# clone the custom rosbridge suite fork
+git clone https://github.com/botforge-robotics/rosbridge_suite.git
+
 cd ..
 # install dependencies (rosdep is recommended)
 rosdep install --from-paths src -i -y
@@ -438,7 +453,7 @@ source ~/.bashrc
 
 ## 📷 Camera Configuration
 
-After installation, you need to configure the camera image topic for the app to display your robot's camera feed.
+After installation, you can configure the camera image topic for the app to display your robot's camera feed, or run without camera functionality.
 
 ### Configure Camera Topic
 
@@ -451,6 +466,18 @@ After installation, you need to configure the camera image topic for the app to 
    ```
 
 3. **In the app, select the compressed image topic:** `/out/compressed`
+
+### Run Without Camera
+
+If you don't have a camera or don't need camera functionality:
+
+1. **Launch without camera topic:**
+
+   ```bash
+   ros2 launch nav2_mission_planner nav2_mission_planner.launch.py
+   ```
+
+2. **The app will work normally** for navigation, mapping, and mission planning without camera feed.
 
 ---
 
