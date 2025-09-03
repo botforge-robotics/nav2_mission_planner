@@ -31,10 +31,13 @@
   - [📋 Prerequisites](#-prerequisites)
   - [🔧 Required Wrapper Launch Files](#-required-wrapper-launch-files)
 - [🚀 Installation](#-installation)
+  - [Remove System-Installed Rosbridge Suite](#remove-system-installed-rosbridge-suite)
+  - [Install Nav2 Mission Planner](#install-nav2-mission-planner)
   - [Permanent Workspace Setup](#permanent-workspace-setup)
   - [Install Mission Planner App](#install-mission-planner-app)
 - [📷 Camera Configuration](#-camera-configuration)
   - [Configure Camera Topic](#configure-camera-topic)
+  - [Run Without Camera](#run-without-camera)
 - [📄 License](#-license)
 
 ---
