@@ -14,12 +14,6 @@
 
 <h1 align="center">Nav2 Mission Planner</h1>
 
-<div align="center">
-  <a href="https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner">
-    <img src="https://play.google.com/intl/en_us/badges/static/images/badges/en_badge_web_generic.png" alt="Get it on Google Play" height="80">
-  </a>
-</div>
-
 ## Table of Contents
 
 - [Table of Contents](#table-of-contents)
@@ -37,7 +31,6 @@
   - [Install Mission Planner App](#install-mission-planner-app)
 - [📷 Camera Configuration](#-camera-configuration)
   - [Configure Camera Topic](#configure-camera-topic)
-  - [Run Without Camera](#run-without-camera)
 - [📄 License](#-license)
 
 ---
@@ -119,8 +112,6 @@ To switch between mapping and localization modes, you need **two** minimal wrapp
 > See the example localization launch file below for a complete implementation.
 
 > **💡 Note:** The Mission Planner app can pass custom parameters to these launch files (e.g., map paths, use_sim_time, etc.) via the LaunchWithArgs service. Make sure your launch files accept the parameters you want to configure from the app.
-
-Make sure these files run **stand-alone** and include the complete Nav2 navigation stack before hooking them into the Mission Planner.
 
 </details>
 
@@ -255,12 +246,6 @@ def generate_launch_description():
 > ])
 > ```
 
-Run it with:
-
-```bash
-ros2 launch <robot_pkg> mapping_launch.py use_sim_time:=false nav2_params_file:=/path/to/your/nav2.yaml slam_params_file:=/path/to/your/slam.yaml
-```
-
 </details>
 
 <details>
@@ -389,15 +374,7 @@ def generate_launch_description():
 > ])
 > ```
 
-Run it with:
-
-```bash
-ros2 launch <robot_pkg> navigation_launch.py map:=office.yaml nav2_params_file:=/path/to/your/nav2.yaml localization_params_file:=/path/to/your/localization.yaml
-```
-
 </details>
-
-> **⚠️ Warning:** The Mission Planner calls these launch files via its service API; it does **not** ship them.
 
 ---
 
@@ -448,10 +425,6 @@ source ~/.bashrc
 3. Connect your device to the same network as your robot
 4. Open the app and follow the on-screen instructions to connect to your robot
 
-> **📱 Download Now:** [Nav2 Mission Planner on Google Play](https://play.google.com/store/apps/details?id=com.botforge.nav2missionplanner)
-
-> **📷 Next Step:** After installation, configure your camera topic in the [Camera Configuration](#-camera-configuration) section below.
-
 ---
 
 ## 📷 Camera Configuration
@@ -468,19 +441,13 @@ After installation, you can configure the camera image topic for the app to disp
    ros2 launch nav2_mission_planner nav2_mission_planner.launch.py camera_topic:=/your_camera/raw_image_topic
    ```
 
-3. **In the app, select the compressed image topic:** `/out/compressed`
-
-### Run Without Camera
-
-If you don't have a camera or don't need camera functionality:
-
-1. **Launch without camera topic:**
+3. **Launch without camera topic:**
 
    ```bash
    ros2 launch nav2_mission_planner nav2_mission_planner.launch.py
    ```
 
-2. **The app will work normally** for navigation, mapping, and mission planning without camera feed.
+4. **In the app, select the compressed image topic:** `/out/compressed`
 
 ---
 
