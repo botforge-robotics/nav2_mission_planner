@@ -26,11 +26,10 @@
   - [🔧 Required Wrapper Launch Files](#-required-wrapper-launch-files)
 - [🚀 Installation](#-installation)
   - [Remove System-Installed Rosbridge Suite](#remove-system-installed-rosbridge-suite)
-  - [Install Nav2 Mission Planner](#install-nav2-mission-planner)
+  - [Install Nav2 Mission Planner \& Rosbridge server](#install-nav2-mission-planner--rosbridge-server)
   - [Permanent Workspace Setup](#permanent-workspace-setup)
   - [Install Mission Planner App](#install-mission-planner-app)
-- [📷 Camera Configuration](#-camera-configuration)
-  - [Configure Camera Topic](#configure-camera-topic)
+- [Launching](#launching)
 - [📄 License](#-license)
 
 ---
@@ -380,6 +379,18 @@ def generate_launch_description():
 
 ## 🚀 Installation
 
+<div align="center">
+  <a href="https://youtu.be/I7syq--gEf4">
+    <img src="./images/youtubeThumbail.png" alt="Installation Video Tutorial" style="width:100%; max-width:600px; border-radius:12px; box-shadow: 0 6px 20px rgba(0,0,0,0.15); transition: transform 0.3s ease;">
+  </a>
+  <br><br>
+  <a href="https://youtu.be/I7syq--gEf4" style="display: inline-block; background: #ff0000; color: white; padding: 12px 24px; text-decoration: none; border-radius: 25px; font-weight: bold; font-size: 16px; box-shadow: 0 4px 15px rgba(255,0,0,0.3);">
+    ▶️ Watch Installation Tutorial
+  </a>
+</div>
+
+</br>
+
 ### Remove System-Installed Rosbridge Suite
 
 First, remove any system-installed rosbridge suite packages:
@@ -388,9 +399,12 @@ First, remove any system-installed rosbridge suite packages:
 sudo apt remove ros-jazzy-rosbridge* ros-jazzy-rosapi*
 ```
 
-### Install Nav2 Mission Planner
+### Install Nav2 Mission Planner & Rosbridge server
 
 ```bash
+# source ROS installation
+source /opt/ros/{distro}/setup.bash
+
 # create workspace and setup
 mkdir -p ~/nav2_mission_planner_ws/src
 cd ~/nav2_mission_planner_ws/src
@@ -427,27 +441,21 @@ source ~/.bashrc
 
 ---
 
-## 📷 Camera Configuration
+## Launching
 
-After installation, you can configure the camera image topic for the app to display your robot's camera feed, or run without camera functionality.
-
-### Configure Camera Topic
-
-1. **Identify your camera's raw image topic** (e.g., `/camera/image_raw`, `/oakd/rgb/preview/image_raw`, `/turtlebot4_camera/image_raw`)
-
-2. **Launch with your camera topic:**
+1. **Launch with your camera topic:**
 
    ```bash
    ros2 launch nav2_mission_planner nav2_mission_planner.launch.py camera_topic:=/your_camera/raw_image_topic
    ```
 
-3. **Launch without camera topic:**
+2. **Launch without camera topic:**
 
    ```bash
    ros2 launch nav2_mission_planner nav2_mission_planner.launch.py
    ```
 
-4. **In the app, select the compressed image topic:** `/out/compressed`
+3. **In the app, select the compressed image topic:** `/out/compressed`
 
 ---
 
