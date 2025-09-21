@@ -77,12 +77,21 @@ def launch_setup(context, *args, **kwargs):
         emulate_tty=True
     )
 
+    # TF2 Buffer Server
+    tf2_buffer_server_node = Node(
+        package='tf2_ros',
+        executable='buffer_server',
+        name='tf2_buffer_server',
+        output='screen'
+    )
+
     return [
         rosbridge_node,
         rosapi_node,
         web_video_server_node,
         republisher_node,
-        launch_manager_node
+        launch_manager_node,
+        tf2_buffer_server_node
     ]
 
 
